@@ -190,6 +190,32 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
         scrape_interval = "5s";
       };
       scrapeConfigs = [
+        # {
+        #   job_name = "blackbox-exporters";
+        #   metrics_path = "/probe";
+        #   params = { module = [ "icmp" ]; };
+        #   static_configs = [{
+        #     targets = [
+        #       "home.shortcord.com"
+        #       "router.cloud.shortcord.com"
+        #       "violet.home.shortcord.com"
+        #     ];
+        #   }];
+        #   relabel_configs = [
+        #     {
+        #       source_labels = [ "__address__" ];
+        #       target_label = "__param_target";
+        #     }
+        #     {
+        #       source_labels = [ "__param_target" ];
+        #       target_label = "instance";
+        #     }
+        #     {
+        #       target_label = "__address__";
+        #       replacement = "127.0.0.1:9115";
+        #     }
+        #   ];
+        # }
         {
           job_name = "node-exporters";
           dns_sd_configs = [{
@@ -253,7 +279,7 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
     #   backend = "docker";
     #   containers. = {
     #     "moustail.dev" = {
-          
+
     #     };
     #   };
     # };
