@@ -13,6 +13,7 @@ build:
     - nix-shell ./shell.nix --run "colmena build && colmena apply"
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: $CI_PIPELINE_SOURCE != "schedule"
 
 flake-update:
   image: alpine/git
