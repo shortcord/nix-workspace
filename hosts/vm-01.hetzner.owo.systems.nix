@@ -117,7 +117,7 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
           enableACME = true;
           locations."/" = { return = "200 $remote_addr"; };
           extraConfig = ''
-            add_header Content-Typehttps://www.twitch.tv/touchscalytail text/plain;
+            add_header Content-Type text/plain;
           '';
         };
         "freekobolds.com" = {
