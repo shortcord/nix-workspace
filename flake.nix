@@ -35,7 +35,11 @@
             acceptTerms = true;
             defaults.email = "short@shortcord.com";
           };
-
+          services = {
+            openssh = {
+              settings.PasswordAuthentication = false;
+            };
+          };
           users.users.short = {
             isNormalUser = true;
             extraGroups = [ "wheel" ];
