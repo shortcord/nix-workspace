@@ -176,6 +176,7 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
         name = "writefreely";
       };
       admin.name = "short";
+      settings.app.single_user = true;
     };
     prometheus = {
       enable = true;
