@@ -25,20 +25,31 @@
             targetUser = "short";
             buildOnTarget = true;
           };
-          nix.gc = {
-            automatic = true;
-            dates = "weekly";
-            options = "--delete-older-than 2d";
+          nix = {
+            settings = {
+              experimental-features = [ "nix-command" "flakes" ];
+              auto-optimise-store = true;
+            };
+            gc = {
+              automatic = true;
+              dates = "weekly";
+              options = "--delete-older-than 2d";
+            };
           };
           imports = [ ragenix.nixosModules.default ];
-          security.acme = {
-            acceptTerms = true;
-            defaults.email = "short@shortcord.com";
+          security = {
+            sudo = { wheelNeedsPassword = false; };
+            acme = {
+              acceptTerms = true;
+              defaults.email = "short@shortcord.com";
+            };
           };
           services = {
             openssh = {
+              enable = true;
               settings.PasswordAuthentication = false;
             };
+            fail2ban = { enable = true; };
           };
           users.users.short = {
             isNormalUser = true;
@@ -48,14 +59,21 @@
         };
 
         "storage.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
+          age.secrets.distributedUserSSHKey.file = ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
         };
 
         "ns2.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
+          age.secrets.distributedUserSSHKey.file = ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
         };
 
         "vm-01.hetzner.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
+          age.secrets.distributedUserSSHKey.file = ./secrets/general/distributedUserSSHKey.age;
+          imports = [ ./hosts/${name}.nix ];
+        };
+
+        "violet.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
           imports = [ ./hosts/${name}.nix ];
         };
       };

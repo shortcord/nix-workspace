@@ -51,7 +51,18 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
   hardware.cpu.intel.updateMicrocode = false;
 
   system.stateVersion = "22.11";
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  nix = {
+    buildMachines = [{
+      hostName = "violet.lab.shortcord.com";
+      systems = [ "x86_64-linux" "i686-linux" ];
+      protocol = "ssh-ng";
+      maxJobs = 20;
+      sshUser = "remotebuild";
+      sshKey = config.age.secrets.distributedUserSSHKey.path;
+    }];
+    distributedBuilds = true;
+  };
 
   security.sudo.wheelNeedsPassword = false;
 

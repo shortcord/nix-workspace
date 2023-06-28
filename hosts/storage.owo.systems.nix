@@ -54,6 +54,18 @@
     wireguardPresharedKey.file = ../secrets/${name}/wireguardPresharedKey.age;
   };
 
+  nix = {
+    buildMachines = [{
+      hostName = "violet.lab.shortcord.com";
+      systems = [ "x86_64-linux" "i686-linux" ];
+      protocol = "ssh-ng";
+      maxJobs = 20;
+      sshUser = "remotebuild";
+      sshKey = config.age.secrets.distributedUserSSHKey.path;
+    }];
+    distributedBuilds = true;
+  };
+
   networking = {
     useDHCP = false;
     hostName = "storage";
