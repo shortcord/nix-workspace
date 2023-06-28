@@ -1,6 +1,8 @@
-{ name, nodes, pkgs, lib, config, ... }: 
-let 
-  distributedUserSSHKeyPub = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKnmaQeov9+Xv7z/ulQ0zPVDN3ZKW4AUK8IyoVkbUKQa" ];
+{ name, nodes, pkgs, lib, config, ... }:
+let
+  distributedUserSSHKeyPub = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKnmaQeov9+Xv7z/ulQ0zPVDN3ZKW4AUK8IyoVkbUKQa"
+  ];
 in {
   age.secrets = {
     distributedUserSSHKey.file = ../secrets/general/distributedUserSSHKey.age;
@@ -17,6 +19,10 @@ in {
     "/boot" = {
       device = "/dev/disk/by-uuid/2C1D-95D4";
       fsType = "vfat";
+    };
+    "/tank" = {
+      device = "tank";
+      fsType = "zfs";
     };
   };
 
@@ -52,6 +58,7 @@ in {
   };
 
   networking = {
+    hostId = "7f09cf4e";
     hostName = "violet";
     domain = "lab.shortcord.com";
     useDHCP = true;
@@ -98,12 +105,41 @@ in {
           enableACME = true;
 
           locations."/" = {
-            proxyPass = "http://${config.services.nix-serve.bindAddress}:${toString config.services.nix-serve.port}";
+            proxyPass = "http://${config.services.nix-serve.bindAddress}:${
+                toString config.services.nix-serve.port
+              }";
           };
         };
       };
     };
   };
+
+  virtualisation = {
+    podman = {
+      enable = true;
+      dockerCompat = true;
+      dockerSocket.enable = true;
+      autoPrune = {
+        enable = true;
+        dates = "weekly";
+        flags = [ "--all" ];
+      };
+    };
+    oci-containers = {
+      containers = {
+        "gitlab-runner" = {
+          autoStart = true;
+          image = "docker.io/gitlab/gitlab-runner:latest";
+          volumes = [
+            "gitlab-runner-config:/etc/gitlab-runner"
+            "/var/run/podman/podman.sock:/var/run/docker.sock:ro"
+          ];
+        };
+      };
+    };
+  };
+
+  users.users.short = { extraGroups = [ "wheel" "docker" ]; };
 
   systemd = {
     timers = {
