@@ -62,6 +62,9 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
       sshKey = config.age.secrets.distributedUserSSHKey.path;
     }];
     distributedBuilds = true;
+    extraOptions = ''
+      builders-use-substitutes = true
+    '';
   };
 
   security.sudo.wheelNeedsPassword = false;

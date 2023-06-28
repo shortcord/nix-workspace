@@ -52,6 +52,9 @@
       sshKey = config.age.secrets.distributedUserSSHKey.path;
     }];
     distributedBuilds = true;
+    extraOptions = ''
+      builders-use-substitutes = true
+    '';
   };
 
   networking = {
