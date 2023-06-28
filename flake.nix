@@ -29,6 +29,12 @@
             settings = {
               experimental-features = [ "nix-command" "flakes" ];
               auto-optimise-store = true;
+              substituters = [
+                "https://binarycache.violet.lab.shortcord.com"
+              ];
+              trusted-public-keys = [
+                "binarycache.violet.lab.shortcord.com:Bq1Q/51gHInHj8dMKoaCI5lHM8XnwASajahLe1KjCdQ="
+              ];
             };
             gc = {
               automatic = true;
