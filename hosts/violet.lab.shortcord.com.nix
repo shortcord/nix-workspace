@@ -7,7 +7,6 @@ in {
   age.secrets = {
     distributedUserSSHKey.file = ../secrets/general/distributedUserSSHKey.age;
     nix-serve.file = ../secrets/${name}/nix-serve.age;
-    calckey-config.file = ../secrets/${name}/calckey-config.age;
   };
 
   system.stateVersion = "23.05";
@@ -41,6 +40,14 @@ in {
         wantedBy = [ "multi-user.target" ];
         options =
           "noatime,degraded,compress=zstd,discard=async,space_cache=v2,subvolid=257";
+      }
+      {
+        what = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
+        where = "/nix";
+        type = "btrfs";
+        wantedBy = [ "multi-user.target" ];
+        options =
+          "noatime,degraded,compress=zstd,discard=async,space_cache=v2,subvolid=598";
       }
     ];
     network = {
@@ -136,9 +143,17 @@ in {
     };
   };
 
-  nix.distributedBuilds = lib.mkForce false;
+  nix = {
+    buildMachines = [{
+      hostName = "localhost";
+      systems = [ "x86_64-linux" "i686-linux" ];
+      supportedFeatures = [ "kvm" "nixos-test" "big-parallel" "benchmark" ];
+      maxJobs = 20;
+    }];
+    distributedBuilds = lib.mkForce false;
+  };
 
-  environment.systemPackages = with pkgs; [ vim wget curl btrfs-progs ];
+  environment.systemPackages = with pkgs; [ vim wget curl btrfs-progs git ];
 
   users.users.remotebuild = {
     isNormalUser = true;
@@ -188,7 +203,32 @@ in {
               }";
           };
         };
+        "hydra.${config.networking.fqdn}" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+
+          locations."/" = {
+            proxyPass = "http://${config.services.hydra.listenHost}:${
+                toString config.services.hydra.port
+              }";
+          };
+        };
       };
+    };
+    hydra = {
+      enable = true;
+      listenHost = "localhost";
+      hydraURL = "https://hydra.${config.networking.fqdn}";
+      notificationSender = "hydra@localhost";
+      useSubstitutes = false;
+      extraConfig = ''
+        <git-input>
+          timeout = 3600
+        </git-input>
+      '';
     };
   };
 
@@ -212,39 +252,6 @@ in {
             "/var/run/docker.sock:/var/run/docker.sock:ro"
           ];
         };
-        # "calckey_web" = {
-        #   autoStart = true;
-        #   image = "docker.io/thatonecalculator/calckey:latest";
-        #   volumes = [
-        #     "calckey-data:/calckey/files:rw"
-        #     "${config.age.secrets.calckey-config.path}:/calckey/.config/default.yml:ro"
-        #   ];
-        #   environment = {
-        #     NODE_ENV = "production";
-        #   };
-        #   ports = [
-        #     "3000:3000"
-        #   ];
-        # };
-        # "redis" = {
-        #   autoStart = true;
-        #   image = "docker.io/redis:7.0-alpine";
-        #   volumes = [
-        #     "redis-data:/data:rw"
-        #   ];
-        # };
-        # "calckey-db" = {
-        #   autoStart = true;
-        #   image = "docker.io/postgres:12.2-alpine";
-        #   volumes = [
-        #     "calckey-db-data:/var/lib/postgresql/data"
-        #   ];
-        #   environment = {
-        #     POSTGRES_PASSWORD = "example-calckey-pass";
-        #     POSTGRES_USER = "example-calckey-user";
-        #     POSTGRES_DB = "calckey";
-        #   };
-        # };
       };
     };
   };
