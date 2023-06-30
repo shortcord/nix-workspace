@@ -1,40 +1,40 @@
-stages:
-  - build
-  - updates
+# stages:
+#   - build
+#   - updates
 
-build:
-  image:
-    name: nixos/nix
-  stage: build
-  before_script:
-    - mkdir -p /kaniko/.docker
-    - nix-channel --add https://github.com/ryantm/agenix/archive/main.tar.gz agenix && nix-channel --update
-  script:
-    - nix-shell ./shell.nix --run "colmena build && colmena apply"
-  rules:
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-    - if: $CI_PIPELINE_SOURCE != "schedule"
+# build:
+#   image:
+#     name: nixos/nix
+#   stage: build
+#   before_script:
+#     - mkdir -p /kaniko/.docker
+#     - nix-channel --add https://github.com/ryantm/agenix/archive/main.tar.gz agenix && nix-channel --update
+#   script:
+#     - nix-shell ./shell.nix --run "colmena build && colmena apply"
+#   rules:
+#     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+#     - if: $CI_PIPELINE_SOURCE != "schedule"
+# EGY: clone
+#   script: 
+#     - git add .
+#     - |-
+#       # Check if we have modifications to commit
+#       CHANGES=$(git status --porcelain | wc -l)
 
-flake-update:
-  image: alpine/git
-  stage: updates
-  variables:
-    GIT_STRATEGY: clone
-  script: 
-    - git add .
-    - |-
-      # Check if we have modifications to commit
-      CHANGES=$(git status --porcelain | wc -l)
-
-      if [ "$CHANGES" -gt "0" ]; then
-        git status
-        git commit -m "Flake updates"
-        git push origin "flake-updates-${date --rfc-3339=date}" \
-          -o ci.skip \
-          -o merge_request.create \
-          -o merge_request.remove_source_branch \
-          -o merge_request.target=$CI_DEFAULT_BRANCH \
-          -o merge_request.assign=shortcord
-      fi
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
+#       if [ "$CHANGES" -gt "0" ]; then
+#         git status
+#         git commit -m "Flake updates"
+#         git push origin "flake-updates-${date --rfc-3339=date}" \
+#           -o ci.skip \
+#           -o merge_request.create \
+#           -o merge_request.remove_source_branch \
+#           -o merge_request.target=$CI_DEFAULT_BRANCH \
+#           -o merge_request.assign=shortcord
+#       fi
+#   rules:
+#     - if: $CI_PIPELINE_SOURCE == "schedule"
+# flake-update:
+#   image: alpine/git
+#   stage: updates
+#   variables:
+#     GIT_STRAT
