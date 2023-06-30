@@ -7,6 +7,7 @@ in {
   age.secrets = {
     distributedUserSSHKey.file = ../secrets/general/distributedUserSSHKey.age;
     nix-serve.file = ../secrets/${name}/nix-serve.age;
+    calckey-config.file = ../secrets/${name}/calckey-config.age;
   };
 
   system.stateVersion = "23.05";
@@ -20,9 +21,56 @@ in {
       device = "/dev/disk/by-uuid/2C1D-95D4";
       fsType = "vfat";
     };
-    "/tank" = {
-      device = "tank";
-      fsType = "zfs";
+  };
+
+  systemd = {
+    mounts = [
+      {
+        what = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
+        where = "/btrfs";
+        type = "btrfs";
+        before = [ "systemd-tmpfiles-setup.service" ];
+        wantedBy = [ "multi-user.target" ];
+        options = "noatime,degraded,compress=zstd,discard=async,space_cache=v2";
+      }
+      {
+        what = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
+        where = "/var/lib/docker";
+        type = "btrfs";
+        before = [ "docker.service" ];
+        wantedBy = [ "multi-user.target" ];
+        options =
+          "noatime,degraded,compress=zstd,discard=async,space_cache=v2,subvolid=257";
+      }
+    ];
+    network = {
+      enable = true;
+      networks = {
+        "10-wan" = {
+          matchConfig.MACAddress = "C8:1F:66:E6:7A:51";
+          networkConfig = {
+            DHCP = "ipv4";
+            DNS = "9.9.9.9";
+            IPv6AcceptRA = true;
+          };
+        };
+        "20-lan" = {
+          matchConfig.MACAddress = "C8:1F:66:E6:7A:52";
+          linkConfig.RequiredForOnline = "no";
+          address = [ "10.18.0.1/24" ];
+          networkConfig = {
+            IPv6SendRA = true;
+            DHCPPrefixDelegation = true;
+            IPv6AcceptRA = false;
+          };
+          extraConfig = ''
+            [DHCPPrefixDelegation]
+            UplinkInterface=eno1
+            SubnetId=0
+            Announce=yes
+          '';
+        };
+      };
     };
   };
 
@@ -35,8 +83,8 @@ in {
     kernelPackages = pkgs.linuxKernel.packages.linux_6_1;
     growPartition = true;
     kernelModules = [ ];
-    extraModulePackages = with config.boot.kernelPackages; [ zfs ];
-    kernelParams = [ "kvm-intel" "zfs.zfs_arc_max=12884901888" ];
+    extraModulePackages = [ ];
+    kernelParams = [ "kvm-intel" ];
     loader.systemd-boot = {
       enable = true;
       configurationLimit = 50;
@@ -51,9 +99,12 @@ in {
         "usb_storage"
         "sd_mod"
         "sr_mod"
-        "zfs"
       ];
       kernelModules = [ ];
+    };
+    kernel.sysctl = {
+      "net.ipv4.conf.all.forwarding" = 1;
+      "net.ipv6.conf.all.forwarding" = 1;
     };
   };
 
@@ -61,19 +112,33 @@ in {
     hostId = "7f09cf4e";
     hostName = "violet";
     domain = "lab.shortcord.com";
-    useDHCP = true;
-    nameservers = [ "9.9.9.9" "2620:fe::fe" ];
+    useDHCP = false;
+    #nameservers = [ "9.9.9.9" "2620:fe::fe" ];
     firewall = {
       enable = true;
       allowedUDPPorts = [ ];
       allowedTCPPorts = [ 22 80 443 ];
       allowPing = true;
+      trustedInterfaces = [ "eno1" "eno2" ];
+    };
+    # interfaces."eno2" = {
+    #   useDHCP = false;
+    #   ipv4.addresses = [{
+    #     address = "10.18.0.1";
+    #     prefixLength = 24;
+    #   }];
+    # };
+    nat = {
+      enable = true;
+      enableIPv6 = false;
+      externalInterface = "eno1";
+      internalInterfaces = [ "eno2" ];
     };
   };
 
   nix.distributedBuilds = lib.mkForce false;
 
-  environment.systemPackages = with pkgs; [ vim wget curl zfs ];
+  environment.systemPackages = with pkgs; [ vim wget curl btrfs-progs ];
 
   users.users.remotebuild = {
     isNormalUser = true;
@@ -81,12 +146,25 @@ in {
   };
 
   services = {
-    zfs = {
-      trim.enable = true;
-      autoScrub = {
-        enable = true;
-        interval = "daily";
-      };
+    dhcpd4 = {
+      enable = true;
+      authoritative = true;
+      interfaces = [ "eno2" ];
+      extraConfig = ''
+        option subnet-mask 255.255.255.0;
+        option broadcast-address 10.18.0.255;
+        option routers 10.18.0.1;
+        option domain-name-servers 9.9.9.9;
+        option domain-name "lab.shortcord.com";
+        subnet 10.18.0.0 netmask 255.255.255.0 {
+          range 10.18.0.5 10.18.0.200;
+        }
+      '';
+      machines = [{
+        hostName = "lilac.lab.shortcord.com";
+        ipAddress = "10.18.0.2";
+        ethernetAddress = "14:18:77:5b:a9:87";
+      }];
     };
     nix-serve = {
       enable = true;
@@ -115,10 +193,8 @@ in {
   };
 
   virtualisation = {
-    podman = {
+    docker = {
       enable = true;
-      dockerCompat = true;
-      dockerSocket.enable = true;
       autoPrune = {
         enable = true;
         dates = "weekly";
@@ -126,15 +202,49 @@ in {
       };
     };
     oci-containers = {
+      backend = "docker";
       containers = {
         "gitlab-runner" = {
           autoStart = true;
           image = "docker.io/gitlab/gitlab-runner:latest";
           volumes = [
             "gitlab-runner-config:/etc/gitlab-runner"
-            "/var/run/podman/podman.sock:/var/run/docker.sock:ro"
+            "/var/run/docker.sock:/var/run/docker.sock:ro"
           ];
         };
+        # "calckey_web" = {
+        #   autoStart = true;
+        #   image = "docker.io/thatonecalculator/calckey:latest";
+        #   volumes = [
+        #     "calckey-data:/calckey/files:rw"
+        #     "${config.age.secrets.calckey-config.path}:/calckey/.config/default.yml:ro"
+        #   ];
+        #   environment = {
+        #     NODE_ENV = "production";
+        #   };
+        #   ports = [
+        #     "3000:3000"
+        #   ];
+        # };
+        # "redis" = {
+        #   autoStart = true;
+        #   image = "docker.io/redis:7.0-alpine";
+        #   volumes = [
+        #     "redis-data:/data:rw"
+        #   ];
+        # };
+        # "calckey-db" = {
+        #   autoStart = true;
+        #   image = "docker.io/postgres:12.2-alpine";
+        #   volumes = [
+        #     "calckey-db-data:/var/lib/postgresql/data"
+        #   ];
+        #   environment = {
+        #     POSTGRES_PASSWORD = "example-calckey-pass";
+        #     POSTGRES_USER = "example-calckey-user";
+        #     POSTGRES_DB = "calckey";
+        #   };
+        # };
       };
     };
   };

@@ -9,4 +9,5 @@ let
   ];
 in { 
   "nix-serve.age".publicKeys = users ++ servers;
+  "calckey-config.age".publicKeys = users ++ servers;
  }
