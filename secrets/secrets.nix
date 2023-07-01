@@ -13,5 +13,14 @@ let
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP4tWdXuPUVt2Yv/cGig8Hilm/NZgpsqH1VbKYpOvnwh lilac.lab.shortcord.com"
   ];
 in { 
-  "distributedUserSSHKey.age".publicKeys = users ++ servers;
+  "general/distributedUserSSHKey.age".publicKeys = users ++ servers;
+  "ns2.owo.systems/wireguardPrivateKey.age".publicKeys = users ++ servers;
+  "ns2.owo.systems/wireguardPresharedKey.age".publicKeys = users ++ servers;
+  "storage.owo.systems/minioSecret.age".publicKeys = users ++ servers;
+  "storage.owo.systems/acmeCredentialsFile.age".publicKeys = users ++ servers;
+  "storage.owo.systems/wireguardPrivateKey.age".publicKeys = users ++ servers;
+  "storage.owo.systems/wireguardPresharedKey.age".publicKeys = users ++ servers;
+  "violet.lab.shortcord.com/nix-serve.age".publicKeys = users ++ servers;
+  "violet.lab.shortcord.com/calckey-config.age".publicKeys = users ++ servers;
+  "vm-01.hetzner.owo.systems/prometheusBasicAuthPassword.age".publicKeys = users ++ servers;
  }

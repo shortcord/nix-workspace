@@ -2,7 +2,10 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/23.05";
     colmena.url = "github:zhaofengli/colmena/v0.3.2";
-    ragenix.url = "github:yaxitech/ragenix";
+    ragenix = {
+      url = "github:yaxitech/ragenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { nixpkgs, colmena, ragenix, ... }:
@@ -13,7 +16,20 @@
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPWfoWfo/L6yoIwCbnV7IwfsSFrrrnt6cQpoX60YDaQ0 short@mauspad"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICAXRx3C0/Rjiz5mpqX/Iygkr1wOTG1fw6Am9zKpZUr1 short@dellmaus"
       ];
-    in {
+    in
+    {
+      devShell.x86_64-linux =
+        let
+          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        in
+        pkgs.mkShell {
+          buildInputs = [
+            pkgs.colmena
+            pkgs.nixos-generators
+            pkgs.vim
+            ragenix.packages.x86_64-linux.default
+          ];
+        };
       colmena = {
         meta = {
           nixpkgs = import nixpkgs {
