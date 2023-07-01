@@ -6,9 +6,13 @@
       url = "github:yaxitech/ragenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixos-generators = {
+      url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { nixpkgs, colmena, ragenix, ... }:
+  outputs = { nixpkgs, colmena, ragenix, nixos-generators, ... }:
     let
       sshkeys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINaxLI7oCJcUxfjGXXgs9YI7DimlFbtWE+R22jDF6Zxl short@maus"
@@ -18,6 +22,20 @@
       ];
     in
     {
+      packages.x86_64-linux = {
+        iso = nixos-generators.nixosGenerate {
+          system = "x86_64-linux";
+          format = "iso";
+          modules = [ ./templates/bootiso.nix ];
+          specialArgs = { sshkeys = sshkeys; };
+        };
+        kexec = nixos-generators.nixosGenerate {
+          system = "x86_64-linux";
+          format = "kexec-bundle";
+          modules = [ ./templates/kexec.nix ];
+          specialArgs = { sshkeys = sshkeys; };
+        };
+      };
       devShell.x86_64-linux =
         let
           pkgs = nixpkgs.legacyPackages.x86_64-linux;

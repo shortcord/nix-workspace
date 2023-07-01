@@ -12,15 +12,17 @@ let
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOqzy6mgAsJLPsYnYb6sWBvsmZKF8QG7lLE3A/yE55G7 vm01.hetzner.owo.systems"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP4tWdXuPUVt2Yv/cGig8Hilm/NZgpsqH1VbKYpOvnwh lilac.lab.shortcord.com"
   ];
-in { 
-  "general/distributedUserSSHKey.age".publicKeys = users ++ servers;
-  "ns2.owo.systems/wireguardPrivateKey.age".publicKeys = users ++ servers;
-  "ns2.owo.systems/wireguardPresharedKey.age".publicKeys = users ++ servers;
-  "storage.owo.systems/minioSecret.age".publicKeys = users ++ servers;
-  "storage.owo.systems/acmeCredentialsFile.age".publicKeys = users ++ servers;
-  "storage.owo.systems/wireguardPrivateKey.age".publicKeys = users ++ servers;
-  "storage.owo.systems/wireguardPresharedKey.age".publicKeys = users ++ servers;
-  "violet.lab.shortcord.com/nix-serve.age".publicKeys = users ++ servers;
-  "violet.lab.shortcord.com/calckey-config.age".publicKeys = users ++ servers;
-  "vm-01.hetzner.owo.systems/prometheusBasicAuthPassword.age".publicKeys = users ++ servers;
- }
+  all = users ++ servers;
+in
+{
+  "general/distributedUserSSHKey.age".publicKeys = all;
+  "ns2.owo.systems/wireguardPrivateKey.age".publicKeys = all;
+  "ns2.owo.systems/wireguardPresharedKey.age".publicKeys = all;
+  "storage.owo.systems/minioSecret.age".publicKeys = all;
+  "storage.owo.systems/acmeCredentialsFile.age".publicKeys = all;
+  "storage.owo.systems/wireguardPrivateKey.age".publicKeys = all;
+  "storage.owo.systems/wireguardPresharedKey.age".publicKeys = all;
+  "violet.lab.shortcord.com/nix-serve.age".publicKeys = all;
+  "violet.lab.shortcord.com/calckey-config.age".publicKeys = all;
+  "vm-01.hetzner.owo.systems/prometheusBasicAuthPassword.age".publicKeys = all;
+}
