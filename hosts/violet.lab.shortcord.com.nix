@@ -153,6 +153,7 @@ in {
     distributedBuilds = lib.mkForce false;
   };
 
+  nixpkgs.config.allowUnfree = true;
   environment.systemPackages = with pkgs; [ vim wget curl btrfs-progs git ];
 
   users.users.remotebuild = {
