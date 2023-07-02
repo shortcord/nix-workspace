@@ -120,6 +120,7 @@
         };
 
         "violet.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+          age.secrets.distributedUserSSHKey.file = ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
         };
       };

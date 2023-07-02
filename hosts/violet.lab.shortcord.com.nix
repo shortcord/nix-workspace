@@ -144,12 +144,23 @@ in {
   };
 
   nix = {
-    buildMachines = [{
-      hostName = "localhost";
-      systems = [ "x86_64-linux" "i686-linux" ];
-      supportedFeatures = [ "kvm" "nixos-test" "big-parallel" "benchmark" ];
-      maxJobs = 20;
-    }];
+    buildMachines = [
+      {
+        hostName = "localhost";
+        systems = [ "x86_64-linux" "i686-linux" ];
+        supportedFeatures = [ "kvm" "nixos-test" "big-parallel" "benchmark" ];
+        maxJobs = 20;
+      }
+      {
+        hostName = "lilac.lab.shortcord.com";
+        systems = [ "x86_64-linux" "i686-linux" ];
+        supportedFeatures = [ "kvm" "nixos-test" "big-parallel" "benchmark" ];
+        protocol = "ssh-ng";
+        maxJobs = 8;
+        sshUser = "remotebuild";
+        sshKey = config.age.secrets.distributedUserSSHKey.path;
+      }
+    ];
     distributedBuilds = lib.mkForce false;
   };
 

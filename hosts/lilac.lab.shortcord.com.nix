@@ -1,5 +1,11 @@
 { name, nodes, pkgs, lib, config, ... }:
-{
+let
+  distributedUserSSHKeyPub = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKnmaQeov9+Xv7z/ulQ0zPVDN3ZKW4AUK8IyoVkbUKQa"
+  ];
+in {
+  age.secrets = { catstodon-env.file = ../secrets/${name}/catstodon.env.age; };
+
   system.stateVersion = "23.05";
 
   fileSystems = {
@@ -51,12 +57,56 @@
     firewall = {
       enable = true;
       allowedUDPPorts = [ ];
-      allowedTCPPorts = [ 22 ];
+      allowedTCPPorts = [ 22 80 443 ];
       allowPing = true;
     };
   };
 
   environment.systemPackages = with pkgs; [ vim wget curl ];
+
+  users.users.remotebuild = {
+    isNormalUser = true;
+    openssh = { authorizedKeys.keys = distributedUserSSHKeyPub; };
+  };
+
+  services = {
+    mastodon = {
+      enable = true;
+      localDomain = "social.${config.networking.fqdn}";
+      configureNginx = true;
+      smtp.fromAddress = "noreply@${config.services.mastodon.localDomain}";
+      extraEnvFiles = [ config.age.secrets.catstodon-env.path ];
+      extraConfig = {
+        MAX_TOOT_CHARS = "69420";
+        MAX_DESCRIPTION_CHARS = "69420";
+        MAX_BIO_CHARS = "69420";
+        MAX_PROFILE_FIELDS = "10";
+        MAX_PINNED_TOOTS = "10";
+        MAX_DISPLAY_NAME_CHARS = "50";
+        MIN_POLL_OPTIONS = "1";
+        MAX_POLL_OPTIONS = "20";
+        MAX_REACTIONS = "6";
+        MAX_SEARCH_RESULTS = "1000";
+        MAX_REMOTE_EMOJI_SIZE = "1048576";
+      };
+      package = (pkgs.mastodon.override {
+        version = "catstodon-f158fb7151a338846def20bd9996c9c25b459791";
+        srcOverride = pkgs.fetchgit {
+          url = "https://github.com/CatCatNya/catstodon.git";
+          rev = "f158fb7151a338846def20bd9996c9c25b459791";
+          hash = "sha256-A7W5ZoB8bQLPc36Oey5yyPcCYsEbaSypKgKGEmP81nU=";
+        };
+        dependenciesDir = ../pkgs/catstodon/.;
+      }).overrideAttrs (self: super: {
+        mastodonModules = super.mastodonModules.overrideAttrs (a: b: {
+          yarnOfflineCache = pkgs.fetchYarnDeps {
+            yarnLock = self.src + "/yarn.lock";
+            sha256 = "sha256-lCFOSLCP7gtk6ozxDJ7EVRL8ak4wgdw0u7IkP4Ldhxs=";
+          };
+        });
+      });
+    };
+  };
 
   systemd = {
     timers = {
