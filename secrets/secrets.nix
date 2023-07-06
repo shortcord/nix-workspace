@@ -17,6 +17,7 @@ in
 {
   # General Secrets
   "general/distributedUserSSHKey.age".publicKeys = all;
+  "general/pdnsApiKey.age".publicKeys = all;
   
   # Secrets for ns2.owo.systems
   "ns2.owo.systems/wireguardPrivateKey.age".publicKeys = all;
@@ -37,4 +38,5 @@ in
 
   # Secrets for lilac.lab.shortcord.com
   "lilac.lab.shortcord.com/catstodon.env.age".publicKeys = all;
+  "lilac.lab.shortcord.com/wireguardPrivateKey.age".publicKeys = all;
 }

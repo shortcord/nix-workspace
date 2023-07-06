@@ -5,6 +5,7 @@ let
   ];
 in {
   age.secrets = {
+    pdnsApiKey.file = ../secrets/general/pdnsApiKey.age;
     distributedUserSSHKey.file = ../secrets/general/distributedUserSSHKey.age;
     nix-serve.file = ../secrets/${name}/nix-serve.age;
   };
@@ -20,36 +21,49 @@ in {
       device = "/dev/disk/by-uuid/2C1D-95D4";
       fsType = "vfat";
     };
+    "/btrfs" = {
+      device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
+      fsType = "btrfs";
+      options = [
+        "noatime"
+        "degraded"
+        "compress=zstd"
+        "discard=async"
+        "space_cache=v2"
+      ];
+    };
+    "/var/lib/docker" = {
+      device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
+      fsType = "btrfs";
+      options = [
+        "noatime"
+        "degraded"
+        "compress=zstd"
+        "discard=async"
+        "space_cache=v2"
+        "subvolid=257"
+      ];
+    };
+    "/var/lib/ipfs" = {
+      device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
+      fsType = "btrfs";
+      options = [
+        "noatime"
+        "degraded"
+        "compress=zstd"
+        "discard=async"
+        "space_cache=v2"
+        "subvolid=605"
+      ];
+    };
+    # "/nix" = {
+    #   device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
+    #   fsType = "btrfs";
+    #   options = [ "noatime" "degraded" "compress=zstd" "discard=async" "space_cache=v2" "subvolid=598" ];
+    # };
   };
 
   systemd = {
-    mounts = [
-      {
-        what = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
-        where = "/btrfs";
-        type = "btrfs";
-        before = [ "systemd-tmpfiles-setup.service" ];
-        wantedBy = [ "multi-user.target" ];
-        options = "noatime,degraded,compress=zstd,discard=async,space_cache=v2";
-      }
-      {
-        what = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
-        where = "/var/lib/docker";
-        type = "btrfs";
-        before = [ "docker.service" ];
-        wantedBy = [ "multi-user.target" ];
-        options =
-          "noatime,degraded,compress=zstd,discard=async,space_cache=v2,subvolid=257";
-      }
-      {
-        what = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
-        where = "/nix";
-        type = "btrfs";
-        wantedBy = [ "multi-user.target" ];
-        options =
-          "noatime,degraded,compress=zstd,discard=async,space_cache=v2,subvolid=598";
-      }
-    ];
     network = {
       enable = true;
       networks = {
@@ -120,7 +134,6 @@ in {
     hostName = "violet";
     domain = "lab.shortcord.com";
     useDHCP = false;
-    #nameservers = [ "9.9.9.9" "2620:fe::fe" ];
     firewall = {
       enable = true;
       allowedUDPPorts = [ ];
@@ -128,13 +141,6 @@ in {
       allowPing = true;
       trustedInterfaces = [ "eno1" "eno2" ];
     };
-    # interfaces."eno2" = {
-    #   useDHCP = false;
-    #   ipv4.addresses = [{
-    #     address = "10.18.0.1";
-    #     prefixLength = 24;
-    #   }];
-    # };
     nat = {
       enable = true;
       enableIPv6 = false;
@@ -149,14 +155,14 @@ in {
         hostName = "localhost";
         systems = [ "x86_64-linux" "i686-linux" ];
         supportedFeatures = [ "kvm" "nixos-test" "big-parallel" "benchmark" ];
-        maxJobs = 20;
+        maxJobs = 8;
       }
       {
         hostName = "lilac.lab.shortcord.com";
         systems = [ "x86_64-linux" "i686-linux" ];
         supportedFeatures = [ "kvm" "nixos-test" "big-parallel" "benchmark" ];
         protocol = "ssh-ng";
-        maxJobs = 8;
+        maxJobs = 2;
         sshUser = "remotebuild";
         sshKey = config.age.secrets.distributedUserSSHKey.path;
       }
@@ -197,10 +203,93 @@ in {
       enable = true;
       secretKeyFile = config.age.secrets.nix-serve.path;
     };
+    kubo = {
+      enable = true;
+      emptyRepo = true;
+      enableGC = true;
+      localDiscovery = false;
+      settings = {
+        PublicGateways = {
+          "${config.networking.fqdn}" = {
+            Paths = [
+              "/ipfs"
+              "/ipns"
+            ];
+            UseSubdomains = true;
+          };
+        };
+        Bootstrap = [
+          "/dnsaddr/bootstrap.libp2p.io/p2p/QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN"
+          "/dnsaddr/bootstrap.libp2p.io/p2p/QmQCU2EcMqAqQPR2i9bChDtGNJchTbq5TbXJJ16u19uLTa"
+          "/dnsaddr/bootstrap.libp2p.io/p2p/QmbLHAnMoJPWSCR5Zhtx6BHJX9KiKNN6tpvbUcqanj75Nb"
+          "/dnsaddr/bootstrap.libp2p.io/p2p/QmcZf59bWwK5XFi76CZX8cbJ4BhTzzA3gU1ZjYZcYW3dwt"
+          "/ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ"
+          "/ip4/104.131.131.82/udp/4001/quic/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ"
+
+          ## ipfs-01.owo.systems
+          "/dns4/ipfs-01.owo.systems/tcp/4001/p2p/12D3KooWNGmh5EBpPBXGGcFnrMtBW6u9Z61HgyHAobjo2ANhq1kL"
+          "/dns4/ipfs-01.owo.systems/udp/4001/quic/p2p/12D3KooWNGmh5EBpPBXGGcFnrMtBW6u9Z61HgyHAobjo2ANhq1kL"
+          "/dns6/ipfs-01.owo.systems/tcp/4001/p2p/12D3KooWNGmh5EBpPBXGGcFnrMtBW6u9Z61HgyHAobjo2ANhq1kL"
+          "/dns6/ipfs-01.owo.systems/udp/4001/quic/p2p/12D3KooWNGmh5EBpPBXGGcFnrMtBW6u9Z61HgyHAobjo2ANhq1kL"
+        ];
+        Peering = {
+          Peers = [
+            {
+              Addrs = [ ];
+              ID = "12D3KooWM63pJ1xhDjqKvH8bEyzowwmfB5tP9UndMP2T2WjDBF7Y";
+            }
+            {
+              Addrs = [ ];
+              ID = "12D3KooWDJCyi3EAVBeisRkrRGtEPjEHNA3CKsmwbWbg5mM9eqvZ";
+            }
+            {
+              Addrs = [
+                "/ip6/2a01:4ff:f0:c73c::1/udp/4001/quic/p2p/12D3KooWJTJoJZ49CgoqYe4JnUfXaqDPYiG5bm1ssN6X4v8n9FF2/p2p-circuit"
+              ];
+              ID = "12D3KooWJo2f5EmnUmZFeWxVDHUKdpZmhQ9pVdJ2eQToxNyF5WNm";
+            }
+            {
+              Addrs = [ "/dns6/ipfs1.lxd.bsocat.net/tcp/4001" ];
+              ID = "12D3KooWFkQFKVSgmDfUggx5de5wSbAtfegBnashkP8VN8rESRUX";
+            }
+            {
+              Addrs = [ "/dns6/ipfs.home.bsocat.net/tcp/4001" ];
+              ID = "12D3KooWGHPei7QWiX8vJjHgEkoC4QDWcGKdJf9bE8noP1dAWS21";
+            }
+            {
+              Addrs = [ "/dns6/ipfs2.lxd.bsocat.net/tcp/4001" ];
+              ID = "12D3KooWLSr7JRSYooakhq58vZowUcCaW4ff31tHaGTrWDDaCL8W";
+            }
+            {
+              Addrs = [ "/dns6/gnutoo.home.bsocat.net/tcp/4001" ];
+              ID = "12D3KooWNoPhenCQSsdfKJvJ8g2R1bHbw7M7s5arykhqJCVd5F2B";
+            }
+            {
+              Addrs = [ "/dns6/dl.lxd.bsocat.net/tcp/4001" ];
+              ID = "12D3KooWQvvJkr8fqUAJWcwe6Tysng3AQyKtSBnTG85rW5vm4B67";
+            }
+            {
+              Addrs = [ "/dns6/ipfs3.lxd.bsocat.net/tcp/4001" ];
+              ID = "12D3KooWS3ZiwYPxL4iB3xh32oQs7Cm61ZN7sCsQXhvTGyfybn91";
+            }
+          ];
+        };
+        Datastore = { StorageMax = "1000GB"; };
+        Addresses = {
+          API = [ "/ip4/127.0.0.1/tcp/5001" ];
+          Gateway = [ "/ip4/127.0.0.1/tcp/8080" ];
+        };
+      };
+    };
     nginx = {
       enable = true;
       package = pkgs.nginxQuic;
+      recommendedTlsSettings = true;
+      recommendedZstdSettings = true;
+      recommendedOptimisation = true;
+      recommendedGzipSettings = true;
       recommendedProxySettings = true;
+      recommendedBrotliSettings = true;
       virtualHosts = {
         "binarycache.${config.networking.fqdn}" = {
           kTLS = true;
@@ -228,19 +317,55 @@ in {
               }";
           };
         };
+        "ipfs.${config.networking.fqdn}" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+
+          locations."/" = {
+            proxyPass = "http://localhost:8080";
+          };
+        };
+        "ipns.${config.networking.fqdn}" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+
+          locations."/" = {
+            proxyPass = "http://localhost:8080";
+          };
+        };
       };
     };
     hydra = {
-      enable = true;
+      enable = false;
       listenHost = "localhost";
       hydraURL = "https://hydra.${config.networking.fqdn}";
-      notificationSender = "hydra@localhost";
+      notificationSender = "hydra@${config.networking.fqdn}";
       useSubstitutes = false;
       extraConfig = ''
         <git-input>
           timeout = 3600
         </git-input>
       '';
+    };
+    btrfs.autoScrub = {
+      enable = true;
+      interval = "weekly";
+      fileSystems = [ "/btrfs" ];
+    };
+    prometheus = {
+      enable = true;
+      exporters = {
+        node = {
+          enable = true;
+          openFirewall = true;
+        };
+      };
     };
   };
 
@@ -268,7 +393,9 @@ in {
     };
   };
 
-  users.users.short = { extraGroups = [ "wheel" "docker" ]; };
+  users.users.short = {
+    extraGroups = [ "wheel" "docker" ];
+  };
 
   systemd = {
     timers = {
@@ -288,12 +415,20 @@ in {
           Unit = "update-dyndns-ipv6.service";
         };
       };
+      "btrfs-rebalance" = {
+        wantedBy = [ "timers.target" ];
+        timerConfig = {
+          OnCalendar = "weekly";
+          Unit = "btrfs-rebalance.service";
+        };
+      };
     };
     services = {
       "update-dyndns-ipv4" = {
         script = ''
           set -eu
-          ${pkgs.curl}/bin/curl https://ShortCord:7m6GWrH8TtdVZLm@pdns.ingress.k8s.owo.systems/nic/update\?hostname=${config.networking.fqdn}\&myip=$(${pkgs.curl}/bin/curl https://ipv4.mousetail.dev/)
+          source ${config.age.secrets.pdnsApiKey.path}
+          ${pkgs.curl}/bin/curl https://''${API_USERNAME}:''${API_PASSWORD}@pdns.ingress.k8s.owo.systems/nic/update\?hostname=${config.networking.fqdn}\&myip=$(${pkgs.curl}/bin/curl https://ipv4.mousetail.dev/)
         '';
         serviceConfig = {
           Type = "oneshot";
@@ -303,7 +438,18 @@ in {
       "update-dyndns-ipv6" = {
         script = ''
           set -eu
-          ${pkgs.curl}/bin/curl https://ShortCord:7m6GWrH8TtdVZLm@pdns.ingress.k8s.owo.systems/nic/update\?hostname=${config.networking.fqdn}\&myip=$(${pkgs.curl}/bin/curl https://ipv6.mousetail.dev/)
+          source ${config.age.secrets.pdnsApiKey.path}
+          ${pkgs.curl}/bin/curl https://''${API_USERNAME}:''${API_PASSWORD}@pdns.ingress.k8s.owo.systems/nic/update\?hostname=${config.networking.fqdn}\&myip=$(${pkgs.curl}/bin/curl https://ipv4.mousetail.dev/)
+        '';
+        serviceConfig = {
+          Type = "oneshot";
+          User = "root";
+        };
+      };
+      "btrfs-rebalance" = {
+        script = ''
+          set -eu
+          ${pkgs.btrfs-progs}/bin/btrfs balance start --full-balance /btrfs
         '';
         serviceConfig = {
           Type = "oneshot";

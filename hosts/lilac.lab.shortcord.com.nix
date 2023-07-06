@@ -4,7 +4,11 @@ let
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKnmaQeov9+Xv7z/ulQ0zPVDN3ZKW4AUK8IyoVkbUKQa"
   ];
 in {
-  age.secrets = { catstodon-env.file = ../secrets/${name}/catstodon.env.age; };
+  age.secrets = {
+    pdnsApiKey.file = ../secrets/general/pdnsApiKey.age;
+    catstodon-env.file = ../secrets/${name}/catstodon.env.age;
+    wireguardPrivateKey.file = ../secrets/${name}/wireguardPrivateKey.age;
+  };
 
   system.stateVersion = "23.05";
 
@@ -60,6 +64,25 @@ in {
       allowedTCPPorts = [ 22 80 443 ];
       allowPing = true;
     };
+    wireguard = {
+      enable = true;
+      interfaces.wg0 = {
+        ips = [ "10.6.210.29/32" ];
+        mtu = 1200;
+        listenPort = 51820;
+        privateKeyFile = config.age.secrets.wireguardPrivateKey.path;
+        peers = [{
+          publicKey = "ePYkBTYZaul66VdGLG70IZcCvIaZ7aSeRrkb+hskhiQ=";
+          endpoint = "router.cloud.shortcord.com:51820";
+          persistentKeepalive = 15;
+          allowedIPs = [
+            "10.6.210.1/32"
+            "10.6.210.0/24"
+            "0.0.0.0/0"
+          ];
+        }];
+      };
+    };
   };
 
   environment.systemPackages = with pkgs; [ vim wget curl ];
@@ -90,22 +113,26 @@ in {
         MAX_REMOTE_EMOJI_SIZE = "1048576";
       };
       package = (pkgs.mastodon.override {
-        version = "catstodon-f158fb7151a338846def20bd9996c9c25b459791";
+        version = "catstodon-2bcce397a9c79102233f5a7e1ddbce8920c3377c";
         srcOverride = pkgs.fetchgit {
           url = "https://github.com/CatCatNya/catstodon.git";
-          rev = "f158fb7151a338846def20bd9996c9c25b459791";
-          hash = "sha256-A7W5ZoB8bQLPc36Oey5yyPcCYsEbaSypKgKGEmP81nU=";
+          rev = "2bcce397a9c79102233f5a7e1ddbce8920c3377c";
+          hash = "sha256-22WPKdLvyb/KiFVhlo9KlqZy19Yd29dfNFs5lXbFJUg=";
         };
         dependenciesDir = ../pkgs/catstodon/.;
       }).overrideAttrs (self: super: {
         mastodonModules = super.mastodonModules.overrideAttrs (a: b: {
           yarnOfflineCache = pkgs.fetchYarnDeps {
             yarnLock = self.src + "/yarn.lock";
-            sha256 = "sha256-lCFOSLCP7gtk6ozxDJ7EVRL8ak4wgdw0u7IkP4Ldhxs=";
+            sha256 = "sha256-abC8sRBdntqdcaLRYrLeHHczzcR/RdGguy+BOgnVqbo=";
           };
         });
       });
     };
+    postgresqlBackup = {
+      enable = true;
+      compression = "zstd";
+    }
   };
 
   systemd = {
@@ -123,7 +150,8 @@ in {
       "update-dyndns-ipv6" = {
         script = ''
           set -eu
-          ${pkgs.curl}/bin/curl https://ShortCord:7m6GWrH8TtdVZLm@pdns.ingress.k8s.owo.systems/nic/update\?hostname=${config.networking.fqdn}\&myip=$(${pkgs.curl}/bin/curl https://ipv6.mousetail.dev/)
+          source ${config.age.secrets.pdnsApiKey.path}
+          ${pkgs.curl}/bin/curl https://''${API_USERNAME}:''${API_PASSWORD}@pdns.ingress.k8s.owo.systems/nic/update\?hostname=${config.networking.fqdn}\&myip=$(${pkgs.curl}/bin/curl https://ipv4.mousetail.dev/)
         '';
         serviceConfig = {
           Type = "oneshot";

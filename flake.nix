@@ -31,7 +31,7 @@
         };
         kexec = nixos-generators.nixosGenerate {
           system = "x86_64-linux";
-          format = "kexec-bundle";
+          format = "kexec";
           modules = [ ./templates/kexec.nix ];
           specialArgs = { sshkeys = sshkeys; };
         };
