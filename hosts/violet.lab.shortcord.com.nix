@@ -369,7 +369,9 @@ in {
     };
   };
 
+  programs.dconf.enable = true;
   virtualisation = {
+    libvirtd.enable = true;
     docker = {
       enable = true;
       autoPrune = {
@@ -394,7 +396,7 @@ in {
   };
 
   users.users.short = {
-    extraGroups = [ "wheel" "docker" ];
+    extraGroups = [ "wheel" "docker" "libvirtd" ];
   };
 
   systemd = {
