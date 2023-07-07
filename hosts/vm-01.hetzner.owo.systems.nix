@@ -108,6 +108,12 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
     nginx = {
       package = pkgs.nginxQuic;
       enable = true;
+      recommendedTlsSettings = true;
+      recommendedZstdSettings = true;
+      recommendedOptimisation = true;
+      recommendedGzipSettings = true;
+      recommendedProxySettings = true;
+      recommendedBrotliSettings = true;
       virtualHosts = {
         "netbox.owo.solutions" = {
           kTLS = true;
@@ -161,7 +167,7 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
           enableACME = true;
           locations."/" = { return = "302 https://mousetail.dev"; };
         };
-        "grafana.vm-01.hetzner.owo.systems" = {
+        "grafana.${config.networking.fqdn}" = {
           kTLS = true;
           http2 = true;
           http3 = true;

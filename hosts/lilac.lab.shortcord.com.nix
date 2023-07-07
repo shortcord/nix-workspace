@@ -113,18 +113,14 @@ in {
         MAX_REMOTE_EMOJI_SIZE = "1048576";
       };
       package = (pkgs.mastodon.override {
-        version = "catstodon-2bcce397a9c79102233f5a7e1ddbce8920c3377c";
-        srcOverride = pkgs.fetchgit {
-          url = "https://github.com/CatCatNya/catstodon.git";
-          rev = "2bcce397a9c79102233f5a7e1ddbce8920c3377c";
-          hash = "sha256-22WPKdLvyb/KiFVhlo9KlqZy19Yd29dfNFs5lXbFJUg=";
-        };
+        version = import ../pkgs/catstodon/version.nix;
+        srcOverride = pkgs.callPackage ../pkgs/catstodon/source.nix {};
         dependenciesDir = ../pkgs/catstodon/.;
       }).overrideAttrs (self: super: {
         mastodonModules = super.mastodonModules.overrideAttrs (a: b: {
           yarnOfflineCache = pkgs.fetchYarnDeps {
             yarnLock = self.src + "/yarn.lock";
-            sha256 = "sha256-abC8sRBdntqdcaLRYrLeHHczzcR/RdGguy+BOgnVqbo=";
+            sha256 = "sha256-8fUJ1RBQZ16R3IpA/JEcn+PO04ApQ9TkHuYKycvV8BY=";
           };
         });
       });
@@ -132,7 +128,7 @@ in {
     postgresqlBackup = {
       enable = true;
       compression = "zstd";
-    }
+    };
   };
 
   systemd = {
