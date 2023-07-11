@@ -211,10 +211,7 @@ in {
       settings = {
         PublicGateways = {
           "${config.networking.fqdn}" = {
-            Paths = [
-              "/ipfs"
-              "/ipns"
-            ];
+            Paths = [ "/ipfs" "/ipns" ];
             UseSubdomains = true;
           };
         };
@@ -324,9 +321,7 @@ in {
           forceSSL = true;
           enableACME = true;
 
-          locations."/" = {
-            proxyPass = "http://localhost:8080";
-          };
+          locations."/" = { proxyPass = "http://localhost:8080"; };
         };
         "ipns.${config.networking.fqdn}" = {
           kTLS = true;
@@ -335,9 +330,7 @@ in {
           forceSSL = true;
           enableACME = true;
 
-          locations."/" = {
-            proxyPass = "http://localhost:8080";
-          };
+          locations."/" = { proxyPass = "http://localhost:8080"; };
         };
       };
     };
@@ -395,9 +388,7 @@ in {
     };
   };
 
-  users.users.short = {
-    extraGroups = [ "wheel" "docker" "libvirtd" ];
-  };
+  users.users.short = { extraGroups = [ "wheel" "docker" "libvirtd" ]; };
 
   systemd = {
     timers = {
