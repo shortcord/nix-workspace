@@ -67,7 +67,31 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
     '';
   };
 
-  security.sudo.wheelNeedsPassword = false;
+  security.acme = {
+    certs = {
+      "xmpp.${config.networking.fqdn}" = {
+        reloadServices = [ "prosody.service" ];
+        postRun = ''
+          cp fullchain.pem "${
+            config.users.users."${config.services.prosody.user}".home
+          }/"
+          cp key.pem "${
+            config.users.users."${config.services.prosody.user}".home
+          }/"
+          chown ${config.services.prosody.user}:${config.services.prosody.group} "${
+            config.users.users."${config.services.prosody.user}".home
+          }/fullchain.pem"
+          chown ${config.services.prosody.user}:${config.services.prosody.group} "${
+            config.users.users."${config.services.prosody.user}".home
+          }/key.pem"
+        '';
+        extraDomainNames = [
+          "upload.xmpp.${config.networking.fqdn}"
+          "conference.xmpp.${config.networking.fqdn}"
+        ];
+      };
+    };
+  };
 
   networking = {
     useDHCP = false;
@@ -95,7 +119,20 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
     firewall = {
       enable = true;
       allowedUDPPorts = [ ];
-      allowedTCPPorts = [ 22 80 443 ];
+      allowedTCPPorts = [
+        # OpenSSH
+        22
+        # Nginx w/HTTPS
+        80
+        443
+        # Prosody XMPP
+        5000
+        5222
+        5269
+        5281
+        5347
+        5582
+      ];
       allowPing = true;
     };
   };
@@ -167,6 +204,14 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
           enableACME = true;
           locations."/" = { return = "302 https://mousetail.dev"; };
         };
+        "pawtism.dog" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+          locations."/" = { return = "302 https://estrogen.dog"; };
+        };
         "grafana.${config.networking.fqdn}" = {
           kTLS = true;
           http2 = true;
@@ -180,6 +225,18 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
             proxyWebsockets = true;
             recommendedProxySettings = true;
           };
+        };
+        "xmpp.${config.networking.fqdn}" = {
+          serverAliases = [
+            "upload.xmpp.${config.networking.fqdn}"
+            "conference.xmpp.${config.networking.fqdn}"
+          ];
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+          locations."/" = { return = "302 https://mousetail.dev"; };
         };
       };
     };
@@ -197,6 +254,34 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
       };
       admin.name = "short";
       settings.app.single_user = true;
+    };
+    prosody = {
+      enable = true;
+      admins = [ "short@xmpp.${config.networking.fqdn}" ];
+      ssl = {
+        cert = "${
+            config.users.users."${config.services.prosody.user}".home
+          }/fullchain.pem";
+        key = "${
+            config.users.users."${config.services.prosody.user}".home
+          }/key.pem";
+      };
+      virtualHosts = {
+        "xmpp.${config.networking.fqdn}" = {
+          enabled = true;
+          domain = "xmpp.${config.networking.fqdn}";
+          ssl = {
+            cert = "${
+                config.users.users."${config.services.prosody.user}".home
+              }/fullchain.pem";
+            key = "${
+                config.users.users."${config.services.prosody.user}".home
+              }/key.pem";
+          };
+        };
+      };
+      muc = [{ domain = "conference.xmpp.${config.networking.fqdn}"; }];
+      uploadHttp = { domain = "upload.xmpp.${config.networking.fqdn}"; };
     };
     prometheus = {
       enable = true;
