@@ -10,6 +10,8 @@ build:
     - chmod 400 "${SSH_PRIVATE_KEY}"
     - ssh-add "${SSH_PRIVATE_KEY}"
     - mkdir -p ~/.ssh/ && chmod 0700 ~/.ssh/
+    - mkdir -p ~/.config/nix/
+    - echo "experimental-features = nix-command flakes" >> ~/.config/nix/nix.conf
   script:
     - nix develop --command - colmena build
   rules:
