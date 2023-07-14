@@ -20,12 +20,17 @@
   outputs = { nixpkgs, colmena, ragenix, nixos-generators
     , owo-solutions-homepage, ... }:
     let
-      sshkeys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINaxLI7oCJcUxfjGXXgs9YI7DimlFbtWE+R22jDF6Zxl short@maus"
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEUi5rrB0okX4gQUsivnujVY+0ggin5zKTJMP7ynwKLU short@surface"
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPWfoWfo/L6yoIwCbnV7IwfsSFrrrnt6cQpoX60YDaQ0 short@mauspad"
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICAXRx3C0/Rjiz5mpqX/Iygkr1wOTG1fw6Am9zKpZUr1 short@dellmaus"
-      ];
+      sshkeys = {
+        short = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINaxLI7oCJcUxfjGXXgs9YI7DimlFbtWE+R22jDF6Zxl short@maus"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEUi5rrB0okX4gQUsivnujVY+0ggin5zKTJMP7ynwKLU short@surface"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPWfoWfo/L6yoIwCbnV7IwfsSFrrrnt6cQpoX60YDaQ0 short@mauspad"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICAXRx3C0/Rjiz5mpqX/Iygkr1wOTG1fw6Am9zKpZUr1 short@dellmaus"
+        ];
+        deployment = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOzNDt0mA8dV9l5A/1tIgLVBf6ynUjjZN0Dckvs3kRIG deployment@gitlab.shortcord.com"
+        ];
+      };
     in {
       packages.x86_64-linux = {
         iso = nixos-generators.nixosGenerate {
@@ -77,9 +82,7 @@
               options = "--delete-older-than 2d";
             };
           };
-          imports = [
-            ragenix.nixosModules.default
-          ];
+          imports = [ ragenix.nixosModules.default ];
           security = {
             sudo = { wheelNeedsPassword = false; };
             acme = {
@@ -94,10 +97,17 @@
             };
             fail2ban = { enable = true; };
           };
-          users.users.short = {
-            isNormalUser = true;
-            extraGroups = [ "wheel" ];
-            openssh = { authorizedKeys.keys = sshkeys; };
+          users.users = {
+            deployment = {
+              isNormalUser = true;
+              extraGroups = [ "wheel" ];
+              openssh = { authorizedKeys.keys = sshkeys.deployment; };
+            };
+            short = {
+              isNormalUser = true;
+              extraGroups = [ "wheel" ];
+              openssh = { authorizedKeys.keys = sshkeys.short; };
+            };
           };
         };
 
