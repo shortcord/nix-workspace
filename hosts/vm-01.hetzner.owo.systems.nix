@@ -240,6 +240,34 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
         };
       };
     };
+    prosody = {
+      enable = true;
+      admins = [ "short@xmpp.${config.networking.fqdn}" ];
+      ssl = {
+        cert = "${
+            config.users.users."${config.services.prosody.user}".home
+          }/fullchain.pem";
+        key = "${
+            config.users.users."${config.services.prosody.user}".home
+          }/key.pem";
+      };
+      virtualHosts = {
+        "xmpp.${config.networking.fqdn}" = {
+          enabled = true;
+          domain = "xmpp.${config.networking.fqdn}";
+          ssl = {
+            cert = "${
+                config.users.users."${config.services.prosody.user}".home
+              }/fullchain.pem";
+            key = "${
+                config.users.users."${config.services.prosody.user}".home
+              }/key.pem";
+          };
+        };
+      };
+      muc = [{ domain = "conference.xmpp.${config.networking.fqdn}"; }];
+      uploadHttp = { domain = "upload.xmpp.${config.networking.fqdn}"; };
+    };
     writefreely = {
       enable = true;
       host = "blog.mousetail.dev";
