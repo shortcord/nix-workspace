@@ -283,48 +283,6 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
       admin.name = "short";
       settings.app.single_user = true;
     };
-    prosody = {
-      enable = true;
-      admins = [ "short@xmpp.${config.networking.fqdn}" ];
-      ssl = {
-        cert = "${
-            config.users.users."${config.services.prosody.user}".home
-          }/fullchain.pem";
-        key = "${
-            config.users.users."${config.services.prosody.user}".home
-          }/key.pem";
-      };
-      virtualHosts = {
-        "xmpp.${config.networking.fqdn}" = {
-          enabled = true;
-          domain = "xmpp.${config.networking.fqdn}";
-          ssl = {
-            cert = "${
-                config.users.users."${config.services.prosody.user}".home
-              }/fullchain.pem";
-            key = "${
-                config.users.users."${config.services.prosody.user}".home
-              }/key.pem";
-          };
-        };
-      };
-      muc = [{ domain = "conference.xmpp.${config.networking.fqdn}"; }];
-      uploadHttp = { domain = "upload.xmpp.${config.networking.fqdn}"; };
-    };
-    writefreely = {
-      enable = true;
-      host = "blog.mousetail.dev";
-      acme.enable = true;
-      nginx = {
-        enable = true;
-        forceSSL = true;
-      };
-      database = {
-        type = "sqlite3";
-        name = "writefreely";
-      };
-      admin.name = "short";
-    };
     prometheus = {
       enable = true;
       exporters = {
