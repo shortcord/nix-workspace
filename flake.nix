@@ -140,9 +140,10 @@
             ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
         };
-        "dellmaus.lan" = { name, nodes, pkgs, lib, config, ... }: {
-          imports = [ ./hosts/${name}.nix ];
-        };
+
+        # "dellmaus.lan" = { name, nodes, pkgs, lib, config, ... }: {
+        #   imports = [ ./hosts/${name}.nix ];
+        # };
       };
     };
 }
