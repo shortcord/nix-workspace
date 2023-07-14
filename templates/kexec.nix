@@ -1,32 +1,54 @@
-{ config, pkgs, lib, ... }:
-
+{ config, pkgs, lib, sshkeys, ... }:
 let
-  sshkey = {
-    desktop = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINaxLI7oCJcUxfjGXXgs9YI7DimlFbtWE+R22jDF6Zxl short@maus";
-    surface = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEUi5rrB0okX4gQUsivnujVY+0ggin5zKTJMP7ynwKLU short@surface";
-    default = [ sshkey.desktop sshkey.surface ];
-};
+  sshkeys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINaxLI7oCJcUxfjGXXgs9YI7DimlFbtWE+R22jDF6Zxl short@maus"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEUi5rrB0okX4gQUsivnujVY+0ggin5zKTJMP7ynwKLU short@surface"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPWfoWfo/L6yoIwCbnV7IwfsSFrrrnt6cQpoX60YDaQ0 short@mauspad"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICAXRx3C0/Rjiz5mpqX/Iygkr1wOTG1fw6Am9zKpZUr1 short@dellmaus"
+  ];
 in {
-  kexec.autoReboot = false;
+  system.stateVersion = "23.05"; # Did you read the comment?
+  boot = {
+    # pin kernel to 6.1 lts
+    kernelPackages = pkgs.linuxKernel.packages.linux_6_1;
+    kernelParams = [ "console=tty0" ];
+    supportedFilesystems = lib.mkForce [ "btrfs" "vfat" "xfs" ];
+    tmp.useTmpfs = true;
+  };
 
+  kexec.autoReboot = false;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  time.timeZone = "Etc/UTC";
-  i18n.defaultLocale = "C.UTF-8";
-
-  users.users.root.openssh.authorizedKeys.keys = sshkey.default;
-
-  boot.tmpOnTmpfs = true;
-
-  programs = {
-    vim.defaultEditor = true;
-  };
+  programs = { vim.defaultEditor = true; };
 
   services = {
     openssh = {
       enable = true;
-      permitRootLogin = "yes";
-      passwordAuthentication = false;
+      settings = {
+        PermitRootLogin = lib.mkForce "yes";
+        PasswordAuthentication = false;
+      };
+    };
+  };
+
+  time.timeZone = "Etc/UTC";
+  i18n.defaultLocale = "C.UTF-8";
+
+  networking = {
+    wireguard.enable = false;
+    useDHCP = true;
+    firewall = {
+      enable = true;
+      allowedTCPPorts = [ 22 ];
+      allowPing = true;
+    };
+    tempAddresses = "disabled";
+  };
+
+  users.users = {
+    root = {
+      password = "root";
+      openssh.authorizedKeys.keys = sshkeys;
     };
   };
 
@@ -61,13 +83,4 @@ in {
       # filesystem tooling
       mdadm
     ];
-
-  networking = {
-    firewall.enable = false;
-    wireguard.enable = false;
-    tempAddresses = "disabled";
-    useDHCP = true;
-  };
-
-  system.stateVersion = "22.11"; # Did you read the comment?
 }
