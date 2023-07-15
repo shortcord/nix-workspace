@@ -56,6 +56,18 @@ in {
         "subvolid=605"
       ];
     };
+    "/var/lib/libvirt/images/pool" = {
+      device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
+      fsType = "btrfs";
+      options = [
+        "noatime"
+        "degraded"
+        "compress=zstd"
+        "discard=async"
+        "space_cache=v2"
+        "subvolid=741"
+      ];
+    };
     # "/nix" = {
     #   device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
     #   fsType = "btrfs";
