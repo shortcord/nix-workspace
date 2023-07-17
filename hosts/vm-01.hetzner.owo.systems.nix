@@ -8,6 +8,9 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
   age.secrets = {
     prometheusBasicAuthPassword.file =
       ../secrets/${name}/prometheusBasicAuthPassword.age;
+    wireguardPrivateKey.file = ../secrets/${name}/wireguardPrivateKey.age;
+    powerdnsConfig.file = ../secrets/${name}/powerdnsConfig.age;
+
   };
 
   imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
@@ -118,7 +121,7 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
     };
     firewall = {
       enable = true;
-      allowedUDPPorts = [ ];
+      allowedUDPPorts = [ 51820 ];
       allowedTCPPorts = [
         # OpenSSH
         22
@@ -134,6 +137,21 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
         5582
       ];
       allowPing = true;
+    };
+    wireguard = {
+      enable = true;
+      interfaces.wg0 = {
+        ips = [ "10.7.210.2/32" ];
+        listenPort = 51820;
+        privateKeyFile = config.age.secrets.wireguardPrivateKey.path;
+        peers = [{
+          publicKey = "2a8w4y36L4hiG2ijQKZOfKTar28A4SPtupZnTXVUrTI=";
+          persistentKeepalive = 15;
+          allowedIPs = [ "10.7.210.1/32" ];
+          #endpoint = "ns2.owo.systems:51821";
+          endpoint = "${nodes."ns2.owo.systems".config.networking.fqdn}:${toString nodes."ns2.owo.systems".config.networking.wireguard.interfaces.wg1.listenPort}";
+        }];
+      };
     };
   };
 
@@ -369,6 +387,41 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
           domain = "grafana.vm-01.hetzner.owo.systems";
           root_url = "https://grafana.vm-01.hetzner.owo.systems";
         };
+      };
+    };
+    powerdns = {
+      enable = true;
+      secretFile = config.age.secrets.powerdnsConfig.path;
+      extraConfig = ''
+        expand-alias=yes
+
+        webserver=yes
+        webserver-address=127.0.0.1
+        webserver-port=8081
+        webserver-allow-from=0.0.0.0/0,::/0
+        api=no
+
+        launch=gmysql
+
+        gmysql-port=3306
+        gmysql-host=$SQL_HOST
+        gmysql-dbname=$SQL_DATABASE
+        gmysql-user=$SQL_USER
+        gmysql-password=$SQL_PASSWORD
+        gmysql-dnssec=yes
+      '';
+    };
+    mysql = {
+      package = pkgs.mariadb;
+      enable = true;
+      replication = {
+        role = "slave";
+        serverId = 3;
+        ## This information is only here to prevent the init script
+        # from erroring out during deployment 
+        masterHost = "10.7.210.1";
+        masterUser = "replication_user";
+        masterPassword = "temppassword";
       };
     };
   };

@@ -78,6 +78,14 @@ in {
   systemd = {
     network = {
       enable = true;
+      # netdevs = {
+      #   "30-vm" = {
+      #     netdevConfig = {
+      #       Name = "br0";
+      #       Kind = "bridge";
+      #     };
+      #   };
+      # };
       networks = {
         "10-wan" = {
           matchConfig.MACAddress = "C8:1F:66:E6:7A:51";

@@ -35,6 +35,8 @@ in
 
   # Secrets for vm-01.hetzner.owo.systems
   "vm-01.hetzner.owo.systems/prometheusBasicAuthPassword.age".publicKeys = all;
+  "vm-01.hetzner.owo.systems/powerdnsConfig.age".publicKeys = all;
+  "vm-01.hetzner.owo.systems/wireguardPrivateKey.age".publicKeys = all;
 
   # Secrets for lilac.lab.shortcord.com
   "lilac.lab.shortcord.com/catstodon.env.age".publicKeys = all;
