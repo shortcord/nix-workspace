@@ -40,6 +40,7 @@
   age.secrets = {
     wireguardPrivateKey.file = ../secrets/${name}/wireguardPrivateKey.age;
     wireguardPresharedKey.file = ../secrets/${name}/wireguardPresharedKey.age;
+    powerdnsConfig.file = ../secrets/${name}/powerdnsConfig.age;
   };
 
   nix = {
@@ -137,22 +138,24 @@
     };
     powerdns = {
       enable = true;
+      secretFile = config.age.secrets.powerdnsConfig.path;
       extraConfig = ''
         expand-alias=yes
 
         webserver=yes
         webserver-address=127.0.0.1
         webserver-port=8081
-        webserver-allow-from=0.0.0.0/0,::/0
-        api=no
+        webserver-allow-from=127.0.0.1,::1
+        api=yes
+        api-key=$API_KEY
 
         launch=gmysql
 
         gmysql-port=3306
-        gmysql-host=127.0.0.1
-        gmysql-dbname=powerdns
-        gmysql-user=powerdns
-        gmysql-password=password
+        gmysql-host=$SQL_HOST
+        gmysql-dbname=$SQL_DATABASE
+        gmysql-user=$SQL_USER
+        gmysql-password=$SQL_PASSWORD
         gmysql-dnssec=yes
       '';
     };
@@ -185,6 +188,14 @@
             #     }$request_uri";
             # };
           };
+        };
+        "powerdns.${config.networking.fqdn}" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+          locations."/" = { proxyPass = "http://127.0.0.1:8081"; };
         };
       };
     };
