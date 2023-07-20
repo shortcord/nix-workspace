@@ -35,8 +35,6 @@
     };
   };
 
-  security.sudo.wheelNeedsPassword = false;
-
   age.secrets = {
     wireguardPrivateKey.file = ../secrets/${name}/wireguardPrivateKey.age;
     wireguardPresharedKey.file = ../secrets/${name}/wireguardPresharedKey.age;
@@ -75,7 +73,7 @@
     };
     firewall = {
       enable = false;
-      allowedUDPPorts = [ 53 51820 51821 ];
+      allowedUDPPorts = [ 53 51821 ];
       allowedTCPPorts = [ 53 22 80 443 ];
       allowPing = true;
     };
@@ -155,20 +153,11 @@
     nginx = {
       enable = true;
       virtualHosts = {
-        "ns2.owo.systems" = {
+        "${config.networking.fqdn}" = {
           enableACME = false;
           forceSSL = false;
           locations = {
             "/" = { return = "302 https://shortcord.com"; };
-            # "/pdns/" = { proxyPass = "http://127.0.0.1:8081$request_uri"; };
-            # "/node-exporter/" = {
-            #   proxyPass = "http://${
-            #       toString
-            #       config.services.prometheus.exporters.node.listenAddress
-            #     }:${
-            #       toString config.services.prometheus.exporters.node.port
-            #     }$request_uri";
-            # };
           };
         };
         "powerdns.${config.networking.fqdn}" = {
