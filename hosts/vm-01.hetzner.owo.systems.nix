@@ -179,6 +179,15 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
       recommendedProxySettings = true;
       recommendedBrotliSettings = true;
       virtualHosts = {
+        "miauws.life" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+          serverAliases = [ "miauws.tech" ];
+          locations."/" = { return = "302 https://mousetail.dev"; };
+        };
         "netbox.owo.solutions" = {
           kTLS = true;
           http2 = true;
