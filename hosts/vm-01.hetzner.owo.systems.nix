@@ -11,11 +11,6 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
     wireguardPrivateKey.file = ../secrets/${name}/wireguardPrivateKey.age;
     powerdnsConfig.file = ../secrets/${name}/powerdnsConfig.age;
     powerdns-env.file = ../secrets/${name}/powerdns-env.age;
-    blackbox = {
-      file = ../secrets/${name}/blackbox.age;
-      # owner = "blackbox-exporter";
-      # group = "blackbox-exporter";
-    };
   };
 
   imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
@@ -440,8 +435,8 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
         server = {
           http_addr = "127.0.0.1";
           http_port = 3000;
-          domain = "grafana.vm-01.hetzner.owo.systems";
-          root_url = "https://grafana.vm-01.hetzner.owo.systems";
+          domain = "grafana.${config.networking.fqdn}";
+          root_url = "https://grafana.${config.networking.fqdn}";
         };
       };
     };
