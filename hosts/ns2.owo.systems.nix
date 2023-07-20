@@ -82,25 +82,6 @@
     wireguard = {
       enable = true;
       interfaces = {
-        wg0 = {
-          ips = [ "10.6.210.27/32" ];
-          listenPort = 51820;
-          privateKeyFile = config.age.secrets.wireguardPrivateKey.path;
-          postSetup = ''
-            printf "nameserver 10.6.210.1" | ${pkgs.openresolv}/bin/resolvconf -a wg0 -m 0'';
-          postShutdown = "${pkgs.openresolv}/bin/resolvconf -d wg0";
-          peers = [{
-            publicKey = "ePYkBTYZaul66VdGLG70IZcCvIaZ7aSeRrkb+hskhiQ=";
-            presharedKeyFile = config.age.secrets.wireguardPresharedKey.path;
-            endpoint = "147.135.125.64:51820";
-            persistentKeepalive = 15;
-            allowedIPs = [
-              "10.6.210.1/32"
-              "10.0.0.0/24" # Access to pdns API + Master MySQL node (dhcp)
-              "10.50.0.20/32" # Allow access to ns1 for lego ACME
-            ];
-          }];
-        };
         wg1 = {
           ips = [ "10.7.210.1/32" ];
           listenPort = 51821;
@@ -140,6 +121,7 @@
       enable = true;
       secretFile = config.age.secrets.powerdnsConfig.path;
       extraConfig = ''
+        resolver=[::1]:53
         expand-alias=yes
 
         webserver=yes
