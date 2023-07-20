@@ -1,5 +1,6 @@
 #!/usr/bin/env nix-shell
 #! nix-shell -p bundix nix-prefetch-git -i bash
+# shellcheck shell=bash
 
 set -e
 

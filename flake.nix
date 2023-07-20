@@ -2,6 +2,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/23.05";
     colmena.url = "github:zhaofengli/colmena/v0.3.2";
+    flake-utils.url = "github:numtide/flake-utils";
     ragenix = {
       url = "github:yaxitech/ragenix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -17,8 +18,15 @@
     };
   };
 
-  outputs = { nixpkgs, colmena, ragenix, nixos-generators
-    , owo-solutions-homepage, ... }:
+  outputs =
+    { nixpkgs
+    , colmena
+    , ragenix
+    , nixos-generators
+    , owo-solutions-homepage
+    , flake-utils
+    , ...
+    }:
     let
       sshkeys = {
         short = [
@@ -31,30 +39,29 @@
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOzNDt0mA8dV9l5A/1tIgLVBf6ynUjjZN0Dckvs3kRIG deployment@gitlab.shortcord.com"
         ];
       };
-    in {
-      packages.x86_64-linux = {
-        iso = nixos-generators.nixosGenerate {
-          system = "x86_64-linux";
-          format = "iso";
-          modules = [ ./templates/bootiso.nix ];
-          specialArgs = { sshkeys = sshkeys; };
+    in
+    {
+      devShells = {
+        x86_64-darwin.default = nixpkgs.legacyPackages.x86_64-darwin.mkShell {
+          buildInputs = [
+            nixpkgs.legacyPackages.x86_64-darwin.colmena
+            nixpkgs.legacyPackages.x86_64-darwin.nixos-generators
+            nixpkgs.legacyPackages.x86_64-darwin.vim
+          ] ++ [
+            ragenix.packages.x86_64-darwin.default
+          ];
         };
-        kexec = nixos-generators.nixosGenerate {
-          system = "x86_64-linux";
-          format = "kexec";
-          modules = [ ./templates/kexec.nix ];
-          specialArgs = { sshkeys = sshkeys; };
+        x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.mkShell {
+          buildInputs = [
+            nixpkgs.legacyPackages.x86_64-linux.colmena
+            nixpkgs.legacyPackages.x86_64-linux.nixos-generators
+            nixpkgs.legacyPackages.x86_64-linux.vim
+          ] ++ [
+            ragenix.packages.x86_64-linux.default
+          ];
         };
       };
-      devShell.x86_64-linux = let pkgs = nixpkgs.legacyPackages.x86_64-linux;
-      in pkgs.mkShell {
-        buildInputs = [
-          pkgs.colmena
-          pkgs.nixos-generators
-          pkgs.vim
-          ragenix.packages.x86_64-linux.default
-        ];
-      };
+
       colmena = {
         meta = {
           nixpkgs = import nixpkgs {
@@ -112,30 +119,35 @@
         };
 
         "storage.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "infra" "storage" ];
           age.secrets.distributedUserSSHKey.file =
             ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
         };
 
         "ns2.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "infra" "nameserver" ];
           age.secrets.distributedUserSSHKey.file =
             ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
         };
 
         "vm-01.hetzner.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "infra" "nameserver" ];
           age.secrets.distributedUserSSHKey.file =
             ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
         };
 
         "lilac.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "infra" "lab" ];
           age.secrets.distributedUserSSHKey.file =
             ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
         };
 
         "violet.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "infra" "lab" ];
           age.secrets.distributedUserSSHKey.file =
             ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
