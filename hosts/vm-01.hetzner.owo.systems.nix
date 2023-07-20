@@ -8,6 +8,9 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
   age.secrets = {
     prometheusBasicAuthPassword.file =
       ../secrets/${name}/prometheusBasicAuthPassword.age;
+    wireguardPrivateKey.file = ../secrets/${name}/wireguardPrivateKey.age;
+    powerdnsConfig.file = ../secrets/${name}/powerdnsConfig.age;
+    powerdns-env.file = ../secrets/${name}/powerdns-env.age;
   };
 
   imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
@@ -118,10 +121,12 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
     };
     firewall = {
       enable = true;
-      allowedUDPPorts = [ ];
+      allowedUDPPorts = [ 51820 53 ];
       allowedTCPPorts = [
         # OpenSSH
         22
+        # PowerDNS
+        53
         # Nginx w/HTTPS
         80
         443
@@ -134,6 +139,23 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
         5582
       ];
       allowPing = true;
+    };
+    wireguard = {
+      enable = true;
+      interfaces.wg0 = {
+        ips = [ "10.7.210.2/32" ];
+        listenPort = 51820;
+        privateKeyFile = config.age.secrets.wireguardPrivateKey.path;
+        peers = [{
+          publicKey = "2a8w4y36L4hiG2ijQKZOfKTar28A4SPtupZnTXVUrTI=";
+          persistentKeepalive = 15;
+          allowedIPs = [ "10.7.210.1/32" ];
+          endpoint = "${nodes."ns2.owo.systems".config.networking.fqdn}:${
+              toString
+              nodes."ns2.owo.systems".config.networking.wireguard.interfaces.wg1.listenPort
+            }";
+        }];
+      };
     };
   };
 
@@ -152,6 +174,15 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
       recommendedProxySettings = true;
       recommendedBrotliSettings = true;
       virtualHosts = {
+        "miauws.life" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+          serverAliases = [ "miauws.tech" ];
+          locations."/" = { return = "302 https://mousetail.dev"; };
+        };
         "netbox.owo.solutions" = {
           kTLS = true;
           http2 = true;
@@ -226,6 +257,22 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
             recommendedProxySettings = true;
           };
         };
+        "powerdns.${config.networking.fqdn}" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+          locations."/" = { proxyPass = "http://127.0.0.1:8081"; };
+        };
+        "powerdns-admin.${config.networking.fqdn}" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+          locations."/" = { proxyPass = "http://127.0.0.1:9191"; };
+        };
         "xmpp.${config.networking.fqdn}" = {
           serverAliases = [
             "upload.xmpp.${config.networking.fqdn}"
@@ -281,6 +328,7 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
         name = "writefreely";
       };
       admin.name = "short";
+      settings.app.single_user = true;
     };
     prometheus = {
       enable = true;
@@ -289,38 +337,64 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
           enable = true;
           openFirewall = true;
         };
+        blackbox = {
+          enable = true;
+          openFirewall = false;
+          configFile = pkgs.writeText "blackbox-config" ''
+            modules:
+              http_2xx:
+                prober: http
+                timeout: 5s
+                http:
+                  valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+                  valid_status_codes: [ 200 ]
+                  method: GET
+                  follow_redirects: true
+                  fail_if_ssl: false
+                  fail_if_not_ssl: true
+                  preferred_ip_protocol: "ip6"
+                  ip_protocol_fallback: true
+              icmp_probe:
+                prober: icmp
+                timeout: 5s
+                icmp:
+                  preferred_ip_protocol: "ip6"
+          '';
+        };
       };
       globalConfig = {
         evaluation_interval = "1m";
         scrape_interval = "5s";
       };
       scrapeConfigs = [
-        # {
-        #   job_name = "blackbox-exporters";
-        #   metrics_path = "/probe";
-        #   params = { module = [ "icmp" ]; };
-        #   static_configs = [{
-        #     targets = [
-        #       "home.shortcord.com"
-        #       "router.cloud.shortcord.com"
-        #       "violet.home.shortcord.com"
-        #     ];
-        #   }];
-        #   relabel_configs = [
-        #     {
-        #       source_labels = [ "__address__" ];
-        #       target_label = "__param_target";
-        #     }
-        #     {
-        #       source_labels = [ "__param_target" ];
-        #       target_label = "instance";
-        #     }
-        #     {
-        #       target_label = "__address__";
-        #       replacement = "127.0.0.1:9115";
-        #     }
-        #   ];
-        # }
+        {
+          job_name = "blackbox-exporters";
+          metrics_path = "/probe";
+          params = { module = [ "icmp_probe" ]; };
+          static_configs = [{
+            targets = [
+              "home.shortcord.com"
+              "router.cloud.shortcord.com"
+              "maus.home.shortcord.com"
+              "violet.lab.shortcord.com"
+              "lilac.lab.shortcord.com"
+            ];
+          }];
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "127.0.0.1:9115";
+            }
+          ];
+        }
         {
           job_name = "node-exporters";
           dns_sd_configs = [{
@@ -344,11 +418,7 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
         }
         {
           job_name = "powerdns-exporter";
-          basic_auth = {
-            username = "app";
-            password_file = config.age.secrets.prometheusBasicAuthPassword.path;
-          };
-          metrics_path = "/pdns/metrics";
+          metrics_path = "/metrics";
           dns_sd_configs = [{
             names = [ "_powerdns-exporter.owo.systems" ];
             type = "SRV";
@@ -365,9 +435,46 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
         server = {
           http_addr = "127.0.0.1";
           http_port = 3000;
-          domain = "grafana.vm-01.hetzner.owo.systems";
-          root_url = "https://grafana.vm-01.hetzner.owo.systems";
+          domain = "grafana.${config.networking.fqdn}";
+          root_url = "https://grafana.${config.networking.fqdn}";
         };
+      };
+    };
+    powerdns = {
+      enable = true;
+      secretFile = config.age.secrets.powerdnsConfig.path;
+      extraConfig = ''
+        resolver=[::1]:53
+        expand-alias=yes
+
+        webserver=yes
+        webserver-address=127.0.0.1
+        webserver-port=8081
+        webserver-allow-from=0.0.0.0/0,::/0
+        api=yes
+        api-key=$API_KEY
+
+        launch=gmysql
+
+        gmysql-port=3306
+        gmysql-host=127.0.0.1
+        gmysql-dbname=$SQL_DATABASE
+        gmysql-user=$SQL_USER
+        gmysql-password=$SQL_PASSWORD
+        gmysql-dnssec=yes
+      '';
+    };
+    mysql = {
+      package = pkgs.mariadb;
+      enable = true;
+      replication = {
+        role = "slave";
+        serverId = 3;
+        ## This information is only here to prevent the init script
+        # from erroring out during deployment 
+        masterHost = "10.7.210.1";
+        masterUser = "replication_user";
+        masterPassword = "temppassword";
       };
     };
   };
@@ -380,14 +487,17 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
         flags = [ "--all" ];
       };
     };
-    # oci-containers = {
-    #   backend = "docker";
-    #   containers. = {
-    #     "moustail.dev" = {
-
-    #     };
-    #   };
-    # };
+    oci-containers = {
+      backend = "docker";
+      containers = {
+        "powerdns-admin" = {
+          image = "powerdnsadmin/pda-legacy:v0.4.1";
+          volumes = [ "powerdns-admin-data:/data" ];
+          environmentFiles = [ config.age.secrets.powerdns-env.path ];
+          ports = [ "127.0.0.1:9191:80" ];
+        };
+      };
+    };
   };
 
   users.users.short = { extraGroups = [ "wheel" "docker" ]; };

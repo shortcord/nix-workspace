@@ -2,8 +2,8 @@
 { fetchgit, applyPatches }: let
   src = fetchgit {
     url = "https://github.com/CatCatNya/catstodon.git";
-    rev = "0527458f381a1c7c934a7d2f9ce74b89b7ef855d";
-    sha256 = "126fba5z8mxx1z2in3v2cah8mzqzwfmf5wkshrdwia0qx2iyimkn";
+    rev = "037fcd9d31c411692c67444efd5a1de284ade5d6";
+    sha256 = "1wh71k6q28ra3vays1vblby8xi0cqyr4dmy38jrjwgxzkr97g4w6";
   };
 in applyPatches {
   inherit src;

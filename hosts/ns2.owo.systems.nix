@@ -35,11 +35,10 @@
     };
   };
 
-  security.sudo.wheelNeedsPassword = false;
-
   age.secrets = {
     wireguardPrivateKey.file = ../secrets/${name}/wireguardPrivateKey.age;
     wireguardPresharedKey.file = ../secrets/${name}/wireguardPresharedKey.age;
+    powerdnsConfig.file = ../secrets/${name}/powerdnsConfig.age;
   };
 
   nix = {
@@ -73,31 +72,24 @@
       }];
     };
     firewall = {
-      enable = true;
-      allowedUDPPorts = [ 53 51820 ];
+      enable = false;
+      allowedUDPPorts = [ 53 51821 ];
       allowedTCPPorts = [ 53 22 80 443 ];
       allowPing = true;
     };
     wireguard = {
       enable = true;
-      interfaces.wg0 = {
-        ips = [ "10.6.210.27/32" ];
-        listenPort = 51820;
-        privateKeyFile = config.age.secrets.wireguardPrivateKey.path;
-        postSetup = ''
-          printf "nameserver 10.6.210.1" | ${pkgs.openresolv}/bin/resolvconf -a wg0 -m 0'';
-        postShutdown = "${pkgs.openresolv}/bin/resolvconf -d wg0";
-        peers = [{
-          publicKey = "ePYkBTYZaul66VdGLG70IZcCvIaZ7aSeRrkb+hskhiQ=";
-          presharedKeyFile = config.age.secrets.wireguardPresharedKey.path;
-          endpoint = "147.135.125.64:51820";
-          persistentKeepalive = 15;
-          allowedIPs = [
-            "10.6.210.1/32"
-            "10.0.0.0/24" # Access to pdns API + Master MySQL node (dhcp)
-            "10.50.0.20/32" # Allow access to ns1 for lego ACME
-          ];
-        }];
+      interfaces = {
+        wg1 = {
+          ips = [ "10.7.210.1/32" ];
+          listenPort = 51821;
+          privateKeyFile = config.age.secrets.wireguardPrivateKey.path;
+          peers = [{
+            publicKey = "x8o7GM5Fk1EYZK9Mgx4/DIt7DxAygvKg310G6+VHhUs=";
+            persistentKeepalive = 15;
+            allowedIPs = [ "10.7.210.2/32" ];
+          }];
+        };
       };
     };
   };
@@ -114,31 +106,36 @@
       package = pkgs.mariadb;
       enable = true;
       replication = {
-        role = "slave";
+        role = "master";
         serverId = 2;
+        ## This information is only here to prevent the init script
+        # from erroring out during deployment 
         masterUser = "replication_user";
-        masterPassword = "T9ogXl64hI4BRg5u5PA+S0lym6jwOnZu";
-        masterHost = "sql01.rack";
+        masterPassword = "temppassword";
+        slaveHost = "10.7.210.2";
       };
     };
     powerdns = {
       enable = true;
+      secretFile = config.age.secrets.powerdnsConfig.path;
       extraConfig = ''
+        resolver=[::1]:53
         expand-alias=yes
 
         webserver=yes
         webserver-address=127.0.0.1
         webserver-port=8081
-        webserver-allow-from=0.0.0.0/0,::/0
-        api=no
+        webserver-allow-from=127.0.0.1,::1
+        api=yes
+        api-key=$API_KEY
 
         launch=gmysql
 
         gmysql-port=3306
-        gmysql-host=127.0.0.1
-        gmysql-dbname=powerdns
-        gmysql-user=powerdns
-        gmysql-password=password
+        gmysql-host=$SQL_HOST
+        gmysql-dbname=$SQL_DATABASE
+        gmysql-user=$SQL_USER
+        gmysql-password=$SQL_PASSWORD
         gmysql-dnssec=yes
       '';
     };
@@ -156,21 +153,20 @@
     nginx = {
       enable = true;
       virtualHosts = {
-        "ns2.owo.systems" = {
+        "${config.networking.fqdn}" = {
           enableACME = false;
           forceSSL = false;
           locations = {
             "/" = { return = "302 https://shortcord.com"; };
-            # "/pdns/" = { proxyPass = "http://127.0.0.1:8081$request_uri"; };
-            # "/node-exporter/" = {
-            #   proxyPass = "http://${
-            #       toString
-            #       config.services.prometheus.exporters.node.listenAddress
-            #     }:${
-            #       toString config.services.prometheus.exporters.node.port
-            #     }$request_uri";
-            # };
           };
+        };
+        "powerdns.${config.networking.fqdn}" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+          locations."/" = { proxyPass = "http://127.0.0.1:8081"; };
         };
       };
     };

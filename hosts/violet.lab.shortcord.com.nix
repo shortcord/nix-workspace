@@ -56,6 +56,18 @@ in {
         "subvolid=605"
       ];
     };
+    "/var/lib/libvirt/images/pool" = {
+      device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
+      fsType = "btrfs";
+      options = [
+        "noatime"
+        "degraded"
+        "compress=zstd"
+        "discard=async"
+        "space_cache=v2"
+        "subvolid=741"
+      ];
+    };
     # "/nix" = {
     #   device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
     #   fsType = "btrfs";
@@ -421,7 +433,7 @@ in {
         script = ''
           set -eu
           source ${config.age.secrets.pdnsApiKey.path}
-          ${pkgs.curl}/bin/curl https://''${API_USERNAME}:''${API_PASSWORD}@pdns.ingress.k8s.owo.systems/nic/update\?hostname=${config.networking.fqdn}\&myip=$(${pkgs.curl}/bin/curl https://ipv4.mousetail.dev/)
+          ${pkgs.curl}/bin/curl https://''${API_USERNAME}:''${API_PASSWORD}@powerdns-admin.vm-01.hetzner.owo.systems/nic/update\?hostname=${config.networking.fqdn}\&myip=$(${pkgs.curl}/bin/curl https://ipv4.mousetail.dev/)
         '';
         serviceConfig = {
           Type = "oneshot";
@@ -432,7 +444,7 @@ in {
         script = ''
           set -eu
           source ${config.age.secrets.pdnsApiKey.path}
-          ${pkgs.curl}/bin/curl https://''${API_USERNAME}:''${API_PASSWORD}@pdns.ingress.k8s.owo.systems/nic/update\?hostname=${config.networking.fqdn}\&myip=$(${pkgs.curl}/bin/curl https://ipv4.mousetail.dev/)
+          ${pkgs.curl}/bin/curl https://''${API_USERNAME}:''${API_PASSWORD}@powerdns-admin.vm-01.hetzner.owo.systems/nic/update\?hostname=${config.networking.fqdn}\&myip=$(${pkgs.curl}/bin/curl https://ipv4.mousetail.dev/)
         '';
         serviceConfig = {
           Type = "oneshot";

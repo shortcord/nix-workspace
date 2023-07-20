@@ -48,7 +48,7 @@ in {
   users.users = {
     root = {
       password = "root";
-      openssh.authorizedKeys.keys = sshkeys;
+      openssh.authorizedKeys.keys = sshkeys.short;
     };
   };
 
