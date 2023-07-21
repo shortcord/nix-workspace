@@ -163,8 +163,11 @@
       enable = true;
       virtualHosts = {
         "${config.networking.fqdn}" = {
-          enableACME = false;
-          forceSSL = false;
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
           locations = {
             "/" = { return = "302 https://shortcord.com"; };
           };
