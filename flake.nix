@@ -18,57 +18,29 @@
     };
   };
 
-  outputs =
-    { nixpkgs
-    , colmena
-    , ragenix
-    , nixos-generators
-    , owo-solutions-homepage
-    , flake-utils
-    , ...
-    }:
-    let
-      sshkeys = {
-        short = [
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINaxLI7oCJcUxfjGXXgs9YI7DimlFbtWE+R22jDF6Zxl short@maus"
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEUi5rrB0okX4gQUsivnujVY+0ggin5zKTJMP7ynwKLU short@surface"
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPWfoWfo/L6yoIwCbnV7IwfsSFrrrnt6cQpoX60YDaQ0 short@mauspad"
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICAXRx3C0/Rjiz5mpqX/Iygkr1wOTG1fw6Am9zKpZUr1 short@dellmaus"
-        ];
-        deployment = [
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOzNDt0mA8dV9l5A/1tIgLVBf6ynUjjZN0Dckvs3kRIG deployment@gitlab.shortcord.com"
-        ];
-      };
-    in
-    {
+  outputs = { nixpkgs, colmena, ragenix, nixos-generators
+    , owo-solutions-homepage, flake-utils, ... }:
+    let scConfig = import ./config/default.nix;
+    in {
       devShells = {
         x86_64-darwin.default = nixpkgs.legacyPackages.x86_64-darwin.mkShell {
           buildInputs = [
             nixpkgs.legacyPackages.x86_64-darwin.colmena
             nixpkgs.legacyPackages.x86_64-darwin.nixos-generators
             nixpkgs.legacyPackages.x86_64-darwin.vim
-          ] ++ [
-            ragenix.packages.x86_64-darwin.default
-          ];
+          ] ++ [ ragenix.packages.x86_64-darwin.default ];
         };
         x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.mkShell {
           buildInputs = [
             nixpkgs.legacyPackages.x86_64-linux.colmena
             nixpkgs.legacyPackages.x86_64-linux.nixos-generators
             nixpkgs.legacyPackages.x86_64-linux.vim
-          ] ++ [
-            ragenix.packages.x86_64-linux.default
-          ];
+          ] ++ [ ragenix.packages.x86_64-linux.default ];
         };
       };
 
       colmena = {
-        meta = {
-          nixpkgs = import nixpkgs {
-            system = "x86_64-linux";
-            overlays = [ ];
-          };
-        };
+        meta = { nixpkgs = import nixpkgs { system = "x86_64-linux"; }; };
         defaults = {
           deployment = {
             targetUser = "short";
@@ -108,12 +80,12 @@
             deployment = {
               isNormalUser = true;
               extraGroups = [ "wheel" ];
-              openssh = { authorizedKeys.keys = sshkeys.deployment; };
+              openssh = { authorizedKeys.keys = scConfig.sshkeys.users.deployment; };
             };
             short = {
               isNormalUser = true;
               extraGroups = [ "wheel" ];
-              openssh = { authorizedKeys.keys = sshkeys.short; };
+              openssh = { authorizedKeys.keys = scConfig.sshkeys.users.short; };
             };
           };
         };
