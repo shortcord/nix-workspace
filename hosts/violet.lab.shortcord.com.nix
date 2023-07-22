@@ -83,7 +83,7 @@ in {
           matchConfig.MACAddress = "C8:1F:66:E6:7A:51";
           networkConfig = {
             DHCP = "ipv4";
-            DNS = "9.9.9.9";
+            DNS = "127.0.0.1";
             IPv6AcceptRA = true;
           };
         };
