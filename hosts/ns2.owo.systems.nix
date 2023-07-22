@@ -56,24 +56,34 @@
     '';
   };
 
+  systemd = {
+    network = {
+      enable = true;
+      networks = {
+        "10-wan" = {
+          matchConfig.MACAddress = "56:00:04:63:08:52";
+          networkConfig = {
+            DHCP = "no";
+            DNS = [ "9.9.9.9" "2620:fe::fe" ];
+            Address = [
+              "66.135.9.121/23"
+              "2001:19f0:1000:1512:5400:04ff:fe63:0852/64"
+            ];
+            Gateway = "66.135.8.1";
+            IPv6AcceptRA = true;
+          };
+        };
+      };
+    };
+  };
+
   networking = {
     hostName = "ns2";
     domain = "owo.systems";
-    useDHCP = true;
-    nameservers = [ "9.9.9.9" "2620:fe::fe" ];
-    defaultGateway = {
-      address = "66.135.8.1";
-      interface = "ens3";
-    };
-    interfaces.ens3 = {
-      ipv4.addresses = [{
-        address = "66.135.9.121";
-        prefixLength = 32;
-      }];
-    };
+    useDHCP = false;
     firewall = {
-      enable = false;
-      allowedUDPPorts = [ 53 51821 ];
+      enable = true;
+      allowedUDPPorts = [ 53 51820 ];
       allowedTCPPorts = [ 53 22 80 443 ];
       allowPing = true;
     };
@@ -82,7 +92,7 @@
       interfaces = {
         wg1 = {
           ips = [ "10.7.210.1/32" ];
-          listenPort = 51821;
+          listenPort = 51820;
           privateKeyFile = config.age.secrets.wireguardPrivateKey.path;
           peers = [{
             publicKey = "x8o7GM5Fk1EYZK9Mgx4/DIt7DxAygvKg310G6+VHhUs=";
@@ -97,6 +107,7 @@
   environment.systemPackages = with pkgs; [ vim wget curl ];
 
   services = {
+    resolved.enable = false;
     openssh = {
       enable = true;
       passwordAuthentication = false;
@@ -122,6 +133,8 @@
         resolver=[::1]:53
         expand-alias=yes
 
+        local-address=66.135.9.121:53, [2001:19f0:1000:1512:5400:04ff:fe63:0852]:53
+
         webserver=yes
         webserver-address=127.0.0.1
         webserver-port=8081
@@ -139,6 +152,13 @@
         gmysql-dnssec=yes
       '';
     };
+    pdns-recursor = {
+      enable = true;
+      dns = {
+        port = 53;
+        address = [ "127.0.0.1" "::1" ];
+      };
+    };
     prometheus = {
       enable = true;
       exporters = {
@@ -154,11 +174,12 @@
       enable = true;
       virtualHosts = {
         "${config.networking.fqdn}" = {
-          enableACME = false;
-          forceSSL = false;
-          locations = {
-            "/" = { return = "302 https://shortcord.com"; };
-          };
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+          locations = { "/" = { return = "302 https://shortcord.com"; }; };
         };
         "powerdns.${config.networking.fqdn}" = {
           kTLS = true;

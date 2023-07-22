@@ -57,7 +57,7 @@ in {
     hostName = "lilac";
     domain = "lab.shortcord.com";
     useDHCP = true;
-    nameservers = [ "9.9.9.9" "2620:fe::fe" ];
+    nameservers = [ "10.18.0.1" ];
     firewall = {
       enable = true;
       allowedUDPPorts = [ ];
