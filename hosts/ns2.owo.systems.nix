@@ -65,7 +65,10 @@
           networkConfig = {
             DHCP = "no";
             DNS = [ "9.9.9.9" "2620:fe::fe" ];
-            Address = [ "66.135.9.121/23" "2001:19f0:1000:1512:5400:04ff:fe63:0852/64" ];
+            Address = [
+              "66.135.9.121/23"
+              "2001:19f0:1000:1512:5400:04ff:fe63:0852/64"
+            ];
             Gateway = "66.135.8.1";
             IPv6AcceptRA = true;
           };
@@ -79,7 +82,7 @@
     domain = "owo.systems";
     useDHCP = false;
     firewall = {
-      enable = false;
+      enable = true;
       allowedUDPPorts = [ 53 51820 ];
       allowedTCPPorts = [ 53 22 80 443 ];
       allowPing = true;
@@ -104,6 +107,7 @@
   environment.systemPackages = with pkgs; [ vim wget curl ];
 
   services = {
+    resolved.enable = false;
     openssh = {
       enable = true;
       passwordAuthentication = false;
@@ -148,6 +152,13 @@
         gmysql-dnssec=yes
       '';
     };
+    pdns-recursor = {
+      enable = true;
+      dns = {
+        port = 53;
+        address = [ "127.0.0.1" "::1" ];
+      };
+    };
     prometheus = {
       enable = true;
       exporters = {
@@ -168,9 +179,7 @@
           http3 = true;
           forceSSL = true;
           enableACME = true;
-          locations = {
-            "/" = { return = "302 https://shortcord.com"; };
-          };
+          locations = { "/" = { return = "302 https://shortcord.com"; }; };
         };
         "powerdns.${config.networking.fqdn}" = {
           kTLS = true;

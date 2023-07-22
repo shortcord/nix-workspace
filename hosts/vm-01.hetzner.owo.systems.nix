@@ -100,7 +100,7 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
     useDHCP = false;
     hostName = "vm-01";
     domain = "hetzner.owo.systems";
-    nameservers = [ "9.9.9.9" "2620:fe::fe" ];
+    nameservers = [ "127.0.0.1" "::1" ];
     defaultGateway = {
       address = "172.31.1.1";
       interface = "ens3";
@@ -447,6 +447,8 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
         resolver=[::1]:53
         expand-alias=yes
 
+        local-address=88.198.125.192:53, [2a01:4f8:c012:a734::1]:53
+
         webserver=yes
         webserver-address=127.0.0.1
         webserver-port=8081
@@ -463,6 +465,13 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
         gmysql-password=$SQL_PASSWORD
         gmysql-dnssec=yes
       '';
+    };
+    pdns-recursor = {
+      enable = true;
+      dns = {
+        port = 53;
+        address = [ "127.0.0.1" "::1" ];
+      };
     };
     mysql = {
       package = pkgs.mariadb;

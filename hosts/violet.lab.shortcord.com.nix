@@ -191,6 +191,14 @@ in {
   };
 
   services = {
+    resolved.enable = false;
+    pdns-recursor = {
+      enable = true;
+      dns = {
+        port = 53;
+        address = [ "127.0.0.1" "::1" "10.18.0.1" ];
+      };
+    };
     dhcpd4 = {
       enable = true;
       authoritative = true;
@@ -199,7 +207,7 @@ in {
         option subnet-mask 255.255.255.0;
         option broadcast-address 10.18.0.255;
         option routers 10.18.0.1;
-        option domain-name-servers 9.9.9.9;
+        option domain-name-servers 10.18.0.1;
         option domain-name "lab.shortcord.com";
         subnet 10.18.0.0 netmask 255.255.255.0 {
           range 10.18.0.5 10.18.0.200;

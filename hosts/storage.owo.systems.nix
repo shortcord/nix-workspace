@@ -73,7 +73,7 @@
     useDHCP = false;
     hostName = "storage";
     domain = "owo.systems";
-    nameservers = [ "9.9.9.9" "2620:fe::fe" ];
+    nameservers = [ "127.0.0.1" "::1" ];
     defaultGateway = {
       address = "5.9.99.97";
       interface = "enp3s0";
@@ -136,6 +136,13 @@
   };
 
   services = {
+    pdns-recursor = {
+      enable = true;
+      dns = {
+        port = 53;
+        address = [ "127.0.0.1" "::1" ];
+      };
+    };
     minio = {
       enable = true;
       rootCredentialsFile = config.age.secrets.minioSecret.path;
