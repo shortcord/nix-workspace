@@ -86,6 +86,7 @@
       allowedUDPPorts = [ 53 51820 ];
       allowedTCPPorts = [ 53 22 80 443 ];
       allowPing = true;
+      trustedInterfaces = [ "wg1" ];
     };
     wireguard = {
       enable = true;
@@ -94,11 +95,18 @@
           ips = [ "10.7.210.1/32" ];
           listenPort = 51820;
           privateKeyFile = config.age.secrets.wireguardPrivateKey.path;
-          peers = [{
-            publicKey = "x8o7GM5Fk1EYZK9Mgx4/DIt7DxAygvKg310G6+VHhUs=";
-            persistentKeepalive = 15;
-            allowedIPs = [ "10.7.210.2/32" ];
-          }];
+          peers = [
+            {
+              publicKey = "x8o7GM5Fk1EYZK9Mgx4/DIt7DxAygvKg310G6+VHhUs=";
+              persistentKeepalive = 15;
+              allowedIPs = [ "10.7.210.2/32" ];
+            }
+            {
+              publicKey = "iCm6s21gpwlvaVoBYw0Wyaa39q/REIa+aTFXvkBFYEQ=";
+              persistentKeepalive = 15;
+              allowedIPs = [ "10.7.210.3/32" ];
+            }
+          ];
         };
       };
     };
@@ -171,18 +179,25 @@
       };
     };
     postfix = {
-      enable = false;
+      enable = true;
       config = {
-        mynetworks = "127.0.0.0/8";
-        inet_interfaces = "127.0.0.1";
-        relay_domains = "shortcord.com";
+        mynetworks = [ "127.0.0.0/8" "10.7.210.0/24" ];
+        inet_interfaces = [ "127.0.0.1" "10.7.210.1" ];
+        relay_domains = [ "lilac.lab.shortcord.com" "shortcord.com" "owo.systems" "owo.solutions" "owo.gallery" "mousetail.dev" ];
+        parent_domain_matches_subdomains = [ "relay_domains" ];
 
         # Allow connections from trusted networks only.
         smtpd_client_restrictions = [ "permit_mynetworks" "reject" ];
 
+
+        # Enforce server to always ehlo
+        smtpd_helo_required = "yes";
         # Don't talk to mail systems that don't know their own hostname.
         # With Postfix < 2.3, specify reject_unknown_hostname.
-        smtpd_helo_restrictions = [ "reject_unknown_helo_hostname" ];
+        #smtpd_helo_restrictions = [ "reject_unknown_hostname" ];
+        # I don't like this but I'm at a loss as it sees the wireguard IP and I'm
+        # not about to put that in DNS.
+        smtpd_helo_restrictions = [ ];
 
         # Don't accept mail from domains that don't exist.
         smtpd_sender_restrictions = [ "reject_unknown_sender_domain" ];
@@ -222,7 +237,7 @@
         smtp_tls_security_level = "encrypt";
 
         smtp_use_tls = "yes";
-        relayhost = "[smtp.gmail.com]:587";
+        relayhost = "[smtp-relay.gmail.com]:587";
 
         smtp_always_send_ehlo = "yes";
         smtp_helo_name = "shortcord.com";

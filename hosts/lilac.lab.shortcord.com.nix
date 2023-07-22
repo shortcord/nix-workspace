@@ -66,21 +66,33 @@ in {
     };
     wireguard = {
       enable = true;
-      interfaces.wg0 = {
-        ips = [ "10.6.210.29/32" ];
-        mtu = 1200;
-        listenPort = 51820;
-        privateKeyFile = config.age.secrets.wireguardPrivateKey.path;
-        peers = [{
-          publicKey = "ePYkBTYZaul66VdGLG70IZcCvIaZ7aSeRrkb+hskhiQ=";
-          endpoint = "router.cloud.shortcord.com:51820";
-          persistentKeepalive = 15;
-          allowedIPs = [
-            "10.6.210.1/32"
-            "10.6.210.0/24"
-            "0.0.0.0/0"
-          ];
-        }];
+      interfaces = {
+        wg0 = {
+          ips = [ "10.6.210.29/32" ];
+          mtu = 1200;
+          listenPort = 51820;
+          privateKeyFile = config.age.secrets.wireguardPrivateKey.path;
+          peers = [{
+            publicKey = "ePYkBTYZaul66VdGLG70IZcCvIaZ7aSeRrkb+hskhiQ=";
+            endpoint = "router.cloud.shortcord.com:51820";
+            persistentKeepalive = 15;
+            allowedIPs = [ "10.6.210.1/32" "10.6.210.0/24" "0.0.0.0/0" ];
+          }];
+        };
+        "mail-relay" = {
+          ips = [ "10.7.210.3/32" ];
+          mtu = 1200;
+          privateKeyFile = config.age.secrets.wireguardPrivateKey.path;
+          peers = [{
+            publicKey = "2a8w4y36L4hiG2ijQKZOfKTar28A4SPtupZnTXVUrTI=";
+            persistentKeepalive = 15;
+            allowedIPs = [ "10.7.210.1/32" ];
+            endpoint = "${nodes."ns2.owo.systems".config.networking.fqdn}:${
+                toString
+                nodes."ns2.owo.systems".config.networking.wireguard.interfaces.wg1.listenPort
+              }";
+          }];
+        };
       };
     };
   };
@@ -111,10 +123,15 @@ in {
         MAX_REACTIONS = "6";
         MAX_SEARCH_RESULTS = "1000";
         MAX_REMOTE_EMOJI_SIZE = "1048576";
+        ## Email stuff
+        SMTP_SERVER = "10.7.210.1";
+        SMTP_PORT = "25";
+        SMTP_FROM_ADDRESS = "noreply@shortcord.com";
+        SMTP_DOMAIN = "lilac.lab.shortcord.com";
       };
       package = (pkgs.mastodon.override {
         version = import ../pkgs/catstodon/version.nix;
-        srcOverride = pkgs.callPackage ../pkgs/catstodon/source.nix {};
+        srcOverride = pkgs.callPackage ../pkgs/catstodon/source.nix { };
         dependenciesDir = ../pkgs/catstodon/.;
       }).overrideAttrs (self: super: {
         mastodonModules = super.mastodonModules.overrideAttrs (a: b: {
