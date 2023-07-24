@@ -246,10 +246,7 @@ in {
           "/ip4/104.131.131.82/udp/4001/quic/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ"
 
           ## ipfs-01.owo.systems
-          "/dns4/ipfs-01.owo.systems/tcp/4001/p2p/12D3KooWNGmh5EBpPBXGGcFnrMtBW6u9Z61HgyHAobjo2ANhq1kL"
-          "/dns4/ipfs-01.owo.systems/udp/4001/quic/p2p/12D3KooWNGmh5EBpPBXGGcFnrMtBW6u9Z61HgyHAobjo2ANhq1kL"
-          "/dns6/ipfs-01.owo.systems/tcp/4001/p2p/12D3KooWNGmh5EBpPBXGGcFnrMtBW6u9Z61HgyHAobjo2ANhq1kL"
-          "/dns6/ipfs-01.owo.systems/udp/4001/quic/p2p/12D3KooWNGmh5EBpPBXGGcFnrMtBW6u9Z61HgyHAobjo2ANhq1kL"
+          "/dnsaddr/ipfs-01.owo.systems/p2p/12D3KooWNGmh5EBpPBXGGcFnrMtBW6u9Z61HgyHAobjo2ANhq1kL"
         ];
         Peering = {
           Peers = [
