@@ -18,7 +18,8 @@
                 "--",
                 "colmena",
                 "build"
-            ]
+            ],
+            "problemMatcher": []
         },
         {
             "label": "Colmena Apply - All",
@@ -30,7 +31,8 @@
                 "--",
                 "colmena",
                 "apply"
-            ]
+            ],
+            "problemMatcher": []
         },
         {
             "label": "Colmena Build - Host",
@@ -44,7 +46,8 @@
                 "build",
                 "--on",
                 "${input:targetHost}"
-            ]
+            ],
+            "problemMatcher": []
         },
         {
             "label": "Colmena Apply - Host",
@@ -58,7 +61,8 @@
                 "apply",
                 "--on",
                 "${input:targetHost}"
-            ]
+            ],
+            "problemMatcher": []
         }
     ],
     "inputs": [
