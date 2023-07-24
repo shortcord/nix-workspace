@@ -222,6 +222,8 @@ in {
     nix-serve = {
       enable = true;
       secretKeyFile = config.age.secrets.nix-serve.path;
+      bindAddress = "127.0.0.1";
+      port = 5000;
     };
     kubo = {
       enable = true;
@@ -293,8 +295,7 @@ in {
         };
         Datastore = { StorageMax = "1000GB"; };
         Addresses = {
-          API = [ "/ip4/127.0.0.1/tcp/5001" ];
-          Gateway = [ "/ip4/127.0.0.1/tcp/8080" ];
+          Gateway = "/ip4/127.0.0.1/tcp/8080";
         };
       };
     };
@@ -408,7 +409,7 @@ in {
     };
   };
 
-  users.users.short = { extraGroups = [ "wheel" "docker" "libvirtd" ]; };
+  users.users.short = { extraGroups = [ "wheel" "docker" "libvirtd" config.services.kubo.group ]; };
 
   systemd = {
     timers = {
