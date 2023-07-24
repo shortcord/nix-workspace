@@ -418,6 +418,7 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
         }
         {
           job_name = "powerdns-exporter";
+          scheme = "https";
           metrics_path = "/metrics";
           dns_sd_configs = [{
             names = [ "_powerdns-exporter.owo.systems" ];
