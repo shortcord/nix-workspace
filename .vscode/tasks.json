@@ -1,0 +1,72 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Flake Update",
+            "type": "shell",
+            "command": "nix flake update"
+        },
+        {
+            "label": "Colmena Build - All",
+            "type": "shell",
+            "command": "nix",
+            "args": [
+                "develop",
+                "--command",
+                "--",
+                "colmena",
+                "build"
+            ]
+        },
+        {
+            "label": "Colmena Apply - All",
+            "type": "shell",
+            "command": "nix",
+            "args": [
+                "develop",
+                "--command",
+                "--",
+                "colmena",
+                "apply"
+            ]
+        },
+        {
+            "label": "Colmena Build - Host",
+            "type": "shell",
+            "command": "nix",
+            "args": [
+                "develop",
+                "--command",
+                "--",
+                "colmena",
+                "build",
+                "--on",
+                "${input:targetHost}"
+            ]
+        },
+        {
+            "label": "Colmena Apply - Host",
+            "type": "shell",
+            "command": "nix",
+            "args": [
+                "develop",
+                "--command",
+                "--",
+                "colmena",
+                "apply",
+                "--on",
+                "${input:targetHost}"
+            ]
+        }
+    ],
+    "inputs": [
+        {
+            "id": "targetHost",
+            "description": "Target host to run the command on.",
+            "default": "@all",
+            "type": "promptString"
+        }
+    ]
+}
