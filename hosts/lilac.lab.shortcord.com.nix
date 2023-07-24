@@ -105,6 +105,15 @@ in {
   };
 
   services = {
+    prometheus = {
+      enable = true;
+      exporters = {
+        node = {
+          enable = true;
+          openFirewall = true;
+        };
+      };
+    };
     mastodon = {
       enable = true;
       localDomain = "social.${config.networking.fqdn}";
