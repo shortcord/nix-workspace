@@ -11,15 +11,9 @@
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    owo-solutions-homepage = {
-      url =
-        "git+https://gitlab.shortcord.com/owo.solutions/homepage?ref=refs/heads/feature/nix-package&rev=c56e673cc6ab45eb59bd7e85294b0d7de6aabb86";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
-  outputs = { nixpkgs, colmena, ragenix, nixos-generators
-    , owo-solutions-homepage, flake-utils, ... }:
+  outputs = { nixpkgs, colmena, ragenix, nixos-generators, flake-utils, ... }:
     let scConfig = import ./config/default.nix;
     in {
       devShells = {
@@ -80,7 +74,9 @@
             deployment = {
               isNormalUser = true;
               extraGroups = [ "wheel" ];
-              openssh = { authorizedKeys.keys = scConfig.sshkeys.users.deployment; };
+              openssh = {
+                authorizedKeys.keys = scConfig.sshkeys.users.deployment;
+              };
             };
             short = {
               isNormalUser = true;
@@ -105,14 +101,14 @@
         };
 
         "vm-01.hetzner.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment.tags = [ "infra" "nameserver" ];
+          deployment.tags = [ "infra" "nameserver" "grafana" "prometheus" ];
           age.secrets.distributedUserSSHKey.file =
             ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
         };
 
         "lilac.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment.tags = [ "infra" "lab" ];
+          deployment.tags = [ "infra" "lab" "mastodon" ];
           age.secrets.distributedUserSSHKey.file =
             ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];

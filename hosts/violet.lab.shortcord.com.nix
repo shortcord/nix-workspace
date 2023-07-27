@@ -83,7 +83,7 @@ in {
           matchConfig.MACAddress = "C8:1F:66:E6:7A:51";
           networkConfig = {
             DHCP = "ipv4";
-            DNS = "9.9.9.9";
+            DNS = "127.0.0.1";
             IPv6AcceptRA = true;
           };
         };
@@ -222,6 +222,8 @@ in {
     nix-serve = {
       enable = true;
       secretKeyFile = config.age.secrets.nix-serve.path;
+      bindAddress = "127.0.0.1";
+      port = 5000;
     };
     kubo = {
       enable = true;
@@ -244,10 +246,7 @@ in {
           "/ip4/104.131.131.82/udp/4001/quic/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ"
 
           ## ipfs-01.owo.systems
-          "/dns4/ipfs-01.owo.systems/tcp/4001/p2p/12D3KooWNGmh5EBpPBXGGcFnrMtBW6u9Z61HgyHAobjo2ANhq1kL"
-          "/dns4/ipfs-01.owo.systems/udp/4001/quic/p2p/12D3KooWNGmh5EBpPBXGGcFnrMtBW6u9Z61HgyHAobjo2ANhq1kL"
-          "/dns6/ipfs-01.owo.systems/tcp/4001/p2p/12D3KooWNGmh5EBpPBXGGcFnrMtBW6u9Z61HgyHAobjo2ANhq1kL"
-          "/dns6/ipfs-01.owo.systems/udp/4001/quic/p2p/12D3KooWNGmh5EBpPBXGGcFnrMtBW6u9Z61HgyHAobjo2ANhq1kL"
+          "/dnsaddr/ipfs-01.owo.systems/p2p/12D3KooWNGmh5EBpPBXGGcFnrMtBW6u9Z61HgyHAobjo2ANhq1kL"
         ];
         Peering = {
           Peers = [
@@ -293,8 +292,7 @@ in {
         };
         Datastore = { StorageMax = "1000GB"; };
         Addresses = {
-          API = [ "/ip4/127.0.0.1/tcp/5001" ];
-          Gateway = [ "/ip4/127.0.0.1/tcp/8080" ];
+          Gateway = "/ip4/127.0.0.1/tcp/8080";
         };
       };
     };
@@ -408,7 +406,7 @@ in {
     };
   };
 
-  users.users.short = { extraGroups = [ "wheel" "docker" "libvirtd" ]; };
+  users.users.short = { extraGroups = [ "wheel" "docker" "libvirtd" config.services.kubo.group ]; };
 
   systemd = {
     timers = {
