@@ -28,6 +28,7 @@ in
   "vm-01.hetzner.owo.systems/wireguardPrivateKey.age".publicKeys = all;
   "vm-01.hetzner.owo.systems/powerdns-env.age".publicKeys = all;
   "vm-01.hetzner.owo.systems/blackbox.age".publicKeys = all;
+  "vm-01.hetzner.owo.systems/minioPrometheusBearerToken.age".publicKeys = all;
 
   # Secrets for lilac.lab.shortcord.com
   "lilac.lab.shortcord.com/catstodon.env.age".publicKeys = all;

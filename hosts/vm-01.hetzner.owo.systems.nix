@@ -8,6 +8,11 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
   age.secrets = {
     prometheusBasicAuthPassword.file =
       ../secrets/${name}/prometheusBasicAuthPassword.age;
+    minioPrometheusBearerToken = { 
+      owner = "prometheus";
+      group = "prometheus";
+      file = ../secrets/${name}/minioPrometheusBearerToken.age;
+    };
     wireguardPrivateKey.file = ../secrets/${name}/wireguardPrivateKey.age;
     powerdnsConfig.file = ../secrets/${name}/powerdnsConfig.age;
     powerdns-env.file = ../secrets/${name}/powerdns-env.age;
@@ -243,6 +248,18 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
           enableACME = true;
           locations."/" = { return = "302 https://estrogen.dog"; };
         };
+        "prometheus.${config.networking.fqdn}" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+          locations."/" = {
+            proxyPass = "http://${
+                toString config.services.prometheus.listenAddress
+              }:${toString config.services.prometheus.port}";
+          };
+        };
         "grafana.${config.networking.fqdn}" = {
           kTLS = true;
           http2 = true;
@@ -254,7 +271,6 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
                 toString config.services.grafana.settings.server.http_addr
               }:${toString config.services.grafana.settings.server.http_port}";
             proxyWebsockets = true;
-            recommendedProxySettings = true;
           };
         };
         "powerdns.${config.networking.fqdn}" = {
@@ -332,6 +348,10 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
     };
     prometheus = {
       enable = true;
+      listenAddress = "127.0.0.1";
+      port = 9090;
+      # Get around sandboxing issues, fuckin' developers
+      checkConfig = "syntax-only";
       exporters = {
         node = {
           enable = true;
@@ -367,6 +387,15 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
         scrape_interval = "5s";
       };
       scrapeConfigs = [
+        {
+          job_name = "minio-job";
+          metrics_path = "/minio/v2/metrics/cluster";
+          bearer_token_file = config.age.secrets.minioPrometheusBearerToken.path;
+          scheme = "https";
+          static_configs = [{
+            targets = [ "storage.owo.systems" ];
+          }];
+        }
         {
           job_name = "blackbox-exporters";
           metrics_path = "/probe";
