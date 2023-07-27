@@ -464,6 +464,12 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
       settings = {
         analytics = { reporting_enabled = false; };
         users = { allow_sign_up = false; };
+        "auth.anonymous" = {
+          enabled = true;
+          org_name = "Main Org.";
+          org_role = "Viewer";
+          hide_version = true;
+        };
         smtp = {
           enabled = true;
           host = "10.7.210.1:25";
