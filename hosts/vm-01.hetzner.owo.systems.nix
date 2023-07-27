@@ -8,7 +8,7 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
   age.secrets = {
     prometheusBasicAuthPassword.file =
       ../secrets/${name}/prometheusBasicAuthPassword.age;
-    minioPrometheusBearerToken = { 
+    minioPrometheusBearerToken = {
       owner = "prometheus";
       group = "prometheus";
       file = ../secrets/${name}/minioPrometheusBearerToken.age;
@@ -147,19 +147,21 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
     };
     wireguard = {
       enable = true;
-      interfaces.wg0 = {
-        ips = [ "10.7.210.2/32" ];
-        listenPort = 51820;
-        privateKeyFile = config.age.secrets.wireguardPrivateKey.path;
-        peers = [{
-          publicKey = "2a8w4y36L4hiG2ijQKZOfKTar28A4SPtupZnTXVUrTI=";
-          persistentKeepalive = 15;
-          allowedIPs = [ "10.7.210.1/32" ];
-          endpoint = "${nodes."ns2.owo.systems".config.networking.fqdn}:${
-              toString
-              nodes."ns2.owo.systems".config.networking.wireguard.interfaces.wg1.listenPort
-            }";
-        }];
+      interfaces = {
+        wg0 = {
+          ips = [ "10.7.210.2/32" ];
+          listenPort = 51820;
+          privateKeyFile = config.age.secrets.wireguardPrivateKey.path;
+          peers = [{
+            publicKey = "2a8w4y36L4hiG2ijQKZOfKTar28A4SPtupZnTXVUrTI=";
+            persistentKeepalive = 15;
+            allowedIPs = [ "10.7.210.1/32" ];
+            endpoint = "${nodes."ns2.owo.systems".config.networking.fqdn}:${
+                toString
+                nodes."ns2.owo.systems".config.networking.wireguard.interfaces.wg1.listenPort
+              }";
+          }];
+        };
       };
     };
   };
@@ -255,9 +257,10 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
           forceSSL = true;
           enableACME = true;
           locations."/" = {
-            proxyPass = "http://${
-                toString config.services.prometheus.listenAddress
-              }:${toString config.services.prometheus.port}";
+            proxyPass =
+              "http://${toString config.services.prometheus.listenAddress}:${
+                toString config.services.prometheus.port
+              }";
           };
         };
         "grafana.${config.networking.fqdn}" = {
@@ -390,11 +393,10 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
         {
           job_name = "minio-job";
           metrics_path = "/minio/v2/metrics/cluster";
-          bearer_token_file = config.age.secrets.minioPrometheusBearerToken.path;
+          bearer_token_file =
+            config.age.secrets.minioPrometheusBearerToken.path;
           scheme = "https";
-          static_configs = [{
-            targets = [ "storage.owo.systems" ];
-          }];
+          static_configs = [{ targets = [ "storage.owo.systems" ]; }];
         }
         {
           job_name = "blackbox-exporters";
@@ -462,6 +464,12 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
       settings = {
         analytics = { reporting_enabled = false; };
         users = { allow_sign_up = false; };
+        smtp = {
+          enabled = true;
+          host = "10.7.210.1:25";
+          from_name = "${config.networking.fqdn}";
+          from_address = "grafana-noreply@${config.networking.fqdn}";
+        };
         server = {
           http_addr = "127.0.0.1";
           http_port = 3000;
