@@ -52,21 +52,6 @@
     acmeCredentialsFile.file = ../secrets/${name}/acmeCredentialsFile.age;
   };
 
-  nix = {
-    buildMachines = [{
-      hostName = "violet.lab.shortcord.com";
-      systems = [ "x86_64-linux" "i686-linux" ];
-      protocol = "ssh-ng";
-      maxJobs = 20;
-      sshUser = "remotebuild";
-      sshKey = config.age.secrets.distributedUserSSHKey.path;
-    }];
-    distributedBuilds = true;
-    extraOptions = ''
-      builders-use-substitutes = true
-    '';
-  };
-
   networking = {
     useDHCP = false;
     hostName = "storage";
@@ -145,7 +130,7 @@
       package = pkgs.nginxQuic;
       enable = true;
       virtualHosts = {
-        "admin.storage.owo.systems" = {
+        "admin.${config.networking.fqdn}" = {
           kTLS = true;
           http2 = true;
           http3 = true;
@@ -160,7 +145,7 @@
           '';
 
           locations."/" = {
-            proxyPass = "http://127.0.0.1:9001";
+            proxyPass = "http://${config.services.minio.consoleAddress}";
             extraConfig = ''
               proxy_set_header Host $host;
               proxy_set_header X-Real-IP $remote_addr;
@@ -176,7 +161,7 @@
             '';
           };
         };
-        "storage.owo.systems" = {
+        "storage.${config.networking.fqdn}" = {
           serverAliases = [ "*.storage.owo.systems" ];
           kTLS = true;
           http2 = true;
@@ -192,7 +177,7 @@
           '';
 
           locations."/" = {
-            proxyPass = "http://127.0.0.1:9000";
+            proxyPass = "http://${config.services.minio.listenAddress}";
             extraConfig = ''
               proxy_set_header Host $host;
               proxy_set_header X-Real-IP $remote_addr;
