@@ -50,8 +50,6 @@
   age.secrets = {
     minioSecret.file = ../secrets/${name}/minioSecret.age;
     acmeCredentialsFile.file = ../secrets/${name}/acmeCredentialsFile.age;
-    wireguardPrivateKey.file = ../secrets/${name}/wireguardPrivateKey.age;
-    wireguardPresharedKey.file = ../secrets/${name}/wireguardPresharedKey.age;
   };
 
   nix = {
@@ -97,25 +95,6 @@
       allowedUDPPorts = [ 51820 ];
       allowedTCPPorts = [ 22 80 443 ];
       allowPing = true;
-    };
-    wireguard = {
-      enable = true;
-      interfaces.wg0 = {
-        ips = [ "10.6.210.28/32" ];
-        mtu = 1200;
-        listenPort = 51820;
-        privateKeyFile = config.age.secrets.wireguardPrivateKey.path;
-        peers = [{
-          publicKey = "ePYkBTYZaul66VdGLG70IZcCvIaZ7aSeRrkb+hskhiQ=";
-          presharedKeyFile = config.age.secrets.wireguardPresharedKey.path;
-          endpoint = "router.cloud.shortcord.com:51820";
-          persistentKeepalive = 15;
-          allowedIPs = [
-            "10.6.210.1/32"
-            "10.50.0.20/32" # Allow access to ns1 for lego ACME
-          ];
-        }];
-      };
     };
   };
 
