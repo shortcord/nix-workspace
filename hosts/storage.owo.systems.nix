@@ -161,7 +161,7 @@
             '';
           };
         };
-        "storage.${config.networking.fqdn}" = {
+        "${config.networking.fqdn}" = {
           serverAliases = [ "*.storage.owo.systems" ];
           kTLS = true;
           http2 = true;
