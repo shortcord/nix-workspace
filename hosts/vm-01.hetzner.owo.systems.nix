@@ -110,7 +110,7 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
       address = "172.31.1.1";
       interface = "ens3";
     };
-    defaultGateway6 = {
+    defaultGateway6 = { 
       address = "fe80::1";
       interface = "ens3";
     };
@@ -169,6 +169,15 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
   environment.systemPackages = with pkgs; [ vim git ];
 
   services = {
+    ndppd = {
+      enable = true;
+      proxies.ens3 = {
+        rules."primary" = {
+          network = "2a01:4f8:c012:a734::/64";
+          method = "static";
+        };
+      };
+    };
     fail2ban = { enable = true; };
     openssh = { enable = true; };
     nginx = {
@@ -402,6 +411,8 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
           job_name = "blackbox-exporters";
           metrics_path = "/probe";
           params = { module = [ "icmp_probe" ]; };
+          scrape_interval = "5s";
+          scrape_timeout = "3s";
           static_configs = [{
             targets = [
               "home.shortcord.com"
@@ -430,19 +441,6 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
           job_name = "node-exporters";
           dns_sd_configs = [{
             names = [ "_node-exporter.prometheus.owo.systems" ];
-            type = "SRV";
-            refresh_interval = "5s";
-          }];
-        }
-        {
-          job_name = "node-exporters-https";
-          basic_auth = {
-            username = "app";
-            password_file = config.age.secrets.prometheusBasicAuthPassword.path;
-          };
-          metrics_path = "/node-exporter/metrics";
-          dns_sd_configs = [{
-            names = [ "_node-exporter-https.prometheus.owo.systems" ];
             type = "SRV";
             refresh_interval = "5s";
           }];

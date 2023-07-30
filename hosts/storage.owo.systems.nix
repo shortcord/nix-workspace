@@ -50,23 +50,6 @@
   age.secrets = {
     minioSecret.file = ../secrets/${name}/minioSecret.age;
     acmeCredentialsFile.file = ../secrets/${name}/acmeCredentialsFile.age;
-    wireguardPrivateKey.file = ../secrets/${name}/wireguardPrivateKey.age;
-    wireguardPresharedKey.file = ../secrets/${name}/wireguardPresharedKey.age;
-  };
-
-  nix = {
-    buildMachines = [{
-      hostName = "violet.lab.shortcord.com";
-      systems = [ "x86_64-linux" "i686-linux" ];
-      protocol = "ssh-ng";
-      maxJobs = 20;
-      sshUser = "remotebuild";
-      sshKey = config.age.secrets.distributedUserSSHKey.path;
-    }];
-    distributedBuilds = true;
-    extraOptions = ''
-      builders-use-substitutes = true
-    '';
   };
 
   networking = {
@@ -97,25 +80,6 @@
       allowedUDPPorts = [ 51820 ];
       allowedTCPPorts = [ 22 80 443 ];
       allowPing = true;
-    };
-    wireguard = {
-      enable = true;
-      interfaces.wg0 = {
-        ips = [ "10.6.210.28/32" ];
-        mtu = 1200;
-        listenPort = 51820;
-        privateKeyFile = config.age.secrets.wireguardPrivateKey.path;
-        peers = [{
-          publicKey = "ePYkBTYZaul66VdGLG70IZcCvIaZ7aSeRrkb+hskhiQ=";
-          presharedKeyFile = config.age.secrets.wireguardPresharedKey.path;
-          endpoint = "router.cloud.shortcord.com:51820";
-          persistentKeepalive = 15;
-          allowedIPs = [
-            "10.6.210.1/32"
-            "10.50.0.20/32" # Allow access to ns1 for lego ACME
-          ];
-        }];
-      };
     };
   };
 
@@ -166,7 +130,7 @@
       package = pkgs.nginxQuic;
       enable = true;
       virtualHosts = {
-        "admin.storage.owo.systems" = {
+        "admin.${config.networking.fqdn}" = {
           kTLS = true;
           http2 = true;
           http3 = true;
@@ -181,7 +145,7 @@
           '';
 
           locations."/" = {
-            proxyPass = "http://127.0.0.1:9001";
+            proxyPass = "http://${config.services.minio.consoleAddress}";
             extraConfig = ''
               proxy_set_header Host $host;
               proxy_set_header X-Real-IP $remote_addr;
@@ -197,7 +161,7 @@
             '';
           };
         };
-        "storage.owo.systems" = {
+        "${config.networking.fqdn}" = {
           serverAliases = [ "*.storage.owo.systems" ];
           kTLS = true;
           http2 = true;
@@ -213,7 +177,7 @@
           '';
 
           locations."/" = {
-            proxyPass = "http://127.0.0.1:9000";
+            proxyPass = "http://${config.services.minio.listenAddress}";
             extraConfig = ''
               proxy_set_header Host $host;
               proxy_set_header X-Real-IP $remote_addr;
