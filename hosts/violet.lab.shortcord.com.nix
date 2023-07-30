@@ -291,9 +291,7 @@ in {
           ];
         };
         Datastore = { StorageMax = "1000GB"; };
-        Addresses = {
-          Gateway = "/ip4/127.0.0.1/tcp/8080";
-        };
+        Addresses = { Gateway = "/ip4/127.0.0.1/tcp/8080"; };
       };
     };
     nginx = {
@@ -406,7 +404,9 @@ in {
     };
   };
 
-  users.users.short = { extraGroups = [ "wheel" "docker" "libvirtd" config.services.kubo.group ]; };
+  users.users.short = {
+    extraGroups = [ "wheel" "docker" "libvirtd" config.services.kubo.group ];
+  };
 
   systemd = {
     timers = {
