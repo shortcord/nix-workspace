@@ -190,6 +190,16 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
       recommendedProxySettings = true;
       recommendedBrotliSettings = true;
       virtualHosts = {
+        "shortcord.com" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+          locations."/" = {
+            proxyPass = "http://127.0.0.1:9200";
+          };
+        };
         "miauws.life" = {
           kTLS = true;
           http2 = true;
@@ -217,7 +227,7 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
           kTLS = true;
           http2 = true;
           http3 = true;
-          forceSSL = true;
+          forceSSL = false;
           enableACME = true;
           locations."/" = { return = "200 $remote_addr"; };
           extraConfig = ''
@@ -542,10 +552,16 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
       backend = "docker";
       containers = {
         "powerdns-admin" = {
+          autoStart = true;
           image = "powerdnsadmin/pda-legacy:v0.4.1";
           volumes = [ "powerdns-admin-data:/data" ];
           environmentFiles = [ config.age.secrets.powerdns-env.path ];
           ports = [ "127.0.0.1:9191:80" ];
+        };
+        "shortcord.com" = {
+          autoStart = true;
+          image = "gitlab.shortcord.com:5050/shortcord/shortcord.com:ad3e6c0218ebcda9247b575d7f3b65bbea9a3e49";
+          ports = [ "127.0.0.1:9200:80" ];
         };
       };
     };

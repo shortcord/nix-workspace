@@ -8,6 +8,7 @@ in {
     pdnsApiKey.file = ../secrets/general/pdnsApiKey.age;
     distributedUserSSHKey.file = ../secrets/general/distributedUserSSHKey.age;
     nix-serve.file = ../secrets/${name}/nix-serve.age;
+    minioSecret.file = ../secrets/${name}/minioSecret.age;
   };
 
   system.stateVersion = "23.05";
@@ -66,6 +67,18 @@ in {
         "discard=async"
         "space_cache=v2"
         "subvolid=741"
+      ];
+    };
+    "/var/lib/minio" = {
+      device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
+      fsType = "btrfs";
+      options = [
+        "noatime"
+        "degraded"
+        "compress=zstd"
+        "discard=async"
+        "space_cache=v2"
+        "subvolid=893"
       ];
     };
     # "/nix" = {
@@ -213,11 +226,18 @@ in {
           range 10.18.0.5 10.18.0.200;
         }
       '';
-      machines = [{
-        hostName = "lilac.lab.shortcord.com";
-        ipAddress = "10.18.0.2";
-        ethernetAddress = "14:18:77:5b:a9:87";
-      }];
+      machines = [
+        {
+          hostName = "lilac.lab.shortcord.com";
+          ipAddress = "10.18.0.2";
+          ethernetAddress = "14:18:77:5b:a9:87";
+        }
+        {
+          hostName = "amethyst.lab.shortcord.com";
+          ipAddress = "10.18.0.3";
+          ethernetAddress = "18:66:da:5f:d8:ff";
+        }
+      ];
     };
     nix-serve = {
       enable = true;
@@ -304,6 +324,18 @@ in {
       recommendedProxySettings = true;
       recommendedBrotliSettings = true;
       virtualHosts = {
+        "proxmox.${config.networking.fqdn}" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+
+          locations."/" = {
+            proxyPass = "https://10.18.0.3:8006";
+            proxyWebsockets = true;
+          };
+        };
         "binarycache.${config.networking.fqdn}" = {
           kTLS = true;
           http2 = true;
@@ -348,6 +380,46 @@ in {
 
           locations."/" = { proxyPass = "http://localhost:8080"; };
         };
+        "minio-admin.${config.networking.fqdn}" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+
+          extraConfig = ''
+            ignore_invalid_headers off;
+            client_max_body_size 0;
+            proxy_buffering off;
+            proxy_request_buffering off;
+          '';
+
+          locations."/" = {
+            proxyPass = "http://${config.services.minio.consoleAddress}";
+            extraConfig = ''
+              proxy_set_header X-NginX-Proxy true;
+              chunked_transfer_encoding off;
+            '';
+          };
+        };
+        "minio.${config.networking.fqdn}" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+
+          extraConfig = ''
+            ignore_invalid_headers off;
+            client_max_body_size 0;
+            proxy_buffering off;
+            proxy_request_buffering off;
+          '';
+
+          locations."/" = {
+            proxyPass = "http://${config.services.minio.listenAddress}";
+          };
+        };
       };
     };
     hydra = {
@@ -375,6 +447,13 @@ in {
           openFirewall = true;
         };
       };
+    };
+    minio = {
+      enable = true;
+      rootCredentialsFile = config.age.secrets.minioSecret.path;
+      listenAddress = "127.0.0.1:9000";
+      consoleAddress = "127.0.0.1:9001";
+      region = "us-01";
     };
   };
 
