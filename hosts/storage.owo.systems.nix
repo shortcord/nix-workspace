@@ -190,6 +190,33 @@
             '';
           };
         };
+        "s3.boldrx.com" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+
+          extraConfig = ''
+            ignore_invalid_headers off;
+            client_max_body_size 0;
+            proxy_buffering off;
+            proxy_request_buffering off;
+          '';
+          locations."/" = {
+            proxyPass = "http://${config.services.minio.listenAddress}";
+            extraConfig = ''
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+
+              proxy_http_version 1.1;
+              proxy_set_header Connection "";
+              chunked_transfer_encoding off;
+            '';
+          };
+        };
       };
     };
   };
