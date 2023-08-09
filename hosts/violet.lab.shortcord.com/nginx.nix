@@ -19,6 +19,9 @@
         locations."/" = {
           proxyPass = "https://10.18.0.3:8006";
           proxyWebsockets = true;
+          extraConfig = ''
+            client_max_body_size 0;
+          '';
         };
       };
       "minio-admin.${config.networking.fqdn}" = {
