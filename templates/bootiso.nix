@@ -1,4 +1,4 @@
-{ pkgs, modulesPath, lib, sshkeys, ... }: {
+{ pkgs, modulesPath, lib, scConfig, ... }: {
   imports = [ "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix" ];
 
   boot = {
@@ -38,7 +38,7 @@
   users.users = {
     root = {
       password = "root";
-      openssh.authorizedKeys.keys = sshkeys.short;
+      openssh.authorizedKeys.keys = scConfig.sshkeys.users.short;
     };
   };
 }
