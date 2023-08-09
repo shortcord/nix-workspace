@@ -298,7 +298,7 @@ in {
         wantedBy = [ "timers.target" ];
         timerConfig = {
           OnCalendar = "weekly";
-          Unit = "btrfs-rebalance.service";3
+          Unit = "btrfs-rebalance.service";
         };
       };
     };
