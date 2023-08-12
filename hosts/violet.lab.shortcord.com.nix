@@ -262,7 +262,7 @@ in {
         config = ''
           interface eno4
             ip ospf bfd
-            ip ospf area 1
+            ip ospf area 0
             ipv6 ospf6 network point-to-point
             ipv6 ospf6 bfd
         '';
@@ -272,7 +272,7 @@ in {
         config = ''
           router ospf
             redistribute connected
-            area 1 shortcut default
+            area 0 shortcut default
         '';
       };
       ospf6 = {
@@ -280,7 +280,7 @@ in {
         config = ''
           router ospf6
             redistribute connected
-            interface eno4 area 1
+            interface eno4 area 0
         '';
       };
     };
