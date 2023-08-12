@@ -23,6 +23,12 @@
           modules = [ ./templates/bootiso.nix ];
           specialArgs = { scConfig = scConfig; };
         };
+        proxmox-lxc = nixos-generators.nixosGenerate {
+          format = "proxmox-lxc";
+          system = "x86_64-linux";
+          modules = [ ./templates/proxmox-lxc.nix ];
+          specialArgs = { scConfig = scConfig; };
+        };
       };
       devShells = {
         x86_64-darwin.default = nixpkgs.legacyPackages.x86_64-darwin.mkShell {

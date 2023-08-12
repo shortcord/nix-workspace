@@ -10,7 +10,7 @@ in {
 
   system.stateVersion = "23.05";
 
-  imports = [ 
+  imports = [
     ./general/dyndns-ipv4.nix
     ./general/dyndns-ipv6.nix
     ./${name}/hydra.nix
@@ -18,7 +18,6 @@ in {
     ./${name}/minio.nix
     ./${name}/nginx.nix
   ];
-
 
   fileSystems = {
     "/" = {
@@ -123,6 +122,17 @@ in {
             Announce=yes
           '';
         };
+        "30-home" = {
+          matchConfig.MACAddress = "C8:1F:66:E6:7A:54";
+          linkConfig.RequiredForOnline = "no";
+          address = [ "192.168.15.2/24" ];
+          networkConfig = { 
+            Gateway = "192.168.15.1";
+            DHCP = "no";
+            DNS = "no";
+            IPv6AcceptRA = false; 
+          };
+        };
       };
     };
   };
@@ -168,10 +178,10 @@ in {
     useDHCP = false;
     firewall = {
       enable = true;
-      allowedUDPPorts = [ ];
-      allowedTCPPorts = [ 22 80 443 ];
+      allowedUDPPorts = [ 5201 ];
+      allowedTCPPorts = [ 22 80 443 5201 ];
       allowPing = true;
-      trustedInterfaces = [ "eno1" "eno2" ];
+      trustedInterfaces = [ "eno1" "eno2" "eno4" ];
     };
     nat = {
       enable = true;
@@ -245,6 +255,31 @@ in {
           ethernetAddress = "18:66:da:5f:d8:ff";
         }
       ];
+    };
+    frr = {
+      zebra = {
+        enable = true;
+        config = ''
+          interface eno4
+            ip ospf bfd
+            ip ospf area 1
+        '';
+      };
+      ospf = {
+        enable = true;
+        config = ''
+          router ospf
+            redistribute connected
+            area 1 shortcut default
+        '';
+      };
+      ospf6 = {
+        enable = false;
+        config = ''
+          router ospf6
+            redistribute connected
+        '';
+      };
     };
     btrfs.autoScrub = {
       enable = true;
