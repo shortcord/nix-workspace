@@ -263,6 +263,8 @@ in {
           interface eno4
             ip ospf bfd
             ip ospf area 1
+            ipv6 ospf6 network point-to-point
+            ipv6 ospf6 bfd
         '';
       };
       ospf = {
@@ -274,10 +276,11 @@ in {
         '';
       };
       ospf6 = {
-        enable = false;
+        enable = true;
         config = ''
           router ospf6
             redistribute connected
+            interface eno4 area 1
         '';
       };
     };
