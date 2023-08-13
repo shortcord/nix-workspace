@@ -3,7 +3,8 @@ let
   distributedUserSSHKeyPub = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKnmaQeov9+Xv7z/ulQ0zPVDN3ZKW4AUK8IyoVkbUKQa"
   ];
-in {
+in
+{
   age.secrets = {
     distributedUserSSHKey.file = ../secrets/general/distributedUserSSHKey.age;
   };
@@ -17,6 +18,7 @@ in {
     ./${name}/ipfs.nix
     ./${name}/minio.nix
     ./${name}/nginx.nix
+    ./${name}/jellyfin.nix
   ];
 
   fileSystems = {
@@ -126,11 +128,11 @@ in {
           matchConfig.MACAddress = "C8:1F:66:E6:7A:54";
           linkConfig.RequiredForOnline = "no";
           address = [ "192.168.15.2/24" ];
-          networkConfig = { 
+          networkConfig = {
             Gateway = "192.168.15.1";
             DHCP = "no";
             DNS = "no";
-            IPv6AcceptRA = false; 
+            IPv6AcceptRA = false;
           };
         };
       };
