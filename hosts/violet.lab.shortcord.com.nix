@@ -14,11 +14,12 @@ in
   imports = [
     ./general/dyndns-ipv4.nix
     ./general/dyndns-ipv6.nix
+    ./general/promtail.nix
     ./${name}/hydra.nix
     ./${name}/ipfs.nix
     ./${name}/minio.nix
     ./${name}/nginx.nix
-    ./${name}/jellyfin.nix
+    ##./${name}/jellyfin.nix
   ];
 
   fileSystems = {

@@ -86,19 +86,6 @@
         enableACME = true;
         locations."/" = { return = "302 https://estrogen.dog"; };
       };
-      "prometheus.${config.networking.fqdn}" = {
-        kTLS = true;
-        http2 = true;
-        http3 = true;
-        forceSSL = true;
-        enableACME = true;
-        locations."/" = {
-          proxyPass =
-            "http://${toString config.services.prometheus.listenAddress}:${
-              toString config.services.prometheus.port
-            }";
-        };
-      };
       "grafana.${config.networking.fqdn}" = {
         kTLS = true;
         http2 = true;

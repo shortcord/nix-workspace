@@ -1,13 +1,51 @@
-{ name, pkgs, config, ... }:
-{
+{ name, pkgs, config, ... }: {
   age.secrets = {
     catstodon-env.file = ../../secrets/${name}/catstodon.env.age;
   };
   services = {
+    nginx = {
+      enable = true;
+      package = pkgs.nginxQuic;
+      recommendedTlsSettings = true;
+      recommendedZstdSettings = true;
+      recommendedOptimisation = true;
+      recommendedGzipSettings = true;
+      recommendedProxySettings = true;
+      recommendedBrotliSettings = true;
+      virtualHosts.${config.services.mastodon.localDomain} = {
+        kTLS = true;
+        http2 = true;
+        http3 = true;
+        forceSSL = true;
+        enableACME = true;
+
+        root = "${config.services.mastodon.package}/public/";
+
+        extraConfig = ''
+          client_max_body_size 500M;
+        '';
+
+        locations = {
+          "/system/".alias = "/var/lib/mastodon/public-system/";
+          "/" = { tryFiles = "$uri @proxy"; };
+          "@proxy" = {
+            proxyPass =
+              "http://127.0.0.1:${toString (config.services.mastodon.webPort)}";
+            proxyWebsockets = true;
+          };
+          "/api/v1/streaming/" = {
+            proxyPass =
+              "http://127.0.0.1:${toString (config.services.mastodon.streamingPort)}/";
+            proxyWebsockets = true;
+          };
+        };
+      };
+    };
     mastodon = {
       enable = true;
+      enableUnixSocket = false;
       localDomain = "social.${config.networking.fqdn}";
-      configureNginx = true;
+      configureNginx = false;
       smtp.fromAddress = "noreply@${config.services.mastodon.localDomain}";
       extraEnvFiles = [ config.age.secrets.catstodon-env.path ];
       extraConfig = {

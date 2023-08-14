@@ -47,6 +47,10 @@
   boot.cleanTmpDir = true;
   zramSwap.enable = true;
 
+  imports = [
+    ./general/promtail.nix
+  ];
+
   age.secrets = {
     minioSecret.file = ../secrets/${name}/minioSecret.age;
     acmeCredentialsFile.file = ../secrets/${name}/acmeCredentialsFile.age;

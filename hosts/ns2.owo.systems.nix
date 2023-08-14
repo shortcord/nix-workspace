@@ -41,6 +41,10 @@
     powerdnsConfig.file = ../secrets/${name}/powerdnsConfig.age;
   };
 
+  imports = [
+    ./general/promtail.nix
+  ];
+
   nix = {
     buildMachines = [{
       hostName = "violet.lab.shortcord.com";

@@ -13,6 +13,7 @@ in
 
   imports = [
     ./general/dyndns-ipv6.nix
+    ./general/promtail.nix
     ./${name}/hardware.nix
     ./${name}/mastodon.nix
   ];

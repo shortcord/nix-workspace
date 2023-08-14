@@ -20,6 +20,7 @@
     ./${name}/nginx.nix
     ./${name}/xmpp.nix
     ./${name}/prometheus.nix
+    ./general/promtail.nix
   ];
 
   nix = {
@@ -130,31 +131,6 @@
       };
       admin.name = "short";
       settings.app.single_user = true;
-    };
-    grafana = {
-      enable = true;
-      settings = {
-        analytics = { reporting_enabled = false; };
-        users = { allow_sign_up = false; };
-        "auth.anonymous" = {
-          enabled = true;
-          org_name = "Main Org.";
-          org_role = "Viewer";
-          hide_version = true;
-        };
-        smtp = {
-          enabled = true;
-          host = "10.7.210.1:25";
-          from_name = "${config.networking.fqdn}";
-          from_address = "grafana-noreply@${config.networking.fqdn}";
-        };
-        server = {
-          http_addr = "127.0.0.1";
-          http_port = 3000;
-          domain = "grafana.${config.networking.fqdn}";
-          root_url = "https://grafana.${config.networking.fqdn}";
-        };
-      };
     };
     powerdns = {
       enable = true;
