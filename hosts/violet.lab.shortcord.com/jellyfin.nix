@@ -36,9 +36,6 @@
                 proxy_buffering off;
               '';
             };
-            "/web/" = {
-              proxyPass = "http://127.0.0.1:8096/web/index.html";
-            };
             "/socket" = {
               proxyPass = "http://127.0.0.1:8096";
               proxyWebsockets = true;
