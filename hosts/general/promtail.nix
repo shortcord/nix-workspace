@@ -31,17 +31,10 @@
             label_structured_data = true;
             labels = { job = "syslog"; };
           };
-          relabel_configs = [
-            { # Set hostname
-              source_labels = [ "__syslog_message_hostname" ];
-              target_label = "host";
-            }
-            { # Drop if service tag is empty
-              source_labels = [ "__service__" ];
-              regex = "";
-              action = "drop";
-            }
-          ];
+          relabel_configs = [{ # Set hostname
+            source_labels = [ "__syslog_message_hostname" ];
+            target_label = "host";
+          }];
         }];
       };
     };
