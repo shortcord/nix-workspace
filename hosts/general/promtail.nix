@@ -4,6 +4,12 @@
     owner = "promtail";
     group = "promtail";
   };
+  networking.firewall = lib.mkIf (!config.services.promtail.configuration.server.disable) {
+    allowedTCPPorts = [ 
+      config.services.promtail.configuration.server.http_listen_port
+      config.services.promtail.configuration.server.grpc_listen_port
+    ];
+  };
   services = {
     rsyslogd = {
       enable = true;
@@ -14,7 +20,14 @@
     promtail = {
       enable = true;
       configuration = {
-        server = { disable = true; };
+        server = { 
+          disable = true;
+          http_listen_address = "0.0.0.0";
+          http_listen_port = 9200;
+          grpc_listen_address = "0.0.0.0";
+          grpc_listen_port = 9095;
+          enable_runtime_reload = false;
+        };
         client = {
           url = "https://loki.vm-01.hetzner.owo.systems/loki/api/v1/push";
           basic_auth = {
