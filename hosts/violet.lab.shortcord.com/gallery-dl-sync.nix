@@ -21,6 +21,9 @@ let
     https://e621.net/posts?tags=spikedmauler
     https://e621.net/posts?tags=ni70
 
+    # Characters
+    https://e621.net/posts?tags=texi_%28yitexity%29
+
     # Artists
     https://danbooru.donmai.us/posts?tags=oofxyphxia
     https://danbooru.donmai.us/posts?tags=morifumi
