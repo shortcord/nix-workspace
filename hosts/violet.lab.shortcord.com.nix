@@ -20,6 +20,7 @@ in
     ./${name}/minio.nix
     ./${name}/nginx.nix
     ./${name}/jellyfin.nix
+    ./${name}/gallery-dl-sync.nix
   ];
 
   fileSystems = {
@@ -100,6 +101,18 @@ in
         "discard=async"
         "space_cache=v2"
         "subvolid=896"
+      ];
+    };
+    "/var/gallery-dl" = {
+      device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
+      fsType = "btrfs";
+      options = [
+        "noatime"
+        "degraded"
+        "compress=zstd"
+        "discard=async"
+        "space_cache=v2"
+        "subvolid=890"
       ];
     };
     # "/nix" = {
