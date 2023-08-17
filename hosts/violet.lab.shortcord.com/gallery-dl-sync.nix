@@ -21,7 +21,8 @@ let
     https://e621.net/posts?tags=spikedmauler
     https://e621.net/posts?tags=ni70
     https://e621.net/posts?tags=zeiro
-
+    https://e621.net/posts?tags=sigma_x
+    
     # Characters
     https://e621.net/posts?tags=texi_%28yitexity%29
 
