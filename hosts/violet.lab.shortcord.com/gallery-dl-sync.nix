@@ -20,6 +20,7 @@ let
     https://e621.net/posts?tags=rattfood
     https://e621.net/posts?tags=spikedmauler
     https://e621.net/posts?tags=ni70
+    https://e621.net/posts?tags=zeiro
 
     # Characters
     https://e621.net/posts?tags=texi_%28yitexity%29
@@ -55,12 +56,12 @@ let
     # https://danbooru.donmai.us/posts?tags=kimono
 
     # Artists
-    https://www.pixiv.net/en/users/32603125
-    https://www.pixiv.net/en/users/22298878
-    https://www.pixiv.net/en/users/3439325
-    https://www.pixiv.net/en/users/67442991
-    https://www.pixiv.net/en/users/12450448
-    https://www.pixiv.net/en/users/526122
+    # https://www.pixiv.net/en/users/32603125
+    # https://www.pixiv.net/en/users/22298878
+    # https://www.pixiv.net/en/users/3439325
+    # https://www.pixiv.net/en/users/67442991
+    # https://www.pixiv.net/en/users/12450448
+    # https://www.pixiv.net/en/users/526122
 
     # Artists
     https://rule34.xxx/index.php?page=post&s=list&tags=prprlo
