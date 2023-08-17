@@ -22,7 +22,8 @@ let
     https://e621.net/posts?tags=ni70
     https://e621.net/posts?tags=zeiro
     https://e621.net/posts?tags=sigma_x
-    
+    https://e621.net/posts?tags=areye_(artist)
+
     # Characters
     https://e621.net/posts?tags=texi_%28yitexity%29
 
@@ -68,6 +69,9 @@ let
     https://rule34.xxx/index.php?page=post&s=list&tags=prprlo
     https://rule34.xxx/index.php?page=post&s=list&tags=pepero_(prprlo)
     https://rule34.xxx/index.php?page=post&s=list&tags=voidnosferatu
+
+    # Characters
+    https://rule34.xxx/index.php?page=post&s=list&tags=krekk0v+-gore+-death
   '';
   dlDirectory = "/var/gallery-dl";
   configFile = pkgs.writeText "gallery-dl.conf" ''
