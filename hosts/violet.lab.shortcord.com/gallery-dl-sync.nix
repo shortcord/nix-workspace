@@ -84,6 +84,7 @@ let
     }
   '';
 in {
+  environment.etc."gallery-dl-pages.txt".source = pages;
   systemd = {
     timers = {
       "gallery-dl-process" = {
@@ -103,7 +104,7 @@ in {
           set -eu
           ${pkgs.gallery-dl}/bin/gallery-dl \
             --config "${configFile}" \
-            --input-file "${pages}" \
+            --input-file "/etc/gallery-dl-pages.txt" \
             --destination "${dlDirectory}" \
             --download-archive "${dlDirectory}/archive.db"
           exit 0;
