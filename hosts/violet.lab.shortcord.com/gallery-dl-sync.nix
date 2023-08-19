@@ -28,6 +28,7 @@ let
     https://e621.net/posts?tags=areye_(artist)
     https://e621.net/posts?tags=ultrabondagefairy
     https://e621.net/posts?tags=sunshiu
+    https://e621.net/posts?tags=ulitochka
 
     # Characters
     https://e621.net/posts?tags=texi_%28yitexity%29
