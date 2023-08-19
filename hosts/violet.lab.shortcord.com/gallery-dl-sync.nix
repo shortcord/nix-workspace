@@ -1,7 +1,10 @@
 { pkgs, config, ... }:
 let
   pages = pkgs.writeText "pages.txt" ''
+    # Favs
     https://e621.net/posts?tags=fav%3AShortCord
+
+    # Artists
     https://e621.net/posts?tags=vlue_%28maynara%29
     https://e621.net/posts?tags=maynara
     https://e621.net/posts?tags=ark_warrior
@@ -23,6 +26,8 @@ let
     https://e621.net/posts?tags=zeiro
     https://e621.net/posts?tags=sigma_x
     https://e621.net/posts?tags=areye_(artist)
+    https://e621.net/posts?tags=ultrabondagefairy
+    https://e621.net/posts?tags=sunshiu
 
     # Characters
     https://e621.net/posts?tags=texi_%28yitexity%29
@@ -44,7 +49,6 @@ let
     https://danbooru.donmai.us/posts?tags=snale
     https://danbooru.donmai.us/posts?tags=kirushi
     https://danbooru.donmai.us/posts?tags=pepero_(prprlo)
-  
 
     # Characters
     # https://danbooru.donmai.us/posts?tags=nazrin
@@ -122,6 +126,35 @@ in {
         serviceConfig = {
           Type = "oneshot";
           SyslogIdentifier = "gallery-dl-init-dirs";
+        };
+      };
+    };
+  };
+  services.nginx = {
+    virtualHosts = {
+      "filebrowser.${config.networking.fqdn}" = {
+        kTLS = true;
+        http2 = true;
+        http3 = true;
+        forceSSL = true;
+        enableACME = true;
+
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:8085";
+        };
+      };
+    };
+  };
+  virtualisation = {
+    oci-containers = {
+      containers = {
+        "filebrowser" = {
+          autoStart = true;
+          image = "docker.io/filebrowser/filebrowser:v2-s6";
+          volumes = [
+            "${dlDirectory}:/srv:ro"
+          ];
+          ports = [ "127.0.0.1:8085:80" ];
         };
       };
     };
