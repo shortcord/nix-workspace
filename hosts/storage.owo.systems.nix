@@ -47,6 +47,10 @@
   boot.cleanTmpDir = true;
   zramSwap.enable = true;
 
+  imports = [
+    ./general/promtail.nix
+  ];
+
   age.secrets = {
     minioSecret.file = ../secrets/${name}/minioSecret.age;
     acmeCredentialsFile.file = ../secrets/${name}/acmeCredentialsFile.age;
@@ -77,7 +81,7 @@
     };
     firewall = {
       enable = true;
-      allowedUDPPorts = [ 51820 ];
+      allowedUDPPorts = [ ];
       allowedTCPPorts = [ 22 80 443 ];
       allowPing = true;
     };
@@ -129,6 +133,12 @@
     nginx = {
       package = pkgs.nginxQuic;
       enable = true;
+      recommendedTlsSettings = true;
+      recommendedZstdSettings = true;
+      recommendedOptimisation = true;
+      recommendedGzipSettings = true;
+      recommendedProxySettings = true;
+      recommendedBrotliSettings = true;
       virtualHosts = {
         "admin.${config.networking.fqdn}" = {
           kTLS = true;
@@ -142,26 +152,16 @@
             client_max_body_size 0;
             proxy_buffering off;
             proxy_request_buffering off;
+            proxy_set_header X-NginX-Proxy true;
+            chunked_transfer_encoding off;
           '';
-
+          
           locations."/" = {
             proxyPass = "http://${config.services.minio.consoleAddress}";
-            extraConfig = ''
-              proxy_set_header Host $host;
-              proxy_set_header X-Real-IP $remote_addr;
-              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-              proxy_set_header X-Forwarded-Proto $scheme;
-              proxy_set_header X-NginX-Proxy true;
-              real_ip_header X-Real-IP;
-
-              proxy_http_version 1.1;
-              proxy_set_header Upgrade $http_upgrade;
-              proxy_set_header Connection "upgrade";
-              chunked_transfer_encoding off;
-            '';
+            proxyWebsockets = true;
           };
         };
-        "${config.networking.fqdn}" = {
+        "storage.owo.systems" = {
           serverAliases = [ "*.storage.owo.systems" ];
           kTLS = true;
           http2 = true;
@@ -174,20 +174,34 @@
             client_max_body_size 0;
             proxy_buffering off;
             proxy_request_buffering off;
+            proxy_set_header X-NginX-Proxy true;
+            chunked_transfer_encoding off;
+          '';
+          
+          locations."/" = {
+            proxyPass = "http://${config.services.minio.listenAddress}";
+            proxyWebsockets = true;
+          };
+        };
+        "s3.boldrx.com" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+
+          extraConfig = ''
+            ignore_invalid_headers off;
+            client_max_body_size 0;
+            proxy_buffering off;
+            proxy_request_buffering off;
+            proxy_set_header X-NginX-Proxy true;
+            chunked_transfer_encoding off;
           '';
 
           locations."/" = {
             proxyPass = "http://${config.services.minio.listenAddress}";
-            extraConfig = ''
-              proxy_set_header Host $host;
-              proxy_set_header X-Real-IP $remote_addr;
-              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-              proxy_set_header X-Forwarded-Proto $scheme;
-
-              proxy_http_version 1.1;
-              proxy_set_header Connection "";
-              chunked_transfer_encoding off;
-            '';
+            proxyWebsockets = true;
           };
         };
       };

@@ -1,10 +1,10 @@
 { pkgs, modulesPath, lib, scConfig, ... }: {
-  imports = [ "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix" ];
+  imports = [ "${modulesPath}/virtualisation/proxmox-lxc.nix" ];
 
   boot = {
     # pin kernel to 6.1 lts
     kernelPackages = pkgs.linuxKernel.packages.linux_6_1;
-    kernelParams = [ "console=tty0" ];
+    kernelParams = [ ];
     supportedFilesystems = lib.mkForce [ "btrfs" "vfat" "xfs" ];
     tmp.useTmpfs = true;
   };
@@ -38,6 +38,7 @@
   users.users = {
     root = {
       password = "root";
+      password = "password";
       openssh.authorizedKeys.keys = scConfig.sshkeys.users.short;
     };
   };

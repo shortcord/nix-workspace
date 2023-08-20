@@ -1,9 +1,5 @@
-let
-  disks = {
-    root = "/dev/disk/by-uuid/79bdfbec-983a-41ac-9603-a207beae1f19";
-    boot = "/dev/disk/by-uuid/DD73-4F08";
-  };
-in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
+{ name, nodes, pkgs, lib, config, modulesPath, ... }: {
+  system.stateVersion = "22.11";
 
   age.secrets = {
     prometheusBasicAuthPassword.file =
@@ -18,47 +14,14 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
     powerdns-env.file = ../secrets/${name}/powerdns-env.age;
   };
 
-  imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
-
-  boot = {
-    initrd = {
-      availableKernelModules =
-        [ "ata_piix" "virtio_pci" "virtio_scsi" "xhci_pci" "sd_mod" "sr_mod" ];
-      kernelModules = [ ];
-    };
-    kernelModules = [ ];
-    extraModulePackages = [ ];
-  };
-
-  fileSystems = {
-    "/" = {
-      device = disks.root;
-      fsType = "ext4";
-    };
-    "/boot" = {
-      device = disks.boot;
-      fsType = "vfat";
-    };
-  };
-
-  boot = {
-    loader = {
-      grub = {
-        enable = true;
-        version = 2;
-        device = "/dev/sda";
-      };
-    };
-  };
-
-  swapDevices = [ ];
-  zramSwap.enable = true;
-
-  nixpkgs.hostPlatform = "x86_64-linux";
-  hardware.enableRedistributableFirmware = false;
-  hardware.cpu.intel.updateMicrocode = false;
-
-  system.stateVersion = "22.11";
+  imports = [ 
+    (modulesPath + "/profiles/qemu-guest.nix")
+    ./${name}/hardware.nix
+    ./${name}/nginx.nix
+    ./${name}/xmpp.nix
+    ./${name}/prometheus.nix
+    ./general/promtail.nix
+  ];
 
   nix = {
     buildMachines = [{
@@ -73,32 +36,6 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
     extraOptions = ''
       builders-use-substitutes = true
     '';
-  };
-
-  security.acme = {
-    certs = {
-      "xmpp.${config.networking.fqdn}" = {
-        reloadServices = [ "prosody.service" ];
-        postRun = ''
-          cp fullchain.pem "${
-            config.users.users."${config.services.prosody.user}".home
-          }/"
-          cp key.pem "${
-            config.users.users."${config.services.prosody.user}".home
-          }/"
-          chown ${config.services.prosody.user}:${config.services.prosody.group} "${
-            config.users.users."${config.services.prosody.user}".home
-          }/fullchain.pem"
-          chown ${config.services.prosody.user}:${config.services.prosody.group} "${
-            config.users.users."${config.services.prosody.user}".home
-          }/key.pem"
-        '';
-        extraDomainNames = [
-          "upload.xmpp.${config.networking.fqdn}"
-          "conference.xmpp.${config.networking.fqdn}"
-        ];
-      };
-    };
   };
 
   networking = {
@@ -180,169 +117,6 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
     };
     fail2ban = { enable = true; };
     openssh = { enable = true; };
-    nginx = {
-      package = pkgs.nginxQuic;
-      enable = true;
-      recommendedTlsSettings = true;
-      recommendedZstdSettings = true;
-      recommendedOptimisation = true;
-      recommendedGzipSettings = true;
-      recommendedProxySettings = true;
-      recommendedBrotliSettings = true;
-      virtualHosts = {
-        "miauws.life" = {
-          kTLS = true;
-          http2 = true;
-          http3 = true;
-          forceSSL = true;
-          enableACME = true;
-          serverAliases = [ "miauws.tech" ];
-          locations."/" = { return = "302 https://mousetail.dev"; };
-        };
-        "netbox.owo.solutions" = {
-          kTLS = true;
-          http2 = true;
-          http3 = true;
-          forceSSL = true;
-          enableACME = true;
-          locations."/" = { proxyPass = "http://127.0.0.1:8080"; };
-          extraConfig = ''
-            proxy_set_header X-Forwarded-Host $http_host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-Proto $scheme;
-          '';
-        };
-        "ip.mousetail.dev" = {
-          serverAliases = [ "ipv4.mousetail.dev" "ipv6.mousetail.dev" ];
-          kTLS = true;
-          http2 = true;
-          http3 = true;
-          forceSSL = true;
-          enableACME = true;
-          locations."/" = { return = "200 $remote_addr"; };
-          extraConfig = ''
-            add_header Content-Type text/plain;
-          '';
-        };
-        "freekobolds.com" = {
-          serverAliases = [ "www.freekobolds.com" ];
-          kTLS = true;
-          http2 = true;
-          http3 = true;
-          forceSSL = true;
-          enableACME = true;
-          locations."/" = {
-            return = "302 https://www.twitch.tv/touchscalytail";
-          };
-        };
-        "shinx.dev" = {
-          kTLS = true;
-          http2 = true;
-          http3 = true;
-          forceSSL = true;
-          enableACME = true;
-          locations."/" = { return = "302 https://francessco.us"; };
-        };
-        "owo.gallery" = {
-          kTLS = true;
-          http2 = true;
-          http3 = true;
-          forceSSL = true;
-          enableACME = true;
-          locations."/" = { return = "302 https://mousetail.dev"; };
-        };
-        "pawtism.dog" = {
-          kTLS = true;
-          http2 = true;
-          http3 = true;
-          forceSSL = true;
-          enableACME = true;
-          locations."/" = { return = "302 https://estrogen.dog"; };
-        };
-        "prometheus.${config.networking.fqdn}" = {
-          kTLS = true;
-          http2 = true;
-          http3 = true;
-          forceSSL = true;
-          enableACME = true;
-          locations."/" = {
-            proxyPass =
-              "http://${toString config.services.prometheus.listenAddress}:${
-                toString config.services.prometheus.port
-              }";
-          };
-        };
-        "grafana.${config.networking.fqdn}" = {
-          kTLS = true;
-          http2 = true;
-          http3 = true;
-          forceSSL = true;
-          enableACME = true;
-          locations."/" = {
-            proxyPass = "http://${
-                toString config.services.grafana.settings.server.http_addr
-              }:${toString config.services.grafana.settings.server.http_port}";
-            proxyWebsockets = true;
-          };
-        };
-        "powerdns.${config.networking.fqdn}" = {
-          kTLS = true;
-          http2 = true;
-          http3 = true;
-          forceSSL = true;
-          enableACME = true;
-          locations."/" = { proxyPass = "http://127.0.0.1:8081"; };
-        };
-        "powerdns-admin.${config.networking.fqdn}" = {
-          kTLS = true;
-          http2 = true;
-          http3 = true;
-          forceSSL = true;
-          enableACME = true;
-          locations."/" = { proxyPass = "http://127.0.0.1:9191"; };
-        };
-        "xmpp.${config.networking.fqdn}" = {
-          serverAliases = [
-            "upload.xmpp.${config.networking.fqdn}"
-            "conference.xmpp.${config.networking.fqdn}"
-          ];
-          kTLS = true;
-          http2 = true;
-          http3 = true;
-          forceSSL = true;
-          enableACME = true;
-          locations."/" = { return = "302 https://mousetail.dev"; };
-        };
-      };
-    };
-    prosody = {
-      enable = true;
-      admins = [ "short@xmpp.${config.networking.fqdn}" ];
-      ssl = {
-        cert = "${
-            config.users.users."${config.services.prosody.user}".home
-          }/fullchain.pem";
-        key = "${
-            config.users.users."${config.services.prosody.user}".home
-          }/key.pem";
-      };
-      virtualHosts = {
-        "xmpp.${config.networking.fqdn}" = {
-          enabled = true;
-          domain = "xmpp.${config.networking.fqdn}";
-          ssl = {
-            cert = "${
-                config.users.users."${config.services.prosody.user}".home
-              }/fullchain.pem";
-            key = "${
-                config.users.users."${config.services.prosody.user}".home
-              }/key.pem";
-          };
-        };
-      };
-      muc = [{ domain = "conference.xmpp.${config.networking.fqdn}"; }];
-      uploadHttp = { domain = "upload.xmpp.${config.networking.fqdn}"; };
-    };
     writefreely = {
       enable = true;
       host = "blog.mousetail.dev";
@@ -357,130 +131,6 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
       };
       admin.name = "short";
       settings.app.single_user = true;
-    };
-    prometheus = {
-      enable = true;
-      listenAddress = "127.0.0.1";
-      port = 9090;
-      # Get around sandboxing issues, fuckin' developers
-      checkConfig = "syntax-only";
-      exporters = {
-        node = {
-          enable = true;
-          openFirewall = true;
-        };
-        blackbox = {
-          enable = true;
-          openFirewall = false;
-          configFile = pkgs.writeText "blackbox-config" ''
-            modules:
-              http_2xx:
-                prober: http
-                timeout: 5s
-                http:
-                  valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
-                  valid_status_codes: [ 200 ]
-                  method: GET
-                  follow_redirects: true
-                  fail_if_ssl: false
-                  fail_if_not_ssl: true
-                  preferred_ip_protocol: "ip6"
-                  ip_protocol_fallback: true
-              icmp_probe:
-                prober: icmp
-                timeout: 5s
-                icmp:
-                  preferred_ip_protocol: "ip6"
-          '';
-        };
-      };
-      globalConfig = {
-        evaluation_interval = "1m";
-        scrape_interval = "5s";
-      };
-      scrapeConfigs = [
-        {
-          job_name = "minio-job";
-          metrics_path = "/minio/v2/metrics/cluster";
-          bearer_token_file =
-            config.age.secrets.minioPrometheusBearerToken.path;
-          scheme = "https";
-          static_configs = [{ targets = [ "storage.owo.systems" ]; }];
-        }
-        {
-          job_name = "blackbox-exporters";
-          metrics_path = "/probe";
-          params = { module = [ "icmp_probe" ]; };
-          scrape_interval = "5s";
-          scrape_timeout = "3s";
-          static_configs = [{
-            targets = [
-              "home.shortcord.com"
-              "router.cloud.shortcord.com"
-              "maus.home.shortcord.com"
-              "violet.lab.shortcord.com"
-              "lilac.lab.shortcord.com"
-            ];
-          }];
-          relabel_configs = [
-            {
-              source_labels = [ "__address__" ];
-              target_label = "__param_target";
-            }
-            {
-              source_labels = [ "__param_target" ];
-              target_label = "instance";
-            }
-            {
-              target_label = "__address__";
-              replacement = "127.0.0.1:9115";
-            }
-          ];
-        }
-        {
-          job_name = "node-exporters";
-          dns_sd_configs = [{
-            names = [ "_node-exporter.prometheus.owo.systems" ];
-            type = "SRV";
-            refresh_interval = "5s";
-          }];
-        }
-        {
-          job_name = "powerdns-exporter";
-          scheme = "https";
-          metrics_path = "/metrics";
-          dns_sd_configs = [{
-            names = [ "_powerdns-exporter.owo.systems" ];
-            type = "SRV";
-            refresh_interval = "5s";
-          }];
-        }
-      ];
-    };
-    grafana = {
-      enable = true;
-      settings = {
-        analytics = { reporting_enabled = false; };
-        users = { allow_sign_up = false; };
-        "auth.anonymous" = {
-          enabled = true;
-          org_name = "Main Org.";
-          org_role = "Viewer";
-          hide_version = true;
-        };
-        smtp = {
-          enabled = true;
-          host = "10.7.210.1:25";
-          from_name = "${config.networking.fqdn}";
-          from_address = "grafana-noreply@${config.networking.fqdn}";
-        };
-        server = {
-          http_addr = "127.0.0.1";
-          http_port = 3000;
-          domain = "grafana.${config.networking.fqdn}";
-          root_url = "https://grafana.${config.networking.fqdn}";
-        };
-      };
     };
     powerdns = {
       enable = true;
@@ -542,10 +192,17 @@ in { name, nodes, pkgs, lib, config, modulesPath, ... }: {
       backend = "docker";
       containers = {
         "powerdns-admin" = {
+          autoStart = true;
           image = "powerdnsadmin/pda-legacy:v0.4.1";
           volumes = [ "powerdns-admin-data:/data" ];
           environmentFiles = [ config.age.secrets.powerdns-env.path ];
           ports = [ "127.0.0.1:9191:80" ];
+        };
+        "shortcord.com" = {
+          autoStart = true;
+          image =
+            "gitlab.shortcord.com:5050/shortcord/shortcord.com:ad3e6c0218ebcda9247b575d7f3b65bbea9a3e49";
+          ports = [ "127.0.0.1:9200:80" ];
         };
       };
     };
