@@ -16,6 +16,7 @@ in
     ./general/promtail.nix
     ./${name}/hardware.nix
     ./${name}/mastodon.nix
+    ./${name}/postgresql.nix
   ];
 
   networking = {

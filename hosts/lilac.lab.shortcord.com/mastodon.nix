@@ -66,6 +66,10 @@
         SMTP_FROM_ADDRESS = "noreply@shortcord.com";
         SMTP_DOMAIN = "lilac.lab.shortcord.com";
       };
+      database = {
+        createLocally = true;
+        host = "/run/postgresql";
+      };
       package = (pkgs.mastodon.override {
         version = import ../../pkgs/catstodon/version.nix;
         srcOverride = pkgs.callPackage ../../pkgs/catstodon/source.nix { };
@@ -78,10 +82,6 @@
           };
         });
       });
-    };
-    postgresqlBackup = {
-      enable = true;
-      compression = "zstd";
     };
   };
 }
