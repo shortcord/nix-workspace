@@ -29,6 +29,7 @@ let
     https://e621.net/posts?tags=ultrabondagefairy
     https://e621.net/posts?tags=sunshiu
     https://e621.net/posts?tags=ulitochka
+    https://e621.net/posts?tags=nenkoket
 
     # Characters
     https://e621.net/posts?tags=texi_%28yitexity%29
