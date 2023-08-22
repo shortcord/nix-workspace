@@ -108,28 +108,28 @@
         };
 
         "ns2.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment.tags = [ "infra" "nameserver" ];
+          deployment.tags = [ "infra" "nameserver" "ns2" ];
           age.secrets.distributedUserSSHKey.file =
             ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
         };
 
         "vm-01.hetzner.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment.tags = [ "infra" "nameserver" "grafana" "prometheus" ];
+          deployment.tags = [ "infra" "nameserver" "grafana" "prometheus" "vm-01" ];
           age.secrets.distributedUserSSHKey.file =
             ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
         };
 
         "lilac.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment.tags = [ "infra" "lab" "mastodon" ];
+          deployment.tags = [ "infra" "lab" "mastodon" "lilac" ];
           age.secrets.distributedUserSSHKey.file =
             ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
         };
 
         "violet.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment.tags = [ "infra" "lab" ];
+          deployment.tags = [ "infra" "lab" "violet" ];
           age.secrets.distributedUserSSHKey.file =
             ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
