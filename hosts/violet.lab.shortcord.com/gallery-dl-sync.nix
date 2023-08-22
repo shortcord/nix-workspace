@@ -30,6 +30,8 @@ let
     https://e621.net/posts?tags=sunshiu
     https://e621.net/posts?tags=ulitochka
     https://e621.net/posts?tags=nenkoket
+    https://e621.net/posts?tags=tekilao
+    https://e621.net/posts?tags=wizzikt
 
     # Characters
     https://e621.net/posts?tags=texi_%28yitexity%29
@@ -155,6 +157,7 @@ in {
           image = "docker.io/filebrowser/filebrowser:v2-s6";
           volumes = [
             "${dlDirectory}:/srv:ro"
+            "filebrowserdb:/filebrowser/:rw"
           ];
           ports = [ "127.0.0.1:8085:80" ];
         };
