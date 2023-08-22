@@ -155,7 +155,6 @@ in
           linkConfig.RequiredForOnline = "no";
           address = [ "192.168.15.2/24" ];
           networkConfig = {
-            Gateway = "192.168.15.1";
             DHCP = "no";
             DNS = "no";
             IPv6AcceptRA = false;
@@ -204,6 +203,7 @@ in
     hostName = "violet";
     domain = "lab.shortcord.com";
     useDHCP = false;
+    useNetworkd = true;
     firewall = {
       enable = true;
       allowedUDPPorts = [ 5201 ];
