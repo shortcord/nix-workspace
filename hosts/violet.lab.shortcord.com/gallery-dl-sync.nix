@@ -32,6 +32,7 @@ let
     https://e621.net/posts?tags=nenkoket
     https://e621.net/posts?tags=tekilao
     https://e621.net/posts?tags=wizzikt
+    https://e621.net/posts?tags=kurus
 
     # Characters
     https://e621.net/posts?tags=texi_%28yitexity%29
