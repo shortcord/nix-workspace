@@ -35,6 +35,8 @@ let
     https://e621.net/posts?tags=kurus
     https://e621.net/posts?tags=delki
     https://e621.net/posts?tags=zonkpunch
+    https://e621.net/posts?tags=jay_naylor
+    https://e621.net/posts?tags=m-preg
 
     # Characters
     https://e621.net/posts?tags=texi_%28yitexity%29
