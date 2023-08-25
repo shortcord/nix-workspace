@@ -37,6 +37,7 @@ let
     https://e621.net/posts?tags=zonkpunch
     https://e621.net/posts?tags=jay_naylor
     https://e621.net/posts?tags=m-preg
+    https://e621.net/posts?tags=lazysnout
 
     # Characters
     https://e621.net/posts?tags=texi_%28yitexity%29
