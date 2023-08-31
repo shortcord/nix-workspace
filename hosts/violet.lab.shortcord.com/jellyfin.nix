@@ -9,7 +9,7 @@
     };
     nginx = {
       virtualHosts = {
-        "jellyfin.${config.networking.fqdn}" = {
+        "jellyfin.shortcord.com" = {
           kTLS = true;
           http2 = true;
           http3 = true;
