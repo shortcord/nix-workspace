@@ -38,6 +38,8 @@ let
     https://e621.net/posts?tags=jay_naylor
     https://e621.net/posts?tags=m-preg
     https://e621.net/posts?tags=lazysnout
+    https://e621.net/posts?tags=fozzey
+    https://e621.net/posts?tags=kiwa_flowcat
 
     # Characters
     https://e621.net/posts?tags=texi_%28yitexity%29
