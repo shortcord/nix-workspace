@@ -292,9 +292,11 @@ in
         config = ''
           interface eno4
             ip ospf bfd
-            ip ospf area 1
+            ip ospf area 0.0.0.1
+
             ipv6 ospf6 network point-to-point
             ipv6 ospf6 bfd
+            ipv6 ospf6 area 0.0.0.1
         '';
       };
       ospf = {
@@ -302,7 +304,6 @@ in
         config = ''
           router ospf
             redistribute connected
-            area 1 shortcut default
         '';
       };
       ospf6 = {
@@ -310,7 +311,6 @@ in
         config = ''
           router ospf6
             redistribute connected
-            interface eno4 area 1
         '';
       };
     };
