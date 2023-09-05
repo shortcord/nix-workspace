@@ -7,6 +7,7 @@ in
   "general/distributedUserSSHKey.age".publicKeys = all;
   "general/pdnsApiKey.age".publicKeys = all;
   "general/promtailPassword.age".publicKeys = all;
+  "general/acmeCredentialsFile.age".publicKeys = all;
   
   # Secrets for ns2.owo.systems
   "ns2.owo.systems/wireguardPrivateKey.age".publicKeys = all;
@@ -23,6 +24,7 @@ in
   "violet.lab.shortcord.com/nix-serve.age".publicKeys = all;
   "violet.lab.shortcord.com/calckey-config.age".publicKeys = all;
   "violet.lab.shortcord.com/minioSecret.age".publicKeys = all;
+  "violet.lab.shortcord.com/deluged.age".publicKeys = all;
 
   # Secrets for vm-01.hetzner.owo.systems
   "vm-01.hetzner.owo.systems/prometheusBasicAuthPassword.age".publicKeys = all;
