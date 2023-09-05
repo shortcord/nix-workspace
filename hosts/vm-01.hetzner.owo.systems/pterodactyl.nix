@@ -63,4 +63,42 @@
       };
     };
   };
+  systemd = {
+    timers = {
+      "pterodactyl-tasks" = {
+        wantedBy = [ "timers.target" ];
+        timerConfig = {
+          OnUnitActiveSec = "1m";
+          Unit = "pterodactyl-tasks.service";
+        };
+      };
+    };
+    services = {
+      "pterodactyl-tasks" = {
+        script = ''
+          set -eu
+          ${pkgs.php81}/bin/php /var/www/panel.owo.solutions/artisan schedule:run
+        '';
+        serviceConfig = {
+          Type = "oneshot";
+          User = config.services.nginx.user;
+        };
+      };
+      "pterodactyl-queue-worker" = {
+        wantedBy = [ "multi-user.target" ];
+        startLimitIntervalSec = 180;
+        startLimitBurst = 30;
+        script = ''
+          set -eu
+          ${pkgs.php81}/bin/php /var/www/panel.owo.solutions/artisan queue:work --queue=high,standard,low --sleep=3 --tries=3
+        '';
+        serviceConfig = {
+          User = config.services.nginx.user;
+          Group = config.services.nginx.group;
+          Restart = "always";
+          RestartSec="5s";
+        };
+      };
+    };
+  };
 }
