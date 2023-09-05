@@ -6,9 +6,18 @@
   ];
   services = {
     mysql = { enable = true; };
-    redis = { servers = { "pterodactyl" = { enable = true; }; }; };
+    redis = {
+      servers = {
+        "pterodactyl" = {
+          user = config.services.nginx.user;
+          enable = true;
+        };
+      };
+    };
     phpfpm.pools.pterodactyl = {
-      user = "nobody";
+      user = config.services.nginx.user;
+      group = config.services.nginx.group;
+      phpPackage = pkgs.php81;
       settings = {
         pm = "dynamic";
         "listen.owner" = config.services.nginx.user;
@@ -19,6 +28,13 @@
         "pm.max_requests" = 500;
       };
     };
+    mysqlBackup = {
+        enable = true;
+        databases = [
+            "pterodactyl"
+        ];
+        calendar = "daily";
+    };
     nginx = {
       virtualHosts = {
         "panel.owo.solutions" = {
@@ -28,16 +44,19 @@
           forceSSL = true;
           enableACME = true;
 
-            root = "/var/www/panel.owo.solutions";
+          root = "/var/www/panel.owo.solutions/public";
 
           locations = {
             "/" = {
-                tryFiles = "$uri $uri/ /index.php?$query_string";
+              index = "index.php";
+              tryFiles = "$uri $uri/ /index.php?$query_string";
             };
-            "\.php$" = {
-                fastcgiParams = {
-                    "fastcgi_pass" = unix:${config.services.phpfpm.pools.pterodactyl.socket};
-                };
+            "~ \\.php$" = {
+              extraConfig = ''
+                fastcgi_pass unix:${config.services.phpfpm.pools.pterodactyl.socket};
+                fastcgi_index index.php;
+              '';
+              fastcgiParams = { "test" = "test"; };
             };
           };
         };

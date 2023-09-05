@@ -115,18 +115,6 @@
         enableACME = true;
         locations."/" = { proxyPass = "http://127.0.0.1:9191"; };
       };
-      "xmpp.${config.networking.fqdn}" = {
-        serverAliases = [
-          "upload.xmpp.${config.networking.fqdn}"
-          "conference.xmpp.${config.networking.fqdn}"
-        ];
-        kTLS = true;
-        http2 = true;
-        http3 = true;
-        forceSSL = true;
-        enableACME = true;
-        locations."/" = { return = "302 https://mousetail.dev"; };
-      };
     };
   };
 }

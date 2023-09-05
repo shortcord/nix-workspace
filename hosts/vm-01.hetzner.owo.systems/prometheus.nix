@@ -45,7 +45,7 @@
         analytics = { reporting_enabled = false; };
         users = { allow_sign_up = false; };
         "auth.anonymous" = {
-          enabled = true;
+          enabled = false;
           org_name = "Main Org.";
           org_role = "Viewer";
           hide_version = true;
@@ -72,6 +72,10 @@
       checkConfig = "syntax-only";
       exporters = {
         node = {
+          enable = true;
+          openFirewall = true;
+        };
+        systemd = {
           enable = true;
           openFirewall = true;
         };
