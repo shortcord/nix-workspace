@@ -1,4 +1,9 @@
-{ pkgs, config, ... }: {
+{ name, pkgs, config, ... }: {
+  age.secrets.deluged = {
+    file = ../../secrets/${name}/deluged.age;
+    owner = config.services.deluge.user;
+    group = config.services.deluge.group;
+  };
   fileSystems = {
     "/var/lib/deluge" = {
       device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
@@ -13,28 +18,20 @@
       ];
     };
   };
+  networking.firewall = {
+    allowedTCPPorts = [ 58846 ];
+    allowedUDPPorts = [ 58846 ];
+  };
   services = {
     deluge = {
       enable = true;
       declarative = true;
-      web = { enable = true; };
+      web = { enable = false; };
+      authFile = config.age.secrets.deluged.path;
       config = {
         torrentfiles_location = "/var/lib/deluge/torrentfiles";
         download_location = "/var/lib/deluge/downloaded";
-        torrentfiles_location = "/var/lib/deluge/torrentfiles";
-      };
-    };
-    nginx = {
-      virtualHosts = {
-        "deluged.${config.networking.fqdn}" = {
-          kTLS = true;
-          http2 = true;
-          http3 = true;
-          forceSSL = true;
-          enableACME = true;
-
-          locations."/" = { proxyPass = "http://127.0.0.1:8112"; };
-        };
+        allow_remote = true;
       };
     };
   };
