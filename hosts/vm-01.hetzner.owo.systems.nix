@@ -20,6 +20,8 @@
     ./${name}/nginx.nix
     ./${name}/xmpp.nix
     ./${name}/prometheus.nix
+    ./${name}/pterodactyl.nix
+    ./${name}/xmpp.nix
     ./general/promtail.nix
   ];
 
@@ -72,13 +74,6 @@
         # Nginx w/HTTPS
         80
         443
-        # Prosody XMPP
-        5000
-        5222
-        5269
-        5281
-        5347
-        5582
       ];
       allowPing = true;
     };
