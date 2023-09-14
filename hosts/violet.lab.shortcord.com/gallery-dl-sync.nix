@@ -41,6 +41,7 @@ let
     https://e621.net/posts?tags=fozzey
     https://e621.net/posts?tags=kiwa_flowcat
     https://e621.net/posts?tags=tsudamaku
+    https://e621.net/posts?tags=punkypanda
 
     # Characters
     https://e621.net/posts?tags=texi_%28yitexity%29
