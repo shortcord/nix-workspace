@@ -14,7 +14,7 @@
     powerdns-env.file = ../secrets/${name}/powerdns-env.age;
   };
 
-  imports = [ 
+  imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
     ./${name}/hardware.nix
     ./${name}/nginx.nix
@@ -40,29 +40,39 @@
     '';
   };
 
+  systemd.network = {
+    enable = true;
+    networks = {
+      "20-wan" = {
+        matchConfig = {
+          Name = "ens3";
+          MACAddress = "96:00:02:16:8c:20";
+        };
+        networkConfig = {
+          DHCP = "no";
+          DNS = [ "127.0.0.1" ];
+          Address = [ 
+            "88.198.125.192/32"
+            "2a01:4f8:c012:a734::1/64"
+          ];
+          Gateway = [ "172.31.1.1" "fe80::1" ];
+          IPv6AcceptRA = true;
+        };
+        routes = [{
+          routeConfig = {
+            Scope = "link";
+            Destination = "172.31.1.1";
+          };
+        }];
+      };
+    };
+  };
+
   networking = {
-    useDHCP = false;
     hostName = "vm-01";
     domain = "hetzner.owo.systems";
-    nameservers = [ "127.0.0.1" "::1" ];
-    defaultGateway = {
-      address = "172.31.1.1";
-      interface = "ens3";
-    };
-    defaultGateway6 = {
-      address = "fe80::1";
-      interface = "ens3";
-    };
-    interfaces.ens3 = {
-      ipv4.addresses = [{
-        address = "88.198.125.192";
-        prefixLength = 32;
-      }];
-      ipv6.addresses = [{
-        address = "2a01:4f8:c012:a734::1";
-        prefixLength = 64;
-      }];
-    };
+    useDHCP = false;
+    useNetworkd = true;
     firewall = {
       enable = true;
       allowedUDPPorts = [ 51820 53 ];
@@ -100,13 +110,27 @@
 
   environment.systemPackages = with pkgs; [ vim git ];
 
+  containers = {
+    # testing = {
+    #   autoStart = true;
+    #   privateNetwork = true;
+    #   localAddress6 = "2a01:4f8:c012:a734::2/128";
+    #   config = { config, pkgs, ... }: {
+    #     services.httpd.enable = true;
+    #     networking.firewall = {
+    #       allowedTCPPorts = [ 22 80 ];
+    #       allowPing = true;
+    #     };
+    #   };
+    # };
+  };
+
   services = {
     ndppd = {
-      enable = true;
-      proxies.ens3 = {
-        rules."primary" = {
-          network = "2a01:4f8:c012:a734::/64";
-          method = "static";
+      enable = false;
+      proxies = {
+        "ens3" = {
+          rules = { "2a01:4f8:c012:a734::/64" = { method = "static"; }; };
         };
       };
     };
