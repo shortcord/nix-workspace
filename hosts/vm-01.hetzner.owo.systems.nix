@@ -51,12 +51,11 @@
         networkConfig = {
           DHCP = "no";
           DNS = [ "127.0.0.1" ];
-          Address = [ 
-            "88.198.125.192/32"
-            "2a01:4f8:c012:a734::1/64"
-          ];
+          Address = [ "88.198.125.192/32" "2a01:4f8:c012:a734::1/64" ];
           Gateway = [ "172.31.1.1" "fe80::1" ];
           IPv6AcceptRA = true;
+          IPv6ProxyNDP = true;
+          IPv6ProxyNDPAddress = builtins.map (ct: ct.localAddress6) (builtins.attrValues config.containers);
         };
         routes = [{
           routeConfig = {
@@ -98,10 +97,11 @@
             publicKey = "2a8w4y36L4hiG2ijQKZOfKTar28A4SPtupZnTXVUrTI=";
             persistentKeepalive = 15;
             allowedIPs = [ "10.7.210.1/32" ];
-            endpoint = "${nodes."ns2.owo.systems".config.networking.fqdn}:${
-                toString
-                nodes."ns2.owo.systems".config.networking.wireguard.interfaces.wg1.listenPort
-              }";
+            endpoint = builtins.concatStringsSep ":" [
+              nodes."ns2.owo.systems".config.networking.fqdn
+              (toString
+                nodes."ns2.owo.systems".config.networking.wireguard.interfaces.wg1.listenPort)
+            ];
           }];
         };
       };
@@ -111,18 +111,19 @@
   environment.systemPackages = with pkgs; [ vim git ];
 
   containers = {
-    # testing = {
-    #   autoStart = true;
-    #   privateNetwork = true;
-    #   localAddress6 = "2a01:4f8:c012:a734::2/128";
-    #   config = { config, pkgs, ... }: {
-    #     services.httpd.enable = true;
-    #     networking.firewall = {
-    #       allowedTCPPorts = [ 22 80 ];
-    #       allowPing = true;
-    #     };
-    #   };
-    # };
+    testing = {
+      autoStart = true;
+      privateNetwork = true;
+      hostAddress6 = "fc00::1";
+      localAddress6 = "2a01:4f8:c012:a734::10";
+      config = { config, pkgs, ... }: {
+        services.httpd.enable = true;
+        networking.firewall = {
+          allowedTCPPorts = [ 22 80 ];
+          allowPing = true;
+        };
+      };
+    };
   };
 
   services = {
@@ -198,7 +199,6 @@
       };
     };
   };
-
   virtualisation = {
     docker = {
       enable = true;
