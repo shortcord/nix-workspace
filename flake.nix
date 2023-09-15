@@ -11,9 +11,13 @@
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    pterodactyl.url = "path:./pkgs/pterodactyl";
   };
 
-  outputs = { nixpkgs, colmena, ragenix, nixos-generators, flake-utils, ... }:
+  outputs = { 
+    nixpkgs, colmena,
+    ragenix, nixos-generators,
+    flake-utils, pterodactyl, ... }:
     let scConfig = import ./config/default.nix;
     in {
       packages.x86_64-linux = {
@@ -48,7 +52,12 @@
       };
 
       colmena = {
-        meta = { nixpkgs = import nixpkgs { system = "x86_64-linux"; }; };
+        meta = { 
+          nixpkgs = import nixpkgs { system = "x86_64-linux"; };
+          specialArgs = {
+            inherit ragenix pterodactyl;
+          };
+        };
         defaults = {
           deployment = {
             targetUser = "short";
@@ -69,7 +78,10 @@
               options = "--delete-older-than 2d";
             };
           };
-          imports = [ ragenix.nixosModules.default ];
+          imports = [ 
+            ragenix.nixosModules.default
+            pterodactyl.nixosModules.default
+          ];
           security = {
             sudo = { wheelNeedsPassword = false; };
             acme = {
@@ -128,7 +140,7 @@
           imports = [ ./hosts/${name}.nix ];
         };
 
-        "violet.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+        "violet.lab.shortcord.com" = { name, nodes, pkgs, lib, config, pterodactyl-wings, ... }: {
           deployment.tags = [ "infra" "lab" "violet" ];
           age.secrets.distributedUserSSHKey.file =
             ./secrets/general/distributedUserSSHKey.age;

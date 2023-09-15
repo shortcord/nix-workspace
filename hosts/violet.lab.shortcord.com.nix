@@ -251,6 +251,14 @@ in
   };
 
   services = {
+    pterodactyl.wings = {
+      enable = true;
+      openFirewall = true;
+      package = wings;
+      allocatedTCPPorts = [ 2022 5000 5001 5002 5003 5004 5005 ];
+      allocatedUDPPorts = [ 5000 5001 5002 5003 5004 5005 ];
+      configFile = "/var/lib/pterodactyl/config.yaml";
+    };
     resolved.enable = false;
     pdns-recursor = {
       enable = true;
