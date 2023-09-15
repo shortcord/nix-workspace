@@ -18,6 +18,7 @@
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP7tbNsAdbSQXOTNpGKKN3mCSIUGn+hhaAqPzA7gh/Hj storage.owo.systems"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOqzy6mgAsJLPsYnYb6sWBvsmZKF8QG7lLE3A/yE55G7 vm01.hetzner.owo.systems"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP4tWdXuPUVt2Yv/cGig8Hilm/NZgpsqH1VbKYpOvnwh lilac.lab.shortcord.com"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMYLWI4ixfYTbbGymECI2zKPsXPzjoJYDPcb/8R4ptX+ matrix.mousetail.dev"
       ];
     };
   };
