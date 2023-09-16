@@ -3,10 +3,10 @@ let
   distributedUserSSHKeyPub = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKnmaQeov9+Xv7z/ulQ0zPVDN3ZKW4AUK8IyoVkbUKQa"
   ];
-in
-{
+in {
   age.secrets = {
     distributedUserSSHKey.file = ../secrets/general/distributedUserSSHKey.age;
+    wingsToken.file = ../secrets/${name}/wingsToken.age;
   };
 
   system.stateVersion = "23.05";
@@ -115,6 +115,18 @@ in
         "discard=async"
         "space_cache=v2"
         "subvolid=890"
+      ];
+    };
+    "/var/repo-mirrors" = {
+      device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
+      fsType = "btrfs";
+      options = [
+        "noatime"
+        "degraded"
+        "compress=zstd"
+        "discard=async"
+        "space_cache=v2"
+        "subvolid=926"
       ];
     };
     # "/nix" = {
@@ -253,11 +265,18 @@ in
   services = {
     pterodactyl.wings = {
       enable = true;
+      package = pkgs.pterodactyl-wings;
       openFirewall = true;
-      package = wings;
-      allocatedTCPPorts = [ 2022 5000 5001 5002 5003 5004 5005 ];
+      allocatedTCPPorts = [ 5000 5001 5002 5003 5004 5005 ];
       allocatedUDPPorts = [ 5000 5001 5002 5003 5004 5005 ];
-      configFile = "/var/lib/pterodactyl/config.yaml";
+      settings = {
+        api = {
+          host = "127.0.0.1";
+          port = 4443;
+        };
+        remote = "https://panel.owo.solutions";
+      };
+      extraConfigFile = config.age.secrets.wingsToken.path;
     };
     resolved.enable = false;
     pdns-recursor = {

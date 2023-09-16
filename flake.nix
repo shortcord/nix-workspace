@@ -14,10 +14,8 @@
     pterodactyl.url = "path:./pkgs/pterodactyl";
   };
 
-  outputs = { 
-    nixpkgs, colmena,
-    ragenix, nixos-generators,
-    flake-utils, pterodactyl, ... }:
+  outputs = { nixpkgs, colmena, ragenix, nixos-generators, flake-utils
+    , pterodactyl, ... }:
     let scConfig = import ./config/default.nix;
     in {
       packages.x86_64-linux = {
@@ -52,11 +50,12 @@
       };
 
       colmena = {
-        meta = { 
-          nixpkgs = import nixpkgs { system = "x86_64-linux"; };
-          specialArgs = {
-            inherit ragenix pterodactyl;
+        meta = {
+          nixpkgs = import nixpkgs {
+            system = "x86_64-linux";
+            overlays = [ pterodactyl.overlays.default ];
           };
+          specialArgs = { inherit ragenix pterodactyl; };
         };
         defaults = {
           deployment = {
@@ -78,10 +77,8 @@
               options = "--delete-older-than 2d";
             };
           };
-          imports = [ 
-            ragenix.nixosModules.default
-            pterodactyl.nixosModules.default
-          ];
+          imports =
+            [ ragenix.nixosModules.default pterodactyl.nixosModules.default ];
           security = {
             sudo = { wheelNeedsPassword = false; };
             acme = {
@@ -127,7 +124,8 @@
         };
 
         "vm-01.hetzner.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment.tags = [ "infra" "nameserver" "grafana" "prometheus" "vm-01" ];
+          deployment.tags =
+            [ "infra" "nameserver" "grafana" "prometheus" "vm-01" ];
           age.secrets.distributedUserSSHKey.file =
             ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
@@ -140,7 +138,7 @@
           imports = [ ./hosts/${name}.nix ];
         };
 
-        "violet.lab.shortcord.com" = { name, nodes, pkgs, lib, config, pterodactyl-wings, ... }: {
+        "violet.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "infra" "lab" "violet" ];
           age.secrets.distributedUserSSHKey.file =
             ./secrets/general/distributedUserSSHKey.age;

@@ -11,10 +11,13 @@
         pterodactyl-wings = import ./wings/module.nix;
         default = pterodactyl-wings;
       };
+      overlays.default = _final: prev: rec {
+        pterodactyl-wings = self.packages.${prev.stdenv.hostPlatform.system}.pterodactyl-wings;
+      };
     } // flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        pterodactyl-wings = pkgs.callPackage ./wings/pkgs/pterodactyl/wings/flake.nixdefault.nix {};
+        pterodactyl-wings = pkgs.callPackage ./wings/default.nix {};
       in
         {
           packages =
