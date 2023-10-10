@@ -11,11 +11,11 @@
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    pterodactyl.url = "path:./pkgs/pterodactyl";
+    pterodactyl-wings.url = "path:./pkgs/pterodactyl/wings";
   };
 
   outputs = { nixpkgs, colmena, ragenix, nixos-generators, flake-utils
-    , pterodactyl, ... }:
+    , pterodactyl-wings, ... }:
     let scConfig = import ./config/default.nix;
     in {
       packages.x86_64-linux = {
@@ -31,7 +31,14 @@
           modules = [ ./templates/proxmox-lxc.nix ];
           specialArgs = { scConfig = scConfig; };
         };
+        proxmox = nixos-generators.nixosGenerate {
+          format = "proxmox";
+          system = "x86_64-linux";
+          modules = [ ./templates/proxmox.nix ];
+          specialArgs = { scConfig = scConfig; };
+        };
       };
+
       devShells = {
         x86_64-darwin.default = nixpkgs.legacyPackages.x86_64-darwin.mkShell {
           buildInputs = [
@@ -53,9 +60,9 @@
         meta = {
           nixpkgs = import nixpkgs {
             system = "x86_64-linux";
-            overlays = [ pterodactyl.overlays.default ];
+            overlays = [ pterodactyl-wings.overlays.default ];
           };
-          specialArgs = { inherit ragenix pterodactyl; };
+          specialArgs = { inherit ragenix pterodactyl-wings; };
         };
         defaults = {
           deployment = {
@@ -78,7 +85,7 @@
             };
           };
           imports =
-            [ ragenix.nixosModules.default pterodactyl.nixosModules.default ];
+            [ ragenix.nixosModules.default pterodactyl-wings.nixosModules.default ];
           security = {
             sudo = { wheelNeedsPassword = false; };
             acme = {
@@ -144,6 +151,13 @@
             ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
         };
+         
+        "keycloak.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "keycloak" ];
+          imports = [ ./hosts/${name}.nix ];
+        };
+
+        # 2600:6c64:6a7f:bf41:3878:56ff:feb7:3240
 
         # "dellmaus.lan" = { name, nodes, pkgs, lib, config, ... }: {
         #   imports = [ ./hosts/${name}.nix ];
