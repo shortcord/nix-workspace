@@ -19,7 +19,34 @@
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOqzy6mgAsJLPsYnYb6sWBvsmZKF8QG7lLE3A/yE55G7 vm01.hetzner.owo.systems"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP4tWdXuPUVt2Yv/cGig8Hilm/NZgpsqH1VbKYpOvnwh lilac.lab.shortcord.com"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMYLWI4ixfYTbbGymECI2zKPsXPzjoJYDPcb/8R4ptX+ matrix.mousetail.dev"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBuhG34gZHiHgpE4rz7sdEZHIuI2154nTK3TOufUkBxA keycloak.lab.shortcord.com"
       ];
+    };
+  };
+  wireguard = {
+    "router.cloud.shortcord.com" = {
+      publicKey = "ePYkBTYZaul66VdGLG70IZcCvIaZ7aSeRrkb+hskhiQ=";
+      ipAddresses = [ ];
+    };
+    "ns2.owo.systems" = {
+      publicKey = "2a8w4y36L4hiG2ijQKZOfKTar28A4SPtupZnTXVUrTI=";
+      ipAddresses = [ "10.7.210.1/32" ];
+    };
+    "vm-01.hetzner.owo.systems" = {
+      publicKey = "x8o7GM5Fk1EYZK9Mgx4/DIt7DxAygvKg310G6+VHhUs=";
+      ipAddresses = [ "10.7.210.2/32" ];
+    };
+    "storage.owo.systems" = { 
+      publicKey = "";
+      ipAddresses = [ ];
+    };
+    "lilac.lab.shortcord.com" = {
+      publicKey = "iCm6s21gpwlvaVoBYw0Wyaa39q/REIa+aTFXvkBFYEQ=";
+      ipAddresses = [ "10.7.210.3/32" ];
+    };
+    "violet.lab.shortcord.com" = {
+      publicKey = "";
+      ipAddresses = [ ];
     };
   };
 }
