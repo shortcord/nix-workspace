@@ -1,5 +1,5 @@
 {
-  description = "Pterodactyl";
+  description = "Pterodactyl Wings";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/23.05";
   inputs.flake-utils.url = "github:numtide/flake-utils";
@@ -20,10 +20,9 @@
         pterodactyl-wings = pkgs.callPackage ./wings/default.nix {};
       in
         {
-          packages =
-          {
+          packages = {
             default = pterodactyl-wings;
-            pterodactyl-wings = pterodactyl-wings ;
+            pterodactyl-wings = pterodactyl-wings;
           };
         }
       );
