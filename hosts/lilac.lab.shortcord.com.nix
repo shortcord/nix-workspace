@@ -53,10 +53,7 @@ in
             publicKey = "2a8w4y36L4hiG2ijQKZOfKTar28A4SPtupZnTXVUrTI=";
             persistentKeepalive = 15;
             allowedIPs = [ "10.7.210.1/32" ];
-            endpoint = "${nodes."ns2.owo.systems".config.networking.fqdn}:${
-                toString
-                nodes."ns2.owo.systems".config.networking.wireguard.interfaces.wg1.listenPort
-              }";
+            endpoint = "ns2.owo.systems:51820";
           }];
         };
       };
