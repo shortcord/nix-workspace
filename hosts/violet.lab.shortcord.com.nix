@@ -23,6 +23,7 @@ in {
     ./${name}/gallery-dl-sync.nix
     ./${name}/deluged.nix
     ./${name}/owncast.nix
+    ./${name}/komga.nix
   ];
 
   fileSystems = {
@@ -164,10 +165,20 @@ in {
             Announce=yes
           '';
         };
-        "30-home" = {
-          matchConfig.MACAddress = "C8:1F:66:E6:7A:54";
+        # "30-home" = {
+        #   matchConfig.MACAddress = "C8:1F:66:E6:7A:54";
+        #   linkConfig.RequiredForOnline = "no";
+        #   address = [ "192.168.15.2/24" ];
+        #   networkConfig = {
+        #     DHCP = "no";
+        #     DNS = "no";
+        #     IPv6AcceptRA = false;
+        #   };
+        # };
+        "40-lan2" = {
+          matchConfig.MACAddress = "C8:1F:66:E6:7A:53";
           linkConfig.RequiredForOnline = "no";
-          address = [ "192.168.15.2/24" ];
+          address = [ "192.168.15.1/24" ];
           networkConfig = {
             DHCP = "no";
             DNS = "no";
@@ -223,13 +234,13 @@ in {
       allowedUDPPorts = [ 5201 ];
       allowedTCPPorts = [ 22 80 443 5201 ];
       allowPing = true;
-      trustedInterfaces = [ "eno1" "eno2" "eno4" ];
+      trustedInterfaces = [ "eno1" "eno2" "eno3" "eno4" ];
     };
     nat = {
       enable = true;
       enableIPv6 = false;
       externalInterface = "eno1";
-      internalInterfaces = [ "eno2" ];
+      internalInterfaces = [ "eno2" "eno3" ];
     };
   };
 
@@ -283,7 +294,7 @@ in {
       enable = true;
       dns = {
         port = 53;
-        address = [ "127.0.0.1" "::1" "10.18.0.1" ];
+        address = [ "127.0.0.1" "::1" "10.18.0.1" "192.168.15.1" ];
       };
     };
     dhcpd4 = {
@@ -315,7 +326,7 @@ in {
     };
     frr = {
       zebra = {
-        enable = true;
+        enable = false;
         config = ''
           interface eno4
             ip ospf bfd
@@ -327,14 +338,14 @@ in {
         '';
       };
       ospf = {
-        enable = true;
+        enable = false;
         config = ''
           router ospf
             redistribute connected
         '';
       };
       ospf6 = {
-        enable = true;
+        enable = false;
         config = ''
           router ospf6
             redistribute connected
