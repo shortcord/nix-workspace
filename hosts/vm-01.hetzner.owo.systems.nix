@@ -55,7 +55,8 @@
           Gateway = [ "172.31.1.1" "fe80::1" ];
           IPv6AcceptRA = true;
           IPv6ProxyNDP = true;
-          IPv6ProxyNDPAddress = builtins.map (ct: ct.localAddress6) (builtins.attrValues config.containers);
+          IPv6ProxyNDPAddress = builtins.map (ct: ct.localAddress6)
+            (builtins.attrValues config.containers);
         };
         routes = [{
           routeConfig = {
@@ -221,7 +222,13 @@
           autoStart = true;
           image =
             "gitlab.shortcord.com:5050/shortcord/shortcord.com:ad3e6c0218ebcda9247b575d7f3b65bbea9a3e49";
-          ports = [ "127.0.0.1:9200:80" ];
+          ports = [ "127.0.0.2:81:80" ];
+        };
+        "owo.solutions" = {
+          autoStart = true;
+          image =
+            "gitlab.shortcord.com:5050/owo.solutions/homepage:21d37ec71927af3ca6f0fce52e702e323a468fcb";
+          ports = [ "127.0.0.2:82:80" ];
         };
       };
     };
