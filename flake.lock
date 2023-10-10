@@ -267,19 +267,19 @@
         "type": "github"
       }
     },
-    "pterodactyl": {
+    "pterodactyl-wings": {
       "inputs": {
         "flake-utils": "flake-utils_2",
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-3lnMJeULAukrzET3ikg4GPHSCX2nsq6EbYboYtklNZ0=",
-        "path": "./pkgs/pterodactyl",
+        "narHash": "sha256-yk87CFdfim92dG27RHoeKiTFbY5NrA+fTkOaHTvzkGY=",
+        "path": "./pkgs/pterodactyl/wings",
         "type": "path"
       },
       "original": {
-        "path": "./pkgs/pterodactyl",
+        "path": "./pkgs/pterodactyl/wings",
         "type": "path"
       }
     },
@@ -313,7 +313,7 @@
         "flake-utils": "flake-utils",
         "nixos-generators": "nixos-generators",
         "nixpkgs": "nixpkgs_2",
-        "pterodactyl": "pterodactyl",
+        "pterodactyl-wings": "pterodactyl-wings",
         "ragenix": "ragenix"
       }
     },
