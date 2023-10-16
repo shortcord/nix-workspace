@@ -33,7 +33,7 @@ in
     wireguard = {
       enable = true;
       interfaces = {
-        wg0 = {
+        "wg0" = {
           ips = [ "10.6.210.29/32" ];
           mtu = 1200;
           listenPort = 51820;
@@ -74,6 +74,33 @@ in
         node = {
           enable = true;
           openFirewall = true;
+        };
+      };
+    };
+  };
+
+  # Ensure that all wireguard tunnels are up
+  # There is probably a better way for this but idk
+  systemd = {
+    timers = {
+      "check-wireguard-tunnels" = {
+        wantedBy = [ "timers.target" ];
+        timerConfig = {
+          OnBootSec = "5m";
+          OnUnitActiveSec = "5m";
+          Unit = "check-wireguard-tunnels.service";
+        };
+      };
+    };
+    services = {
+      "check-wireguard-tunnels" = {
+        script = ''
+          ping -qc 1 10.6.210.1 > /dev/null || systemctl restart wireguard-wg0.service
+          ping -qc 1 10.7.210.1 > /dev/null || systemctl restart wireguard-mail-relay.service          
+        '';
+        serviceConfig = {
+          Type = "oneshot";
+          User = "root";
         };
       };
     };
