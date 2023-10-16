@@ -95,8 +95,8 @@ in
     services = {
       "check-wireguard-tunnels" = {
         script = ''
-          ping -qc 1 10.6.210.1 > /dev/null || systemctl restart wireguard-wg0.service
-          ping -qc 1 10.7.210.1 > /dev/null || systemctl restart wireguard-mail-relay.service          
+          ping -qc1 -w1 10.6.210.1 > /dev/null || systemctl restart wireguard-wg0.service
+          ping -qc1 -w1 10.7.210.1 > /dev/null || systemctl restart wireguard-mail-relay.service          
         '';
         serviceConfig = {
           Type = "oneshot";
