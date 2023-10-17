@@ -107,22 +107,6 @@
           proxyWebsockets = true;
         };
       };
-      "powerdns.${config.networking.fqdn}" = {
-        kTLS = true;
-        http2 = true;
-        http3 = true;
-        forceSSL = true;
-        enableACME = true;
-        locations."/" = { proxyPass = "http://127.0.0.1:8081"; };
-      };
-      "powerdns-admin.${config.networking.fqdn}" = {
-        kTLS = true;
-        http2 = true;
-        http3 = true;
-        forceSSL = true;
-        enableACME = true;
-        locations."/" = { proxyPass = "http://127.0.0.1:9191"; };
-      };
     };
   };
 }
