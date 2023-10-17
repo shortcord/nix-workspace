@@ -22,6 +22,8 @@
     ./${name}/prometheus.nix
     ./${name}/pterodactyl.nix
     ./${name}/xmpp.nix
+    ./${name}/writefreely.nix
+    ./${name}/powerdns.nix
     ./general/promtail.nix
   ];
 
@@ -136,56 +138,6 @@
         };
       };
     };
-    fail2ban = { enable = true; };
-    openssh = { enable = true; };
-    writefreely = {
-      enable = true;
-      host = "blog.mousetail.dev";
-      acme.enable = true;
-      nginx = {
-        enable = true;
-        forceSSL = true;
-      };
-      database = {
-        type = "sqlite3";
-        name = "writefreely";
-      };
-      admin.name = "short";
-      settings.app.single_user = true;
-    };
-    powerdns = {
-      enable = true;
-      secretFile = config.age.secrets.powerdnsConfig.path;
-      extraConfig = ''
-        resolver=[::1]:53
-        expand-alias=yes
-
-        local-address=88.198.125.192:53, [2a01:4f8:c012:a734::1]:53
-
-        webserver=yes
-        webserver-address=127.0.0.1
-        webserver-port=8081
-        webserver-allow-from=0.0.0.0/0,::/0
-        api=yes
-        api-key=$API_KEY
-
-        launch=gmysql
-
-        gmysql-port=3306
-        gmysql-host=127.0.0.1
-        gmysql-dbname=$SQL_DATABASE
-        gmysql-user=$SQL_USER
-        gmysql-password=$SQL_PASSWORD
-        gmysql-dnssec=yes
-      '';
-    };
-    pdns-recursor = {
-      enable = true;
-      dns = {
-        port = 53;
-        address = [ "127.0.0.1" "::1" ];
-      };
-    };
     mysql = {
       package = pkgs.mariadb;
       enable = true;
@@ -211,13 +163,6 @@
     oci-containers = {
       backend = "docker";
       containers = {
-        "powerdns-admin" = {
-          autoStart = true;
-          image = "powerdnsadmin/pda-legacy:v0.4.1";
-          volumes = [ "powerdns-admin-data:/data" ];
-          environmentFiles = [ config.age.secrets.powerdns-env.path ];
-          ports = [ "127.0.0.1:9191:80" ];
-        };
         "shortcord.com" = {
           autoStart = true;
           image =

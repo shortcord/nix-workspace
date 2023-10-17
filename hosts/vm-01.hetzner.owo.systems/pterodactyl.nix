@@ -1,4 +1,7 @@
-{ pkgs, config, ... }: {
+{ pkgs, config, ... }: 
+let
+  webRoot = "/var/www/panel.owo.solutions";
+in {
   environment.systemPackages = with pkgs; [
     php81
     php81Packages.composer
@@ -44,7 +47,7 @@
           forceSSL = true;
           enableACME = true;
 
-          root = "/var/www/panel.owo.solutions/public";
+          root = "${webRoot}/public";
 
           locations = {
             "/" = {
@@ -77,7 +80,7 @@
       "pterodactyl-tasks" = {
         script = ''
           set -eu
-          ${pkgs.php81}/bin/php /var/www/panel.owo.solutions/artisan schedule:run
+          ${pkgs.php81}/bin/php ${webRoot}/artisan schedule:run
         '';
         serviceConfig = {
           Type = "oneshot";
@@ -90,7 +93,7 @@
         startLimitBurst = 30;
         script = ''
           set -eu
-          ${pkgs.php81}/bin/php /var/www/panel.owo.solutions/artisan queue:work --queue=high,standard,low --sleep=3 --tries=3
+          ${pkgs.php81}/bin/php ${webRoot}/artisan queue:work --queue=high,standard,low --sleep=3 --tries=3
         '';
         serviceConfig = {
           User = config.services.nginx.user;
