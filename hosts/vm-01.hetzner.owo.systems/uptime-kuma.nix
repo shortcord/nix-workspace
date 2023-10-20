@@ -10,6 +10,7 @@
     nginx = {
       virtualHosts = {
         "uptime.${config.networking.fqdn}" = {
+          serverAliases = [ "status.miauws.life" ];
           kTLS = true;
           http2 = true;
           http3 = true;

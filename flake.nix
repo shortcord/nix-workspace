@@ -12,10 +12,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     pterodactyl-wings.url = "path:./pkgs/pterodactyl/wings";
+    nixos-mailserver = {
+      url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-23.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { nixpkgs, colmena, ragenix, nixos-generators, flake-utils
-    , pterodactyl-wings, ... }:
+    , nixos-mailserver, pterodactyl-wings, ... }:
     let scConfig = import ./config/default.nix;
     in {
       packages.x86_64-linux = {
@@ -68,7 +72,7 @@
             system = "x86_64-linux";
             overlays = [ pterodactyl-wings.overlays.default ];
           };
-          specialArgs = { inherit ragenix pterodactyl-wings; };
+          specialArgs = { inherit ragenix pterodactyl-wings nixos-mailserver; };
         };
         defaults = {
           deployment = {
@@ -90,8 +94,11 @@
               options = "--delete-older-than 2d";
             };
           };
-          imports =
-            [ ragenix.nixosModules.default pterodactyl-wings.nixosModules.default ];
+          imports = [
+            ragenix.nixosModules.default
+            pterodactyl-wings.nixosModules.default
+            nixos-mailserver.nixosModules.default
+          ];
           security = {
             sudo = { wheelNeedsPassword = false; };
             acme = {
@@ -160,10 +167,9 @@
 
         "miauws.life" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "miauws" ];
-          deployment.targetHost = "51.81.23.224";
           imports = [ ./hosts/${name}.nix ];
         };
-         
+
         # "keycloak.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
         #   deployment.tags = [ "keycloak" ];
         #   imports = [ ./hosts/${name}.nix ];

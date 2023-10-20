@@ -6,7 +6,7 @@
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEUi5rrB0okX4gQUsivnujVY+0ggin5zKTJMP7ynwKLU short@surface"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPWfoWfo/L6yoIwCbnV7IwfsSFrrrnt6cQpoX60YDaQ0 short@mauspad"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICAXRx3C0/Rjiz5mpqX/Iygkr1wOTG1fw6Am9zKpZUr1 short@dellmaus"
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDQ1g7exwsFUbtR+ERJibV+l4VBHgGe+IBfr/qY8lgiJ short@nixbook"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN+WQNAEcOMKpWFofZVJGe5M0gr5dyDAMBQhmev8D/VC short@nixbook"
       ];
       deployment = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOzNDt0mA8dV9l5A/1tIgLVBf6ynUjjZN0Dckvs3kRIG deployment@gitlab.shortcord.com"
