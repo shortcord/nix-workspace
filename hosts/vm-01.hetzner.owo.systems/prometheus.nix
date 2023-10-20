@@ -137,6 +137,7 @@
               "maus.home.shortcord.com"
               "violet.lab.shortcord.com"
               "lilac.lab.shortcord.com"
+              "miauws.life"
             ];
           }];
           relabel_configs = [
@@ -167,6 +168,7 @@
               "maus.home.shortcord.com"
               "violet.lab.shortcord.com"
               "lilac.lab.shortcord.com"
+              "miauws.life"
             ];
           }];
           relabel_configs = [

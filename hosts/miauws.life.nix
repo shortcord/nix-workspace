@@ -1,7 +1,12 @@
 { name, nodes, pkgs, lib, config, modulesPath, ... }: {
   system.stateVersion = "23.05";
 
-  imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
+  imports = [ 
+    (modulesPath + "/profiles/qemu-guest.nix")
+    ./general/promtail.nix
+    ./${name}/mailserver.nix
+    ./${name}/mastodon.nix
+  ];
 
   swapDevices = [ ];
   zramSwap.enable = true;
@@ -77,11 +82,21 @@
   };
 
   services = {
+    qemuGuest.enable = true;
     pdns-recursor = {
       enable = true;
       dns = {
         port = 53;
         address = [ "127.0.0.1" "::1" ];
+      };
+    };
+    prometheus = {
+      enable = true;
+      exporters = {
+        node = {
+          enable = true;
+          openFirewall = true;
+        };
       };
     };
   };

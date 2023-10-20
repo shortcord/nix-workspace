@@ -43,4 +43,6 @@ in
 
   # Secrets for miauws.life
   "miauws.life/catstodon.env.age".publicKeys = all;
+  "miauws.life/email-short.env.age".publicKeys = all;
+  "miauws.life/email-noreply.env.age".publicKeys = all;
 }
