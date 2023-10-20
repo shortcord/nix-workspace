@@ -40,4 +40,7 @@ in
   # Secrets for lilac.lab.shortcord.com
   "lilac.lab.shortcord.com/catstodon.env.age".publicKeys = all;
   "lilac.lab.shortcord.com/wireguardPrivateKey.age".publicKeys = all;
+
+  # Secrets for miauws.life
+  "miauws.life/catstodon.env.age".publicKeys = all;
 }

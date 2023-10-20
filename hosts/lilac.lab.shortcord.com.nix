@@ -3,10 +3,13 @@ let
   distributedUserSSHKeyPub = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKnmaQeov9+Xv7z/ulQ0zPVDN3ZKW4AUK8IyoVkbUKQa"
   ];
-in
-{
+in {
   age.secrets = {
-    wireguardPrivateKey.file = ../secrets/${name}/wireguardPrivateKey.age;
+    wireguardPrivateKey = {
+      file = ../secrets/${name}/wireguardPrivateKey.age;
+      owner = "systemd-network";
+      group = "systemd-network";
+    };
   };
 
   system.stateVersion = "23.05";
@@ -16,8 +19,45 @@ in
     ./general/promtail.nix
     ./${name}/hardware.nix
     ./${name}/mastodon.nix
+    # ./${name}/matrix.nix
     ./${name}/postgresql.nix
   ];
+
+  # systemd.network = {
+  #   enable = true;
+  #   netdevs = {
+  #     "50-wg0" = {
+  #       netdevConfig = {
+  #         Kind = "wireguard";
+  #         Name = "wg0";
+  #         MTUBytes = "1300";
+  #       };
+  #       wireguardConfig = {
+  #         PrivateKeyFile = config.age.secrets.wireguardPrivateKey.path;
+  #         ListenPort = 51820;
+  #       };
+  #       wireguardPeers = [{
+  #         wireguardPeerConfig = {
+  #           PublicKey = "ePYkBTYZaul66VdGLG70IZcCvIaZ7aSeRrkb+hskhiQ=";
+  #           AllowedIPs = [ "10.6.210.1/32" "10.6.210.0/24" "0.0.0.0/0" ];
+  #           Endpoint = "147.135.125.64:51820";
+  #           RouteTable = "off";
+  #         };
+  #       }];
+  #     };
+  #   };
+  #   networks.wg0 = {
+  #     matchConfig.Name = "wg0";
+  #     address = [ "10.6.210.29/32" ];
+  #     routes = [{
+  #       routeConfig = {
+  #         Gateway = "10.6.210.1";
+  #         Destination = "0.0.0.0/0";
+  #         Metric = 0;
+  #       };
+  #     }];
+  #   };
+  # };
 
   networking = {
     hostName = "lilac";

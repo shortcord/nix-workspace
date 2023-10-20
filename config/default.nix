@@ -6,6 +6,7 @@
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEUi5rrB0okX4gQUsivnujVY+0ggin5zKTJMP7ynwKLU short@surface"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPWfoWfo/L6yoIwCbnV7IwfsSFrrrnt6cQpoX60YDaQ0 short@mauspad"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICAXRx3C0/Rjiz5mpqX/Iygkr1wOTG1fw6Am9zKpZUr1 short@dellmaus"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDQ1g7exwsFUbtR+ERJibV+l4VBHgGe+IBfr/qY8lgiJ short@nixbook"
       ];
       deployment = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOzNDt0mA8dV9l5A/1tIgLVBf6ynUjjZN0Dckvs3kRIG deployment@gitlab.shortcord.com"
@@ -20,6 +21,7 @@
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP4tWdXuPUVt2Yv/cGig8Hilm/NZgpsqH1VbKYpOvnwh lilac.lab.shortcord.com"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMYLWI4ixfYTbbGymECI2zKPsXPzjoJYDPcb/8R4ptX+ matrix.mousetail.dev"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBuhG34gZHiHgpE4rz7sdEZHIuI2154nTK3TOufUkBxA keycloak.lab.shortcord.com"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJEfHEMvtBanjtNLBpzyZwDNA5ro7ORIFARnKeIj/GgS miauws.life"
       ];
     };
   };
@@ -45,6 +47,10 @@
       ipAddresses = [ "10.7.210.3/32" ];
     };
     "violet.lab.shortcord.com" = {
+      publicKey = "";
+      ipAddresses = [ ];
+    };
+    "miauws.life" = {
       publicKey = "";
       ipAddresses = [ ];
     };

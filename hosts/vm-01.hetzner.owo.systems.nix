@@ -24,6 +24,7 @@
     ./${name}/xmpp.nix
     ./${name}/writefreely.nix
     ./${name}/powerdns.nix
+    ./${name}/uptime-kuma.nix
     ./general/promtail.nix
   ];
 
