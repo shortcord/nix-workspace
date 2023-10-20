@@ -37,6 +37,12 @@
           modules = [ ./templates/proxmox.nix ];
           specialArgs = { scConfig = scConfig; };
         };
+        "miauws-life" = nixos-generators.nixosGenerate {
+          format = "proxmox";
+          system = "x86_64-linux";
+          modules = [ ./hosts/miauws.life.nix ];
+          specialArgs = { scConfig = scConfig; };
+        };
       };
 
       devShells = {
@@ -151,11 +157,17 @@
             ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
         };
-         
-        "keycloak.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment.tags = [ "keycloak" ];
+
+        "miauws.life" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "miauws" ];
+          deployment.targetHost = "51.81.23.224";
           imports = [ ./hosts/${name}.nix ];
         };
+         
+        # "keycloak.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+        #   deployment.tags = [ "keycloak" ];
+        #   imports = [ ./hosts/${name}.nix ];
+        # };
 
         # 2600:6c64:6a7f:bf41:3878:56ff:feb7:3240
 
