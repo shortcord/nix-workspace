@@ -12,31 +12,6 @@
     recommendedProxySettings = true;
     recommendedBrotliSettings = true;
     virtualHosts = {
-      "shortcord.com" = {
-        kTLS = true;
-        http2 = true;
-        http3 = true;
-        forceSSL = true;
-        enableACME = true;
-        locations."/" = { proxyPass = "http://127.0.0.2:81"; };
-      };
-      "owo.solutions" = {
-        kTLS = true;
-        http2 = true;
-        http3 = true;
-        forceSSL = true;
-        enableACME = true;
-        locations."/" = { proxyPass = "http://127.0.0.2:82"; };
-      };
-      "miauws.life" = {
-        kTLS = true;
-        http2 = true;
-        http3 = true;
-        forceSSL = true;
-        enableACME = true;
-        serverAliases = [ "miauws.tech" ];
-        locations."/" = { return = "302 https://mousetail.dev"; };
-      };
       "netbox.owo.solutions" = {
         kTLS = true;
         http2 = true;

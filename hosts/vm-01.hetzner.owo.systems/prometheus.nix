@@ -1,4 +1,4 @@
-{ name, pkgs, config, ... }: {
+{ name, pkgs, lib, config, ... }: {
   age.secrets = {
     minioPrometheusBearerToken = {
       owner = "prometheus";
@@ -17,7 +17,7 @@
     };
   };
   services = {
-    nginx = {
+    nginx = lib.mkIf config.services.nginx.enable {
       virtualHosts = {
         "prometheus.${config.networking.fqdn}" = {
           kTLS = true;
