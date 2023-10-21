@@ -124,15 +124,15 @@ in {
         script = ''
           set -eu
           
-          # Heartbeat Check
-          ${pkgs.curl}/bin/curl -sf 'https://uptime.vm-01.hetzner.owo.systems/api/push/G07VWI97qv'
-
           ${pkgs.flock}/bin/flock -n /tmp/gallery-dl-process.lockfile \
             ${pkgs.gallery-dl}/bin/gallery-dl \
               --config "${configFile}" \
               --input-file "/etc/gallery-dl-pages.txt" \
               --destination "${dlDirectory}" \
               --download-archive "${dlDirectory}/archive.db"
+
+          # Heartbeat Check
+          ${pkgs.curl}/bin/curl -sf 'https://uptime.vm-01.hetzner.owo.systems/api/push/G07VWI97qv'
 
           exit 0
         '';
