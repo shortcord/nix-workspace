@@ -22,7 +22,6 @@ in {
     ./${name}/jellyfin.nix
     ./${name}/gallery-dl-sync.nix
     ./${name}/deluged.nix
-    ./${name}/owncast.nix
     ./${name}/komga.nix
   ];
 
