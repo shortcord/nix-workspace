@@ -1,4 +1,30 @@
-{ name, pkgs, lib, config, ... }: {
+{ name, pkgs, lib, config, ... }:
+let
+  icmpTargets = [
+    "home.shortcord.com"
+    "router.cloud.shortcord.com"
+    "maus.home.shortcord.com"
+    "violet.lab.shortcord.com"
+    "lilac.lab.shortcord.com"
+    "miauws.life"
+  ];
+  nodeExporterTargets = [
+    "pve.owo.solutions:9100"
+    "miauws.life:9100"
+    "vm-01.hetzner.owo.systems:9100"
+    "violet.lab.shortcord.com:9100"
+    "ipfs-pin-node-01.owo.systems:9100"
+    "storage.owo.systems:9100"
+    "lilac.lab.shortcord.com:9100"
+    "maus.home.shortcord.com:9100"
+    "node.02.servers.owo.solutions:9100"
+  ];
+  powerdnsExporterTargets = [
+    "powerdns.vm-01.hetzner.owo.systems:443"
+    "powerdns.ns2.owo.systems:443"
+  ];
+
+ {
   age.secrets = {
     minioPrometheusBearerToken = {
       owner = "prometheus";
@@ -136,14 +162,7 @@
           scrape_interval = "5s";
           scrape_timeout = "3s";
           static_configs = [{
-            targets = [
-              "home.shortcord.com"
-              "router.cloud.shortcord.com"
-              "maus.home.shortcord.com"
-              "violet.lab.shortcord.com"
-              "lilac.lab.shortcord.com"
-              "miauws.life"
-            ];
+            targets = icmpTargets;
           }];
           relabel_configs = [
             {
@@ -167,14 +186,7 @@
           scrape_interval = "5s";
           scrape_timeout = "3s";
           static_configs = [{
-            targets = [
-              "home.shortcord.com"
-              "router.cloud.shortcord.com"
-              "maus.home.shortcord.com"
-              "violet.lab.shortcord.com"
-              "lilac.lab.shortcord.com"
-              "miauws.life"
-            ];
+            targets = icmpTargets;
           }];
           relabel_configs = [
             {
@@ -193,20 +205,16 @@
         }
         {
           job_name = "node-exporters";
-          dns_sd_configs = [{
-            names = [ "_node-exporter.prometheus.owo.systems" ];
-            type = "SRV";
-            refresh_interval = "5s";
+          static_configs = [{
+            targets = nodeExporterTargets;
           }];
         }
         {
           job_name = "powerdns-exporter";
           scheme = "https";
           metrics_path = "/metrics";
-          dns_sd_configs = [{
-            names = [ "_powerdns-exporter.owo.systems" ];
-            type = "SRV";
-            refresh_interval = "5s";
+          static_configs = [{
+            targets = powerdnsExporterTargets;
           }];
         }
       ];
