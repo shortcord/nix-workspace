@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }: 
 let
-  cfg = config.services.uiptime-kuma;
+  cfg = config.services.uptime-kuma;
 in {
   services = {
     uptime-kuma = {
