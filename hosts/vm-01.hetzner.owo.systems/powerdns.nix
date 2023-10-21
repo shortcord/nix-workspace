@@ -1,4 +1,13 @@
-{ config, pkgs, ... }: {
+{ name, config, lib, pkgs, ... }: {
+   age.secrets = {
+    powerdnsConfig.file = ../../secrets/${name}/powerdnsConfig.age;
+    powerdns-env.file = ../../secrets/${name}/powerdns-env.age;
+  };
+
+  networking.firewall = lib.mkIf config.networking.firewall.enable {
+    allowedUDPPorts = [ 53 ];
+    allowedTCPPorts = [ 53 ];
+  };
   services = {
     pdns-recursor = {
       enable = true;
@@ -17,7 +26,7 @@
         local-address=88.198.125.192:53, [2a01:4f8:c012:a734::1]:53
 
         webserver=yes
-        webserver-address=127.0.0.2
+        webserver-address=127.0.0.3
         webserver-port=8081
         webserver-allow-from=127.0.0.0/8
         api=yes
@@ -33,7 +42,7 @@
         gmysql-dnssec=yes
       '';
     };
-    nginx = {
+    nginx = lib.mkIf config.services.nginx.enable {
       virtualHosts = {
         "powerdns.${config.networking.fqdn}" = {
           kTLS = true;
@@ -41,7 +50,7 @@
           http3 = true;
           forceSSL = true;
           enableACME = true;
-          locations."/" = { proxyPass = "http://127.0.0.2:8081"; };
+          locations."/" = { proxyPass = "http://127.0.0.3:8081"; };
         };
         "powerdns-admin.${config.networking.fqdn}" = {
           kTLS = true;
@@ -49,7 +58,7 @@
           http3 = true;
           forceSSL = true;
           enableACME = true;
-          locations."/" = { proxyPass = "http://127.0.0.2:9191"; };
+          locations."/" = { proxyPass = "http://127.0.0.3:9191"; };
         };
       };
     };
@@ -62,7 +71,7 @@
           image = "powerdnsadmin/pda-legacy:v0.4.1";
           volumes = [ "powerdns-admin-data:/data" ];
           environmentFiles = [ config.age.secrets.powerdns-env.path ];
-          ports = [ "127.0.0.2:9191:80" ];
+          ports = [ "127.0.0.3:9191:80" ];
         };
       };
     };

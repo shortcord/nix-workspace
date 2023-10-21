@@ -1,4 +1,7 @@
-{ pkgs, config, ... }: {
+{ pkgs, lib, config, ... }: {
+  networking.firewall = lib.mkIf config.networking.firewall.enable {
+    allowedTCPPorts = [ 80 443 ];
+  };
   services.nginx = {
     package = pkgs.nginxQuic;
     enable = true;

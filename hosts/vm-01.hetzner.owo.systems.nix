@@ -2,22 +2,14 @@
   system.stateVersion = "22.11";
 
   age.secrets = {
-    prometheusBasicAuthPassword.file =
-      ../secrets/${name}/prometheusBasicAuthPassword.age;
-    minioPrometheusBearerToken = {
-      owner = "prometheus";
-      group = "prometheus";
-      file = ../secrets/${name}/minioPrometheusBearerToken.age;
-    };
     wireguardPrivateKey.file = ../secrets/${name}/wireguardPrivateKey.age;
-    powerdnsConfig.file = ../secrets/${name}/powerdnsConfig.age;
-    powerdns-env.file = ../secrets/${name}/powerdns-env.age;
   };
 
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
     ./${name}/hardware.nix
     ./${name}/nginx.nix
+    ./${name}/websites.nix
     ./${name}/xmpp.nix
     ./${name}/prometheus.nix
     ./${name}/pterodactyl.nix
@@ -78,16 +70,8 @@
     useNetworkd = true;
     firewall = {
       enable = true;
-      allowedUDPPorts = [ 51820 53 ];
-      allowedTCPPorts = [
-        # OpenSSH
-        22
-        # PowerDNS
-        53
-        # Nginx w/HTTPS
-        80
-        443
-      ];
+      allowedUDPPorts = [ 51820 ];
+      allowedTCPPorts = [ 22 ];
       allowPing = true;
     };
     wireguard = {
@@ -114,21 +98,21 @@
 
   environment.systemPackages = with pkgs; [ vim git ];
 
-  containers = {
-    testing = {
-      autoStart = true;
-      privateNetwork = true;
-      hostAddress6 = "fc00::1";
-      localAddress6 = "2a01:4f8:c012:a734::10";
-      config = { config, pkgs, ... }: {
-        services.httpd.enable = true;
-        networking.firewall = {
-          allowedTCPPorts = [ 22 80 ];
-          allowPing = true;
-        };
-      };
-    };
-  };
+  # containers = {
+  #   testing = {
+  #     autoStart = true;
+  #     privateNetwork = true;
+  #     hostAddress6 = "fc00::1";
+  #     localAddress6 = "2a01:4f8:c012:a734::10";
+  #     config = { config, pkgs, ... }: {
+  #       services.httpd.enable = true;
+  #       networking.firewall = {
+  #         allowedTCPPorts = [ 22 80 ];
+  #         allowPing = true;
+  #       };
+  #     };
+  #   };
+  # };
 
   services = {
     ndppd = {
@@ -161,23 +145,7 @@
         flags = [ "--all" ];
       };
     };
-    oci-containers = {
-      backend = "docker";
-      containers = {
-        "shortcord.com" = {
-          autoStart = true;
-          image =
-            "gitlab.shortcord.com:5050/shortcord/shortcord.com:ad3e6c0218ebcda9247b575d7f3b65bbea9a3e49";
-          ports = [ "127.0.0.2:81:80" ];
-        };
-        "owo.solutions" = {
-          autoStart = true;
-          image =
-            "gitlab.shortcord.com:5050/owo.solutions/homepage:21d37ec71927af3ca6f0fce52e702e323a468fcb";
-          ports = [ "127.0.0.2:82:80" ];
-        };
-      };
-    };
+    oci-containers.backend = "docker";
   };
 
   users.users.short = { extraGroups = [ "wheel" "docker" ]; };
