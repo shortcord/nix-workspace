@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ pkgs, lib, config, ... }:
 let
   pages = pkgs.writeText "pages.txt" ''
     # Favs
@@ -123,7 +123,7 @@ in {
         description = "GalleryDL";
         script = ''
           set -eu
-          
+
           ${pkgs.flock}/bin/flock -n /tmp/gallery-dl-process.lockfile \
             ${pkgs.gallery-dl}/bin/gallery-dl \
               --config "${configFile}" \
@@ -153,7 +153,7 @@ in {
       };
     };
   };
-  services.nginx = {
+  services.nginx = lib.mkIf config.services.nginx.enable {
     virtualHosts = {
       "filebrowser.${config.networking.fqdn}" = {
         kTLS = true;
