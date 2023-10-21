@@ -1,5 +1,10 @@
 { name, pkgs, config, ... }: {
   age.secrets = {
+    minioPrometheusBearerToken = {
+      owner = "prometheus";
+      group = "prometheus";
+      file = ../../secrets/${name}/minioPrometheusBearerToken.age;
+    };
     lokiConfig = {
       file = ../../secrets/${name}/lokiConfig.age;
       owner = config.services.loki.user;
