@@ -1,7 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/23.05";
-    colmena.url = "github:zhaofengli/colmena/v0.3.2";
+    colmena.url = "github:zhaofengli/colmena/release-0.4.x";
     flake-utils.url = "github:numtide/flake-utils";
     ragenix = {
       url = "github:yaxitech/ragenix";
@@ -169,17 +169,6 @@
           deployment.tags = [ "miauws" ];
           imports = [ ./hosts/${name}.nix ];
         };
-
-        # "keycloak.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
-        #   deployment.tags = [ "keycloak" ];
-        #   imports = [ ./hosts/${name}.nix ];
-        # };
-
-        # 2600:6c64:6a7f:bf41:3878:56ff:feb7:3240
-
-        # "dellmaus.lan" = { name, nodes, pkgs, lib, config, ... }: {
-        #   imports = [ ./hosts/${name}.nix ];
-        # };
       };
     };
 }
