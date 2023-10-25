@@ -24,7 +24,7 @@ let
     "powerdns.ns2.owo.systems:443"
   ];
 
- {
+ in {
   age.secrets = {
     minioPrometheusBearerToken = {
       owner = "prometheus";
