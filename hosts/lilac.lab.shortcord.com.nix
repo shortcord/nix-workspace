@@ -1,4 +1,4 @@
-{ name, nodes, pkgs, lib, config, ... }:
+{ name, nodes, pkgs, lib, config, modulesPath, ... }:
 let
   distributedUserSSHKeyPub = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKnmaQeov9+Xv7z/ulQ0zPVDN3ZKW4AUK8IyoVkbUKQa"
@@ -15,6 +15,7 @@ in {
   system.stateVersion = "23.05";
 
   imports = [
+    (modulesPath + "/profiles/qemu-guest.nix")
     ./general/dyndns-ipv6.nix
     ./general/promtail.nix
     ./${name}/hardware.nix
@@ -108,6 +109,7 @@ in {
   };
 
   services = {
+  qemuGuest.enable = true;
     prometheus = {
       enable = true;
       exporters = {
@@ -121,28 +123,28 @@ in {
 
   # Ensure that all wireguard tunnels are up
   # There is probably a better way for this but idk
-  systemd = {
-    timers = {
-      "check-wireguard-tunnels" = {
-        wantedBy = [ "timers.target" ];
-        timerConfig = {
-          OnBootSec = "5m";
-          OnUnitActiveSec = "5m";
-          Unit = "check-wireguard-tunnels.service";
-        };
-      };
-    };
-    services = {
-      "check-wireguard-tunnels" = {
-        script = ''
-          ${pkgs.iputils}/bin/ping -qc1 -w1 10.6.210.1 > /dev/null || systemctl restart wireguard-wg0.service
-          ${pkgs.iputils}/bin/ping -qc1 -w1 10.7.210.1 > /dev/null || systemctl restart wireguard-mail-relay.service          
-        '';
-        serviceConfig = {
-          Type = "oneshot";
-          User = "root";
-        };
-      };
-    };
-  };
+  # systemd = {
+  #   timers = {
+  #     "check-wireguard-tunnels" = {
+  #       wantedBy = [ "timers.target" ];
+  #       timerConfig = {
+  #         OnBootSec = "5m";
+  #         OnUnitActiveSec = "5m";
+  #         Unit = "check-wireguard-tunnels.service";
+  #       };
+  #     };
+  #   };
+  #   services = {
+  #     "check-wireguard-tunnels" = {
+  #       script = ''
+  #         ${pkgs.iputils}/bin/ping -qc1 -w1 10.6.210.1 > /dev/null || systemctl restart wireguard-wg0.service
+  #         ${pkgs.iputils}/bin/ping -qc1 -w1 10.7.210.1 > /dev/null || systemctl restart wireguard-mail-relay.service          
+  #       '';
+  #       serviceConfig = {
+  #         Type = "oneshot";
+  #         User = "root";
+  #       };
+  #     };
+  #   };
+  # };
 }
