@@ -21,22 +21,14 @@
     growPartition = true;
     kernelModules = [ ];
     extraModulePackages = [ ];
-    kernelParams = [ "kvm-intel" ];
+    kernelParams = [ "kvm-intel" "console=ttyS0" ];
+    loader.timeout = 0;
     loader.systemd-boot = {
       enable = true;
-      configurationLimit = 50;
+      configurationLimit = 1;
     };
     initrd = {
-      availableKernelModules = [
-        "ehci_pci"
-        "ahci"
-        "megaraid_sas"
-        "usb_storage"
-        "usbhid"
-        "uas"
-        "sd_mod"
-        "sr_mod"
-      ];
+      availableKernelModules = [ "ata_piix" "uhci_hcd" "virtio_pci" "virtio_scsi" "sd_mod" "sr_mod" ];
       kernelModules = [ ];
     };
   };
