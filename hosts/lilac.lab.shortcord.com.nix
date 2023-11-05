@@ -16,8 +16,7 @@ in {
 
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
-    ./general/dyndns-ipv6.nix
-    ./general/promtail.nix
+    ./general/all.nix
     ./${name}/hardware.nix
     ./${name}/mastodon.nix
     # ./${name}/matrix.nix

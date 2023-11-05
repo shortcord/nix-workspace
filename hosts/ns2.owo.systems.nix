@@ -1,6 +1,7 @@
 { name, nodes, pkgs, lib, config, ... }: {
   imports = [
     ./general/promtail.nix
+    ./general/restic.nix
     ./${name}/hardware.nix
     ./${name}/wireguard.nix
     ./${name}/nginx.nix
