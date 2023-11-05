@@ -169,6 +169,11 @@
           deployment.tags = [ "miauws" ];
           imports = [ ./hosts/${name}.nix ];
         };
+
+        "keycloak.owo.solutions" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "keycloak" "auth" ];
+          imports = [ ./hosts/${name}.nix ];
+        };
       };
     };
 }

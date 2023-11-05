@@ -1,10 +1,11 @@
-{ config, lib, pkgs, modulesPath, ... }: {
-  imports = [ "${modulesPath}/virtualisation/proxmox-lxc.nix" ];
-
-  boot = { tmp.useTmpfs = true; };
-
-  system.stateVersion = "23.05";
-
+{ name, config, pkgs, ... }:
+{
+  age.secrets.keycloak-psql-password.file = ../../secrets/${name}/keycloak-psql-password.age;
+  networking = {
+    firewall = {
+      allowedTCPPorts = [ 80 443 ];
+    };
+  };
   services = {
     nginx = {
       enable = true;
@@ -14,7 +15,7 @@
       recommendedTlsSettings = true;
       recommendedProxySettings = true;
       virtualHosts = {
-        "keycloak.lab.shortcord.com" = {
+        "${config.networking.fqdn}" = {
           kTLS = true;
           http2 = true;
           http3 = true;
@@ -32,22 +33,14 @@
       database = {
         type = "postgresql";
         createLocally = true;
-        passwordFile = "/var/test";
+        passwordFile = config.age.secrets.keycloak-psql-password.path;
       };
       settings = {
-        hostname = "keycloak.lab.shortcord.com";
+        hostname = config.networking.fqdn;
         http-port = 8080;
         proxy = "passthrough";
         http-enabled = true;
       };
-    };
-  };
-
-  networking = {
-    hostName = "keycloak";
-    domain = "lab.shortcord.com";
-    firewall = {
-      allowedTCPPorts = [ 22 80 443 ];
     };
   };
 }
