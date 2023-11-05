@@ -20,8 +20,8 @@
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOqzy6mgAsJLPsYnYb6sWBvsmZKF8QG7lLE3A/yE55G7 vm01.hetzner.owo.systems"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP4tWdXuPUVt2Yv/cGig8Hilm/NZgpsqH1VbKYpOvnwh lilac.lab.shortcord.com"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMYLWI4ixfYTbbGymECI2zKPsXPzjoJYDPcb/8R4ptX+ matrix.mousetail.dev"
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBuhG34gZHiHgpE4rz7sdEZHIuI2154nTK3TOufUkBxA keycloak.lab.shortcord.com"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJEfHEMvtBanjtNLBpzyZwDNA5ro7ORIFARnKeIj/GgS miauws.life"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHw2ZJN9Mk/MILgpdDQ3a3/o7SCPHvbT/iaWWMnMWM3O keycloak.owo.solutions"
       ];
     };
   };

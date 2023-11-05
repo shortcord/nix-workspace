@@ -45,4 +45,8 @@ in
   "miauws.life/catstodon.env.age".publicKeys = all;
   "miauws.life/email-short.env.age".publicKeys = all;
   "miauws.life/email-noreply.env.age".publicKeys = all;
+
+  # Secrets for keycloak.owo.solutionss
+  "keycloak.owo.solutions/keycloak-psql-password.age".publicKeys = all;
+  "keycloak.owo.solutions/wireguard-mailrelay-key.age".publicKeys = all;
 }

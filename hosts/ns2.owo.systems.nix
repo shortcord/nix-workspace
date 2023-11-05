@@ -110,6 +110,11 @@
               persistentKeepalive = 15;
               allowedIPs = [ "10.7.210.3/32" ];
             }
+            { # keycloak.owo.gallery
+              publicKey = "NHKzKkq+H+JaIdl+w6NJhn2s1UK/ewiDIhUA5KQOnxU=";
+              persistentKeepalive = 15;
+              allowedIPs = [ "10.7.210.4/32" ];
+            }
           ];
         };
       };
