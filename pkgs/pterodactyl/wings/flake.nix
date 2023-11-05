@@ -8,7 +8,7 @@
     {
       nixosModules = rec
       {
-        pterodactyl-wings = import ./wings/module.nix;
+        pterodactyl-wings = import ./module.nix;
         default = pterodactyl-wings;
       };
       overlays.default = _final: prev: rec {
@@ -17,7 +17,7 @@
     } // flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        pterodactyl-wings = pkgs.callPackage ./wings/default.nix {};
+        pterodactyl-wings = pkgs.callPackage ./default.nix {};
       in
         {
           packages = {
