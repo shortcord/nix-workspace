@@ -48,14 +48,6 @@
           return = "302 https://www.twitch.tv/touchscalytail";
         };
       };
-      "shinx.dev" = {
-        kTLS = true;
-        http2 = true;
-        http3 = true;
-        forceSSL = true;
-        enableACME = true;
-        locations."/" = { return = "302 https://francessco.us"; };
-      };
       "owo.gallery" = {
         kTLS = true;
         http2 = true;

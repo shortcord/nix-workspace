@@ -47,9 +47,7 @@
   boot.cleanTmpDir = true;
   zramSwap.enable = true;
 
-  imports = [
-    ./general/promtail.nix
-  ];
+  imports = [ ./general/all.nix ];
 
   age.secrets = {
     minioSecret.file = ../secrets/${name}/minioSecret.age;
@@ -155,7 +153,7 @@
             proxy_set_header X-NginX-Proxy true;
             chunked_transfer_encoding off;
           '';
-          
+
           locations."/" = {
             proxyPass = "http://${config.services.minio.consoleAddress}";
             proxyWebsockets = true;
@@ -177,7 +175,7 @@
             proxy_set_header X-NginX-Proxy true;
             chunked_transfer_encoding off;
           '';
-          
+
           locations."/" = {
             proxyPass = "http://${config.services.minio.listenAddress}";
             proxyWebsockets = true;

@@ -17,23 +17,8 @@
     ./${name}/writefreely.nix
     ./${name}/powerdns.nix
     ./${name}/uptime-kuma.nix
-    ./general/promtail.nix
+    ./general/all.nix
   ];
-
-  nix = {
-    buildMachines = [{
-      hostName = "violet.lab.shortcord.com";
-      systems = [ "x86_64-linux" "i686-linux" ];
-      protocol = "ssh-ng";
-      maxJobs = 20;
-      sshUser = "remotebuild";
-      sshKey = config.age.secrets.distributedUserSSHKey.path;
-    }];
-    distributedBuilds = true;
-    extraOptions = ''
-      builders-use-substitutes = true
-    '';
-  };
 
   systemd.network = {
     enable = true;

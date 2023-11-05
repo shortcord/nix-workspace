@@ -2,6 +2,15 @@
   age.secrets.powerdnsConfig.file = ../../secrets/${name}/powerdnsConfig.age;
 
   services = {
+    mysqlBackup = {
+      enable = true;
+      # Backup daily
+      calendar = "*-*-* 00:00:00";
+      singleTransaction = true;
+      databases = [
+        "powerdns"
+      ];
+    };
     mysql = {
       package = pkgs.mariadb;
       enable = true;

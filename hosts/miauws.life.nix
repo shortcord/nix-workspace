@@ -3,7 +3,7 @@
 
   imports = [ 
     (modulesPath + "/profiles/qemu-guest.nix")
-    ./general/promtail.nix
+    ./general/all.nix
     ./${name}/mailserver.nix
     ./${name}/mastodon.nix
   ];

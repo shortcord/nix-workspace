@@ -12,9 +12,9 @@ in {
   system.stateVersion = "23.05";
 
   imports = [
+    ./general/all.nix
     ./general/dyndns-ipv4.nix
     ./general/dyndns-ipv6.nix
-    ./general/promtail.nix
     ./${name}/hydra.nix
     ./${name}/ipfs.nix
     ./${name}/minio.nix
