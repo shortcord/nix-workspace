@@ -100,7 +100,6 @@ let
       listenAddress = "127.0.0.1";
       port = 9090;
       retentionTime = "1y";
-      webExternalUrl = "prometheus.${config.networking.fqdn}";
       # Get around sandboxing issues, fuckin' developers
       checkConfig = "syntax-only";
       exporters = {
