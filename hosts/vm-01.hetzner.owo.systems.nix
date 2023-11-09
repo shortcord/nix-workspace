@@ -1,9 +1,13 @@
-{ name, nodes, pkgs, lib, config, modulesPath, ... }: {
+{ name, nodes, pkgs, nixpkgs-unstable, lib, config, modulesPath, ... }: {
   system.stateVersion = "22.11";
 
   age.secrets = {
     wireguardPrivateKey.file = ../secrets/${name}/wireguardPrivateKey.age;
   };
+
+  disabledModules = [
+    "services/monitoring/prometheus/exporters.nix"
+  ];
 
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
@@ -18,6 +22,7 @@
     ./${name}/powerdns.nix
     ./${name}/uptime-kuma.nix
     ./general/all.nix
+    "${nixpkgs-unstable}/nixos/modules/services/monitoring/prometheus/exporters.nix"
   ];
 
   systemd.network = {
