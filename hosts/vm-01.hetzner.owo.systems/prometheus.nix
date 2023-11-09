@@ -103,6 +103,11 @@ let
       # Get around sandboxing issues, fuckin' developers
       checkConfig = "syntax-only";
       exporters = {
+        mysqld = {
+          enable = true;
+          openFirewall = true;
+          configFile = "/tmp/my.cnf";
+        };
         node = {
           enable = true;
           openFirewall = true;
@@ -203,6 +208,13 @@ let
               replacement = "127.0.0.1:9115";
             }
           ];
+        }
+        {
+          job_name = "mysqld-exporters";
+          static_configs = [
+            {
+              targets = [ "vm-01.hetzner.owo.systems:9104" ];
+            }];
         }
         {
           job_name = "node-exporters";
