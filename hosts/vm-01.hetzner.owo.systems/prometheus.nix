@@ -19,12 +19,10 @@ let
     "maus.home.shortcord.com:9100"
     "node.02.servers.owo.solutions:9100"
   ];
-  powerdnsExporterTargets = [
-    "powerdns.vm-01.hetzner.owo.systems:443"
-    "powerdns.ns2.owo.systems:443"
-  ];
+  powerdnsExporterTargets =
+    [ "powerdns.vm-01.hetzner.owo.systems:443" "powerdns.ns2.owo.systems:443" ];
 
- in {
+in {
   age.secrets = {
     minioPrometheusBearerToken = {
       owner = "prometheus";
@@ -167,9 +165,7 @@ let
           params = { module = [ "icmp6_probe" ]; };
           scrape_interval = "5s";
           scrape_timeout = "3s";
-          static_configs = [{
-            targets = icmpTargets;
-          }];
+          static_configs = [{ targets = icmpTargets; }];
           relabel_configs = [
             {
               source_labels = [ "__address__" ];
@@ -185,15 +181,13 @@ let
             }
           ];
         }
-                {
+        {
           job_name = "icmp4-probes";
           metrics_path = "/probe";
           params = { module = [ "icmp4_probe" ]; };
           scrape_interval = "5s";
           scrape_timeout = "3s";
-          static_configs = [{
-            targets = icmpTargets;
-          }];
+          static_configs = [{ targets = icmpTargets; }];
           relabel_configs = [
             {
               source_labels = [ "__address__" ];
@@ -211,24 +205,18 @@ let
         }
         {
           job_name = "mysqld-exporters";
-          static_configs = [
-            {
-              targets = [ "vm-01.hetzner.owo.systems:9104" ];
-            }];
+          static_configs =
+            [{ targets = [ "vm-01.hetzner.owo.systems:9104" ]; }];
         }
         {
           job_name = "node-exporters";
-          static_configs = [{
-            targets = nodeExporterTargets;
-          }];
+          static_configs = [{ targets = nodeExporterTargets; }];
         }
         {
           job_name = "powerdns-exporter";
           scheme = "https";
           metrics_path = "/metrics";
-          static_configs = [{
-            targets = powerdnsExporterTargets;
-          }];
+          static_configs = [{ targets = powerdnsExporterTargets; }];
         }
       ];
     };
