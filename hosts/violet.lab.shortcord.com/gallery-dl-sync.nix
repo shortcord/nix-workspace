@@ -153,7 +153,22 @@ in {
       };
     };
   };
-  services.nginx = lib.mkIf config.services.nginx.enable {
+  services.phpfpm.pools."h5ai" = {
+    user = config.services.nginx.user;
+    group = config.services.nginx.group;
+    phpPackage = pkgs.php81;
+    settings = {
+      pm = "dynamic";
+      "listen.owner" = config.services.nginx.user;
+      "pm.max_children" = 30;
+      "pm.start_servers" = 10;
+      "pm.min_spare_servers" = 10;
+      "pm.max_spare_servers" = 20;
+      "pm.max_requests" = 500;
+    };
+    phpEnv."PATH" = lib.makeBinPath [ pkgs.ffmpeg pkgs.imagemagick pkgs.gnutar pkgs.zip pkgs.coreutils ];
+  };
+  services.nginx = {
     virtualHosts = {
       "filebrowser.${config.networking.fqdn}" = {
         kTLS = true;
@@ -162,23 +177,17 @@ in {
         forceSSL = true;
         enableACME = true;
 
-        locations."/" = {
-          proxyPass = "http://127.0.0.1:8085";
-        };
-      };
-    };
-  };
-  virtualisation = {
-    oci-containers = {
-      containers = {
-        "filebrowser" = {
-          autoStart = true;
-          image = "docker.io/filebrowser/filebrowser:v2-s6";
-          volumes = [
-            "${dlDirectory}:/srv:ro"
-            "filebrowserdb:/filebrowser/:rw"
-          ];
-          ports = [ "127.0.0.1:8085:80" ];
+        root = dlDirectory;
+
+        locations = {
+          "/" = { index = "/_h5ai/public/index.php"; };
+          "~ \\.php$" = {
+            extraConfig = ''
+              fastcgi_pass unix:${config.services.phpfpm.pools."h5ai".socket};
+              fastcgi_index index.php;
+            '';
+            fastcgiParams = { "test" = "test"; };
+          };
         };
       };
     };
