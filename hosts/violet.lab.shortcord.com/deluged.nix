@@ -26,12 +26,29 @@
     deluge = {
       enable = true;
       declarative = true;
-      web = { enable = false; };
+      web = {
+        enable = true;
+        openFirewall = false;
+      };
       authFile = config.age.secrets.deluged.path;
       config = {
         torrentfiles_location = "/var/lib/deluge/torrentfiles";
         download_location = "/var/lib/deluge/downloaded";
         allow_remote = true;
+      };
+    };
+    nginx = {
+      virtualHosts = {
+        "deluged.${config.networking.fqdn}" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+          locations."/" = {
+            proxyPass = "http://127.0.0.1:8112";
+          };
+        };
       };
     };
   };
