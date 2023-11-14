@@ -21,8 +21,8 @@ in {
     ./${name}/nginx.nix
     ./${name}/jellyfin.nix
     ./${name}/gallery-dl-sync.nix
-    ./${name}/deluged.nix
     ./${name}/komga.nix
+    ./${name}/torrenting.nix
   ];
 
   fileSystems = {
