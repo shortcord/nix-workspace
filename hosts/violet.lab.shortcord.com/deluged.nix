@@ -1,4 +1,4 @@
-{ name, pkgs, config, ... }: {
+{ name, pkgs, config, lib, ... }: {
   age.secrets.deluged = {
     file = ../../secrets/${name}/deluged.age;
     owner = config.services.deluge.user;
@@ -25,6 +25,7 @@
   services = {
     deluge = {
       enable = true;
+      group = "users";
       declarative = true;
       web = {
         enable = true;
@@ -35,6 +36,7 @@
         torrentfiles_location = "/var/lib/deluge/torrentfiles";
         download_location = "/var/lib/deluge/downloaded";
         allow_remote = true;
+        enabled_plugins = [ "Label" ];
       };
     };
     nginx = {
@@ -50,6 +52,11 @@
           };
         };
       };
+    };
+  };
+  systemd.services.deluged = {
+    serviceConfig = {
+      UMask = lib.mkForce "0075";
     };
   };
 }

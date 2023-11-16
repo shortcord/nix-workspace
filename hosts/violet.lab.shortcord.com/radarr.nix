@@ -1,26 +1,26 @@
 { config, pkgs, ... }: {
   services = {
-    sonarr = {
+    radarr = { 
       enable = true;
       group = "users";
     };
     nginx = {
       virtualHosts = {
-        "sonarr.${config.networking.fqdn}" = {
+        "radarr.${config.networking.fqdn}" = {
           kTLS = true;
           http2 = true;
           http3 = true;
           forceSSL = true;
           enableACME = true;
           locations."/" = {
-            proxyPass = "http://127.0.0.1:8989";
+            proxyPass = "http://127.0.0.1:7878";
             proxyWebsockets = true;
           };
         };
       };
     };
   };
-  systemd.services.sonarr = {
+  systemd.services.radarr = {
     serviceConfig = {
       UMask = "0075";
     };
