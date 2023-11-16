@@ -6,6 +6,7 @@
   services = {
     jellyfin = {
       enable = true;
+      group = "users";
     };
     nginx = {
       virtualHosts = {
@@ -44,8 +45,5 @@
         };
       };
     };
-  };
-  users.users.jellyfin = {
-    extraGroups = [ "users" ];
   };
 }

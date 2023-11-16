@@ -28,6 +28,7 @@ in
   "violet.lab.shortcord.com/minioSecret.age".publicKeys = all;
   "violet.lab.shortcord.com/deluged.age".publicKeys = all;
   "violet.lab.shortcord.com/wingsToken.age".publicKeys = all;
+  "violet.lab.shortcord.com/gallery-dl-config.age".publicKeys = all;
 
   # Secrets for vm-01.hetzner.owo.systems
   "vm-01.hetzner.owo.systems/prometheusBasicAuthPassword.age".publicKeys = all;

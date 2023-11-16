@@ -37,6 +37,7 @@
         download_location = "/var/lib/deluge/downloaded";
         allow_remote = true;
         enabled_plugins = [ "Label" ];
+        stop_seed_ratio = "0.0";
       };
     };
     nginx = {

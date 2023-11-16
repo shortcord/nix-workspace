@@ -1,4 +1,4 @@
-{ pkgs, lib, config, ... }:
+{ name, pkgs, lib, config, ... }:
 let
   pages = pkgs.writeText "pages.txt" ''
     # Favs
@@ -79,12 +79,12 @@ let
     # https://danbooru.donmai.us/posts?tags=kimono
 
     # Artists
-    # https://www.pixiv.net/en/users/32603125
-    # https://www.pixiv.net/en/users/22298878
-    # https://www.pixiv.net/en/users/3439325
-    # https://www.pixiv.net/en/users/67442991
-    # https://www.pixiv.net/en/users/12450448
-    # https://www.pixiv.net/en/users/526122
+    https://www.pixiv.net/en/users/32603125
+    https://www.pixiv.net/en/users/22298878
+    https://www.pixiv.net/en/users/3439325
+    https://www.pixiv.net/en/users/67442991
+    https://www.pixiv.net/en/users/12450448
+    https://www.pixiv.net/en/users/526122
 
     # Artists
     https://rule34.xxx/index.php?page=post&s=list&tags=prprlo
@@ -95,16 +95,8 @@ let
     https://rule34.xxx/index.php?page=post&s=list&tags=krekk0v+-gore+-death
   '';
   dlDirectory = "/var/gallery-dl";
-  configFile = pkgs.writeText "gallery-dl.conf" ''
-    {
-      "downloader": {
-        "mtime": true,
-        "rate": "2M",
-        "adjust-extensions": true
-      }
-    }
-  '';
 in {
+  age.secrets.gallery-dl-config.file = ../../secrets/${name}/gallery-dl-config.age;
   environment.etc."gallery-dl-pages.txt".source = pages;
   systemd = {
     timers = {
@@ -126,10 +118,10 @@ in {
 
           ${pkgs.flock}/bin/flock -n /tmp/gallery-dl-process.lockfile \
             ${pkgs.gallery-dl}/bin/gallery-dl \
-              --config "${configFile}" \
+              --config "${config.age.secrets.gallery-dl-config.path}" \
               --input-file "/etc/gallery-dl-pages.txt" \
               --destination "${dlDirectory}" \
-              --download-archive "${dlDirectory}/archive.db"
+              --download-archive "${dlDirectory}/archive.db" 
 
           # Heartbeat Check
           ${pkgs.curl}/bin/curl -sf 'https://uptime.vm-01.hetzner.owo.systems/api/push/G07VWI97qv'
