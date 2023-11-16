@@ -45,4 +45,7 @@
       };
     };
   };
+  users.users.jellyfin = {
+    extraGroups = [ "users" ];
+  };
 }
