@@ -12,7 +12,7 @@
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    pterodactyl-wings.url = "path:./pkgs/pterodactyl/wings";
+    pterodactyl-wings.url = "git+https://gitlab.shortcord.com/shortcord/pterodactyl-wings-flake?ref=master";
     nixos-mailserver = {
       url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-23.05";
       inputs.nixpkgs.follows = "nixpkgs";
