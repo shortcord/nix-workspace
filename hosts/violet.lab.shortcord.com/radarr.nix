@@ -22,7 +22,7 @@
   };
   systemd.services.radarr = {
     serviceConfig = {
-      UMask = "0075";
+      UMask = "0013";
     };
   };
 }

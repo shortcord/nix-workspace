@@ -37,12 +37,12 @@
         download_location = "/var/lib/deluge/downloaded";
         allow_remote = true;
         enabled_plugins = [ "Label" ];
-        stop_seed_ratio = "0";
+        stop_seed_ratio = 0;
         stop_seed_at_ratio = true;
-        share_ratio_limit = "0";
-        max_active_seeding = "0";
-        max_active_downloading = "10";
-        max_active_limit = "10";
+        share_ratio_limit = 0;
+        max_active_seeding = 0;
+        max_active_downloading = 10;
+        max_active_limit = 10;
       };
     };
     nginx = {
@@ -62,7 +62,7 @@
   };
   systemd.services.deluged = {
     serviceConfig = {
-      UMask = lib.mkForce "0775";
+      UMask = lib.mkForce "0013";
     };
   };
 }

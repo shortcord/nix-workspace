@@ -22,7 +22,7 @@
   };
   systemd.services.sonarr = {
     serviceConfig = {
-      UMask = "0075";
+      UMask = "0013";
     };
   };
 }
