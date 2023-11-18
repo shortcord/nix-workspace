@@ -92,4 +92,11 @@
       };
     };
   };
+  systemd.services.ipfs = {
+    serviceConfig = {
+      MemoryAccounting = "yes";
+      MemoryHigh = "5G";
+      MemoryMax = "10G";
+    };
+  };
 }
