@@ -16,7 +16,7 @@ in {
     ./general/dyndns-ipv4.nix
     ./general/dyndns-ipv6.nix
     ./${name}/hydra.nix
-    ./${name}/ipfs.nix
+    # ./${name}/ipfs.nix
     ./${name}/minio.nix
     ./${name}/nginx.nix
     ./${name}/jellyfin.nix
@@ -139,6 +139,14 @@ in {
   systemd = {
     network = {
       enable = true;
+      netdevs = {
+        vmbr0 = {
+          netdevConfig = {
+            Kind = "bridge";
+            Name = "vmbr0";
+          };
+        };
+      };
       networks = {
         "10-wan" = {
           matchConfig.MACAddress = "C8:1F:66:E6:7A:51";
@@ -181,6 +189,16 @@ in {
           networkConfig = {
             DHCP = "no";
             DNS = "no";
+            IPv6AcceptRA = false;
+          };
+        };
+        "vmbr0" = {
+          matchConfig.Name = "vmbr0";
+          linkConfig.RequiredForOnline = "no";
+          networkConfig = {
+            DHCP = "no";
+            DNS = "no";
+            Address = [ "fd6f:357c:c101::1/48" ];
             IPv6AcceptRA = false;
           };
         };
@@ -233,7 +251,7 @@ in {
       allowedUDPPorts = [ 5201 ];
       allowedTCPPorts = [ 22 80 443 5201 ];
       allowPing = true;
-      trustedInterfaces = [ "eno1" "eno2" "eno3" "eno4" ];
+      trustedInterfaces = [ "eno1" "eno2" "eno3" "eno4" "vmbr0" ];
     };
     nat = {
       enable = true;
@@ -293,7 +311,8 @@ in {
       enable = true;
       dns = {
         port = 53;
-        address = [ "127.0.0.1" "::1" "10.18.0.1" "192.168.15.1" ];
+        address =
+          [ "127.0.0.1" "::1" "10.18.0.1" "192.168.15.1" ];
       };
     };
     dhcpd4 = {
@@ -420,4 +439,20 @@ in {
       };
     };
   };
+
+  # containers = {
+  #   abittorrent = {
+  #     autoStart = true;
+  #     privateNetwork = true;
+  #     hostBridge = "vmbr0";
+  #     localAddress6 = "fd6f:357c:c101::2/64";
+  #     config = { config, pkgs, ... }: {
+  #       services.httpd.enable = true;
+  #       networking.firewall = {
+  #         allowedTCPPorts = [ 80 ];
+  #         allowPing = true;
+  #       };
+  #     };
+  #   };
+  # };
 }
