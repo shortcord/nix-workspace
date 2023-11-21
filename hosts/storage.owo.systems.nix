@@ -137,6 +137,9 @@
       recommendedGzipSettings = true;
       recommendedProxySettings = true;
       recommendedBrotliSettings = true;
+      eventsConfig = ''
+        worker_connections 20000;
+      '';
       virtualHosts = {
         "admin.${config.networking.fqdn}" = {
           kTLS = true;
