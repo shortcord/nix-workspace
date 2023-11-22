@@ -26,7 +26,6 @@ in
   "violet.lab.shortcord.com/nix-serve.age".publicKeys = all;
   "violet.lab.shortcord.com/calckey-config.age".publicKeys = all;
   "violet.lab.shortcord.com/minioSecret.age".publicKeys = all;
-  "violet.lab.shortcord.com/deluged.age".publicKeys = all;
   "violet.lab.shortcord.com/wingsToken.age".publicKeys = all;
   "violet.lab.shortcord.com/gallery-dl-config.age".publicKeys = all;
 

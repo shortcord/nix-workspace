@@ -6,7 +6,7 @@
   services = {
     jellyfin = {
       enable = true;
-      group = "users";
+      group = "torrents";
     };
     nginx = {
       virtualHosts = {

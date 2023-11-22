@@ -2,7 +2,7 @@
   services = {
     sonarr = {
       enable = true;
-      group = "users";
+      group = "torrents";
     };
     nginx = {
       virtualHosts = {

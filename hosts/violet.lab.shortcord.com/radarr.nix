@@ -2,7 +2,7 @@
   services = {
     radarr = { 
       enable = true;
-      group = "users";
+      group = "torrents";
     };
     nginx = {
       virtualHosts = {
