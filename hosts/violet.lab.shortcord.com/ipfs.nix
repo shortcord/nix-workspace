@@ -1,4 +1,18 @@
 { pkgs, config, ... }: {
+  fileSystems = {
+    "/var/lib/ipfs" = {
+      device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
+      fsType = "btrfs";
+      options = [
+        "noatime"
+        "degraded"
+        "compress=zstd"
+        "discard=async"
+        "space_cache=v2"
+        "subvolid=605"
+      ];
+    };
+  };
   services = {
     nginx = {
       virtualHosts = {

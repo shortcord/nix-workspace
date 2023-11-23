@@ -57,18 +57,6 @@ in {
         "subvolid=257"
       ];
     };
-    "/var/lib/ipfs" = {
-      device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
-      fsType = "btrfs";
-      options = [
-        "noatime"
-        "degraded"
-        "compress=zstd"
-        "discard=async"
-        "space_cache=v2"
-        "subvolid=605"
-      ];
-    };
     "/var/lib/libvirt/images/pool" = {
       device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
       fsType = "btrfs";
@@ -79,42 +67,6 @@ in {
         "discard=async"
         "space_cache=v2"
         "subvolid=741"
-      ];
-    };
-    "/var/lib/minio" = {
-      device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
-      fsType = "btrfs";
-      options = [
-        "noatime"
-        "degraded"
-        "compress=zstd"
-        "discard=async"
-        "space_cache=v2"
-        "subvolid=893"
-      ];
-    };
-    "/var/jellyfin" = {
-      device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
-      fsType = "btrfs";
-      options = [
-        "noatime"
-        "degraded"
-        "compress=zstd"
-        "discard=async"
-        "space_cache=v2"
-        "subvolid=896"
-      ];
-    };
-    "/var/gallery-dl" = {
-      device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
-      fsType = "btrfs";
-      options = [
-        "noatime"
-        "degraded"
-        "compress=zstd"
-        "discard=async"
-        "space_cache=v2"
-        "subvolid=890"
       ];
     };
     "/var/repo-mirrors" = {

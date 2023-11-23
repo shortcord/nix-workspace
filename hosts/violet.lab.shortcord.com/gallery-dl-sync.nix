@@ -96,7 +96,22 @@ let
   '';
   dlDirectory = "/var/gallery-dl";
 in {
-  age.secrets.gallery-dl-config.file = ../../secrets/${name}/gallery-dl-config.age;
+  fileSystems = {
+    "/var/gallery-dl" = {
+      device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
+      fsType = "btrfs";
+      options = [
+        "noatime"
+        "degraded"
+        "compress=zstd"
+        "discard=async"
+        "space_cache=v2"
+        "subvolid=890"
+      ];
+    };
+  };
+  age.secrets.gallery-dl-config.file =
+    ../../secrets/${name}/gallery-dl-config.age;
   environment.etc."gallery-dl-pages.txt".source = pages;
   systemd = {
     timers = {
@@ -158,7 +173,13 @@ in {
       "pm.max_spare_servers" = 20;
       "pm.max_requests" = 500;
     };
-    phpEnv."PATH" = lib.makeBinPath [ pkgs.ffmpeg pkgs.imagemagick pkgs.gnutar pkgs.zip pkgs.coreutils ];
+    phpEnv."PATH" = lib.makeBinPath [
+      pkgs.ffmpeg
+      pkgs.imagemagick
+      pkgs.gnutar
+      pkgs.zip
+      pkgs.coreutils
+    ];
   };
   services.nginx = {
     virtualHosts = {
