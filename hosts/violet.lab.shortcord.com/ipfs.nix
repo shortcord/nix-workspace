@@ -102,7 +102,10 @@
           ];
         };
         Datastore = { StorageMax = "1000GB"; };
-        Addresses = { Gateway = "/ip4/127.0.0.1/tcp/8080"; };
+        Addresses = {
+          Api = "/ip4/127.0.0.1/tcp/5001";
+          Gateway = "/ip4/127.0.0.1/tcp/8080";
+        };
       };
     };
   };
