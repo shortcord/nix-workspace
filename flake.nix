@@ -17,10 +17,14 @@
       url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-23.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    shortcord-site = {
+      url = "git+https://gitlab.shortcord.com/shortcord/shortcord.com.git?ref=master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { nixpkgs, nixpkgs-unstable, colmena, ragenix, nixos-generators, flake-utils
-    , nixos-mailserver, pterodactyl-wings, ... }:
+    , nixos-mailserver, pterodactyl-wings, shortcord-site, ... }:
     let scConfig = import ./config/default.nix;
     in {
       packages.x86_64-linux = {
@@ -71,9 +75,9 @@
         meta = {
           nixpkgs = import nixpkgs {
             system = "x86_64-linux";
-            overlays = [ pterodactyl-wings.overlays.default ];
+            overlays = [ pterodactyl-wings.overlays.default shortcord-site.overlays.default ];
           };
-          specialArgs = { inherit ragenix pterodactyl-wings nixos-mailserver nixpkgs-unstable; };
+          specialArgs = { inherit ragenix pterodactyl-wings nixos-mailserver nixpkgs-unstable shortcord-site; };
         };
         defaults = {
           deployment = {
