@@ -118,6 +118,7 @@ in {
       "gallery-dl-process" = {
         wantedBy = [ "timers.target" ];
         timerConfig = {
+          OnActiveSec = "30m";
           OnUnitActiveSec = "30m";
           Unit = "gallery-dl-process.service";
         };
