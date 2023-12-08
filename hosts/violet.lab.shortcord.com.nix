@@ -21,6 +21,7 @@ in {
     ./${name}/nginx.nix
     ./${name}/jellyfin.nix
     ./${name}/gallery-dl-sync.nix
+    ./${name}/repo-sync.nix
     ./${name}/komga.nix
     ./${name}/torrenting.nix
   ];
@@ -67,18 +68,6 @@ in {
         "discard=async"
         "space_cache=v2"
         "subvolid=741"
-      ];
-    };
-    "/var/repo-mirrors" = {
-      device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
-      fsType = "btrfs";
-      options = [
-        "noatime"
-        "degraded"
-        "compress=zstd"
-        "discard=async"
-        "space_cache=v2"
-        "subvolid=926"
       ];
     };
     # "/nix" = {
