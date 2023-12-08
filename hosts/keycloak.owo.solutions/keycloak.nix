@@ -1,11 +1,7 @@
-{ name, config, pkgs, ... }:
-{
-  age.secrets.keycloak-psql-password.file = ../../secrets/${name}/keycloak-psql-password.age;
-  networking = {
-    firewall = {
-      allowedTCPPorts = [ 80 443 ];
-    };
-  };
+{ name, config, pkgs, ... }: {
+  age.secrets.keycloak-psql-password.file =
+    ../../secrets/${name}/keycloak-psql-password.age;
+  networking = { firewall = { allowedTCPPorts = [ 80 443 ]; }; };
   services = {
     nginx = {
       enable = true;
@@ -23,16 +19,30 @@
           enableACME = true;
 
           locations."/" = {
-            proxyPass = "http://127.0.0.1:${toString config.services.keycloak.settings.http-port}";
+            proxyPass = "http://127.0.0.1:${
+                toString config.services.keycloak.settings.http-port
+              }";
           };
         };
       };
     };
+    mysql = {
+      enable = true;
+      package = pkgs.mariadb;
+      initialDatabases = [{ name = "keycloak"; }];
+      ensureUsers = [{
+        name = "keycloak";
+        ensurePermissions = {
+          "keycloak.*" = "ALL PRIVILEGES";
+          "*.*" = "SELECT, LOCK TABLES";
+        };
+      }];
+    };
     keycloak = {
       enable = true;
       database = {
-        type = "postgresql";
-        createLocally = true;
+        type = "mariadb";
+        createLocally = false;
         passwordFile = config.age.secrets.keycloak-psql-password.path;
       };
       settings = {
