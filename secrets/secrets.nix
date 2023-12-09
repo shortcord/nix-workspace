@@ -40,6 +40,9 @@ in
   "vm-01.hetzner.owo.systems/lokiConfig.age".publicKeys = all;
   "vm-01.hetzner.owo.systems/lokiBasicAuth.age".publicKeys = all;
   "vm-01.hetzner.owo.systems/mysqldExporterConfig.age".publicKeys = all;
+  "vm-01.hetzner.owo.systems/nextcloudDbPass.age".publicKeys = all;
+  "vm-01.hetzner.owo.systems/nextcloudAdminPass.age".publicKeys = all;
+  "vm-01.hetzner.owo.systems/nextcloudS3Secret.age".publicKeys = all;
 
   # Secrets for lilac.lab.shortcord.com
   "lilac.lab.shortcord.com/catstodon.env.age".publicKeys = all;
