@@ -18,6 +18,7 @@
     ./${name}/powerdns.nix
     ./${name}/uptime-kuma.nix
     ./${name}/nextcloud.nix
+    ./${name}/netbox.nix
     ./general/all.nix
   ];
 

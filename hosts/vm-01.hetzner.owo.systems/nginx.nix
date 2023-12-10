@@ -12,19 +12,6 @@
     recommendedProxySettings = true;
     recommendedBrotliSettings = true;
     virtualHosts = {
-      "netbox.owo.solutions" = {
-        kTLS = true;
-        http2 = true;
-        http3 = true;
-        forceSSL = true;
-        enableACME = true;
-        locations."/" = { proxyPass = "http://127.0.0.1:8080"; };
-        extraConfig = ''
-          proxy_set_header X-Forwarded-Host $http_host;
-          proxy_set_header X-Real-IP $remote_addr;
-          proxy_set_header X-Forwarded-Proto $scheme;
-        '';
-      };
       "ip.mousetail.dev" = {
         serverAliases = [ "ipv4.mousetail.dev" "ipv6.mousetail.dev" ];
         kTLS = true;
