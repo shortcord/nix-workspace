@@ -21,6 +21,7 @@ in {
     ./${name}/nginx.nix
     ./${name}/jellyfin.nix
     ./${name}/gallery-dl-sync.nix
+    ./${name}/repo-sync.nix
     ./${name}/komga.nix
     ./${name}/torrenting.nix
   ];
@@ -57,18 +58,6 @@ in {
         "subvolid=257"
       ];
     };
-    "/var/lib/ipfs" = {
-      device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
-      fsType = "btrfs";
-      options = [
-        "noatime"
-        "degraded"
-        "compress=zstd"
-        "discard=async"
-        "space_cache=v2"
-        "subvolid=605"
-      ];
-    };
     "/var/lib/libvirt/images/pool" = {
       device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
       fsType = "btrfs";
@@ -81,54 +70,6 @@ in {
         "subvolid=741"
       ];
     };
-    "/var/lib/minio" = {
-      device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
-      fsType = "btrfs";
-      options = [
-        "noatime"
-        "degraded"
-        "compress=zstd"
-        "discard=async"
-        "space_cache=v2"
-        "subvolid=893"
-      ];
-    };
-    "/var/jellyfin" = {
-      device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
-      fsType = "btrfs";
-      options = [
-        "noatime"
-        "degraded"
-        "compress=zstd"
-        "discard=async"
-        "space_cache=v2"
-        "subvolid=896"
-      ];
-    };
-    "/var/gallery-dl" = {
-      device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
-      fsType = "btrfs";
-      options = [
-        "noatime"
-        "degraded"
-        "compress=zstd"
-        "discard=async"
-        "space_cache=v2"
-        "subvolid=890"
-      ];
-    };
-    "/var/repo-mirrors" = {
-      device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
-      fsType = "btrfs";
-      options = [
-        "noatime"
-        "degraded"
-        "compress=zstd"
-        "discard=async"
-        "space_cache=v2"
-        "subvolid=926"
-      ];
-    };
     # "/nix" = {
     #   device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
     #   fsType = "btrfs";
@@ -139,6 +80,14 @@ in {
   systemd = {
     network = {
       enable = true;
+      netdevs = {
+        vmbr0 = {
+          netdevConfig = {
+            Kind = "bridge";
+            Name = "vmbr0";
+          };
+        };
+      };
       networks = {
         "10-wan" = {
           matchConfig.MACAddress = "C8:1F:66:E6:7A:51";
@@ -181,6 +130,16 @@ in {
           networkConfig = {
             DHCP = "no";
             DNS = "no";
+            IPv6AcceptRA = false;
+          };
+        };
+        "vmbr0" = {
+          matchConfig.Name = "vmbr0";
+          linkConfig.RequiredForOnline = "no";
+          networkConfig = {
+            DHCP = "no";
+            DNS = "no";
+            Address = [ "fd6f:357c:c101::1/48" ];
             IPv6AcceptRA = false;
           };
         };
@@ -233,7 +192,7 @@ in {
       allowedUDPPorts = [ 5201 ];
       allowedTCPPorts = [ 22 80 443 5201 ];
       allowPing = true;
-      trustedInterfaces = [ "eno1" "eno2" "eno3" "eno4" ];
+      trustedInterfaces = [ "eno1" "eno2" "eno3" "eno4" "vmbr0" ];
     };
     nat = {
       enable = true;
@@ -293,7 +252,8 @@ in {
       enable = true;
       dns = {
         port = 53;
-        address = [ "127.0.0.1" "::1" "10.18.0.1" "192.168.15.1" ];
+        address =
+          [ "127.0.0.1" "::1" "10.18.0.1" "192.168.15.1" ];
       };
     };
     dhcpd4 = {
@@ -420,4 +380,20 @@ in {
       };
     };
   };
+
+  # containers = {
+  #   abittorrent = {
+  #     autoStart = true;
+  #     privateNetwork = true;
+  #     hostBridge = "vmbr0";
+  #     localAddress6 = "fd6f:357c:c101::2/64";
+  #     config = { config, pkgs, ... }: {
+  #       services.httpd.enable = true;
+  #       networking.firewall = {
+  #         allowedTCPPorts = [ 80 ];
+  #         allowPing = true;
+  #       };
+  #     };
+  #   };
+  # };
 }

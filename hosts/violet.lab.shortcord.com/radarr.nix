@@ -2,7 +2,7 @@
   services = {
     radarr = { 
       enable = true;
-      group = "users";
+      group = "torrents";
     };
     nginx = {
       virtualHosts = {
@@ -22,7 +22,7 @@
   };
   systemd.services.radarr = {
     serviceConfig = {
-      UMask = "0075";
+      UMask = "0013";
     };
   };
 }

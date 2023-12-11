@@ -1,22 +1,6 @@
 { pkgs, config, ... }:
-let 
-    bindHost = "127.0.0.2";
-    port = "81";
-    fqdn = "shortcord.com";
+let fqdn = "shortcord.com";
 in {
-  virtualisation = {
-    oci-containers = {
-      containers = {
-        "${fqdn}" = {
-          autoStart = true;
-          image =
-            "gitlab.shortcord.com:5050/shortcord/shortcord.com:ad3e6c0218ebcda9247b575d7f3b65bbea9a3e49";
-          ports = [ "${bindHost}:${port}:80" ];
-        };
-      };
-    };
-  };
-
   services.nginx = {
     virtualHosts = {
       "${fqdn}" = {
@@ -25,7 +9,16 @@ in {
         http3 = true;
         forceSSL = true;
         enableACME = true;
-        locations."/" = { proxyPass = "http://${bindHost}:${port}"; };
+
+        root = "${pkgs.shortcord-site}";
+        extraConfig = ''
+          error_page 404 /index.html;
+        '';
+
+        locations."/" = {
+          tryFiles = " $uri $uri/ $uri.html =404";
+          index = "index.html";
+        };
       };
     };
   };

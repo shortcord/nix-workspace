@@ -1,4 +1,18 @@
 { pkgs, config, ... }: {
+  fileSystems = {
+    "/var/lib/ipfs" = {
+      device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
+      fsType = "btrfs";
+      options = [
+        "noatime"
+        "degraded"
+        "compress=zstd"
+        "discard=async"
+        "space_cache=v2"
+        "subvolid=605"
+      ];
+    };
+  };
   services = {
     nginx = {
       virtualHosts = {
@@ -88,8 +102,18 @@
           ];
         };
         Datastore = { StorageMax = "1000GB"; };
-        Addresses = { Gateway = "/ip4/127.0.0.1/tcp/8080"; };
+        Addresses = {
+          Api = "/ip4/127.0.0.1/tcp/5001";
+          Gateway = "/ip4/127.0.0.1/tcp/8080";
+        };
       };
+    };
+  };
+  systemd.services.ipfs = {
+    serviceConfig = {
+      MemoryAccounting = "yes";
+      MemoryHigh = "5G";
+      MemoryMax = "10G";
     };
   };
 }

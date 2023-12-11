@@ -15,6 +15,7 @@ in
   "ns2.owo.systems/wireguardPrivateKey.age".publicKeys = all;
   "ns2.owo.systems/wireguardPresharedKey.age".publicKeys = all;
   "ns2.owo.systems/powerdnsConfig.age".publicKeys = all;
+  "ns2.owo.systems/mysqldExporterConfig.age".publicKeys = all;
   
   # Secrets for storage.owo.systems
   "storage.owo.systems/minioSecret.age".publicKeys = all;
@@ -26,7 +27,6 @@ in
   "violet.lab.shortcord.com/nix-serve.age".publicKeys = all;
   "violet.lab.shortcord.com/calckey-config.age".publicKeys = all;
   "violet.lab.shortcord.com/minioSecret.age".publicKeys = all;
-  "violet.lab.shortcord.com/deluged.age".publicKeys = all;
   "violet.lab.shortcord.com/wingsToken.age".publicKeys = all;
   "violet.lab.shortcord.com/gallery-dl-config.age".publicKeys = all;
 
@@ -39,6 +39,11 @@ in
   "vm-01.hetzner.owo.systems/minioPrometheusBearerToken.age".publicKeys = all;
   "vm-01.hetzner.owo.systems/lokiConfig.age".publicKeys = all;
   "vm-01.hetzner.owo.systems/lokiBasicAuth.age".publicKeys = all;
+  "vm-01.hetzner.owo.systems/mysqldExporterConfig.age".publicKeys = all;
+  "vm-01.hetzner.owo.systems/nextcloudDbPass.age".publicKeys = all;
+  "vm-01.hetzner.owo.systems/nextcloudAdminPass.age".publicKeys = all;
+  "vm-01.hetzner.owo.systems/nextcloudS3Secret.age".publicKeys = all;
+  "vm-01.hetzner.owo.systems/netboxSecretKey.age".publicKeys = all;
 
   # Secrets for lilac.lab.shortcord.com
   "lilac.lab.shortcord.com/catstodon.env.age".publicKeys = all;

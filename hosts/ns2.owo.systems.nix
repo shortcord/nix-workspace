@@ -9,15 +9,28 @@
     ./${name}/powerdns.nix
   ];
 
+  age.secrets.mysqldExporterConfig = {
+    file = ../secrets/${name}/mysqldExporterConfig.age;
+    owner = config.services.prometheus.exporters.mysqld.user;
+    group = config.services.prometheus.exporters.mysqld.group;
+  };
+
   services = {
     prometheus = {
       enable = true;
       exporters = {
+        mysqld = {
+          enable = true;
+          openFirewall = true;
+          configFile = config.age.secrets.mysqldExporterConfig.path;
+        };
         node = {
           enable = true;
-          openFirewall = false;
-          port = 9100;
-          listenAddress = "127.0.0.1";
+          openFirewall = true;
+        };
+        systemd = {
+          enable = true;
+          openFirewall = true;
         };
       };
     };

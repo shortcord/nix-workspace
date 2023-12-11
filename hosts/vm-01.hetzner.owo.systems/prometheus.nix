@@ -21,13 +21,14 @@ let
   ];
   powerdnsExporterTargets =
     [ "powerdns.vm-01.hetzner.owo.systems:443" "powerdns.ns2.owo.systems:443" ];
+  mysqldExporterTargets = [ "vm-01.hetzner.owo.systems:9104" "ns2.owo.systems:9104" ];
 
 in {
   age.secrets = {
     minioPrometheusBearerToken = {
+      file = ../../secrets/${name}/minioPrometheusBearerToken.age;
       owner = "prometheus";
       group = "prometheus";
-      file = ../../secrets/${name}/minioPrometheusBearerToken.age;
     };
     lokiConfig = {
       file = ../../secrets/${name}/lokiConfig.age;
@@ -38,6 +39,11 @@ in {
       file = ../../secrets/${name}/lokiBasicAuth.age;
       owner = config.services.nginx.user;
       group = config.services.nginx.group;
+    };
+    mysqldExporterConfig = {
+      file = ../../secrets/${name}/mysqldExporterConfig.age;
+      owner = config.services.prometheus.exporters.mysqld.user;
+      group = config.services.prometheus.exporters.mysqld.group;
     };
   };
   services = {
@@ -97,14 +103,15 @@ in {
       enable = true;
       listenAddress = "127.0.0.1";
       port = 9090;
-      retentionTime = "1y";
+      # Keep for 8 months
+      retentionTime = "243d";
       # Get around sandboxing issues, fuckin' developers
       checkConfig = "syntax-only";
       exporters = {
         mysqld = {
           enable = true;
           openFirewall = true;
-          configFile = "/tmp/my.cnf";
+          configFile = config.age.secrets.mysqldExporterConfig.path;
         };
         node = {
           enable = true;
@@ -206,7 +213,7 @@ in {
         {
           job_name = "mysqld-exporters";
           static_configs =
-            [{ targets = [ "vm-01.hetzner.owo.systems:9104" ]; }];
+            [{ targets = mysqldExporterTargets; }];
         }
         {
           job_name = "node-exporters";

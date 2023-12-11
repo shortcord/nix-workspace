@@ -1,12 +1,23 @@
-{ config, pkgs, ... }:
-{
-  networking.firewall = {
-    allowedUDPPorts = [ 1900 7359 ];
+{ config, pkgs, ... }: {
+  fileSystems = {
+    "/var/jellyfin" = {
+      device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
+      fsType = "btrfs";
+      options = [
+        "noatime"
+        "degraded"
+        "compress=zstd"
+        "discard=async"
+        "space_cache=v2"
+        "subvolid=896"
+      ];
+    };
   };
+  networking.firewall = { allowedUDPPorts = [ 1900 7359 ]; };
   services = {
     jellyfin = {
       enable = true;
-      group = "users";
+      group = "torrents";
     };
     nginx = {
       virtualHosts = {

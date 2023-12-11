@@ -5,10 +5,6 @@
     wireguardPrivateKey.file = ../secrets/${name}/wireguardPrivateKey.age;
   };
 
-  disabledModules = [
-    "services/monitoring/prometheus/exporters.nix"
-  ];
-
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
     ./${name}/hardware.nix
@@ -21,8 +17,9 @@
     ./${name}/writefreely.nix
     ./${name}/powerdns.nix
     ./${name}/uptime-kuma.nix
+    ./${name}/nextcloud.nix
+    ./${name}/netbox.nix
     ./general/all.nix
-    "${nixpkgs-unstable}/nixos/modules/services/monitoring/prometheus/exporters.nix"
   ];
 
   systemd.network = {
