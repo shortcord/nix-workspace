@@ -2,7 +2,7 @@
   system.stateVersion = "22.11";
 
   boot.loader.grub = {
-    device = "/dev/disk/by-uuid/9b19cf19-42f6-46a9-ae4d-c68a084c2c8d";
+    device = "/dev/disk/by-id/ata-HGST_HUS726060ALE610_K8GEVAAD";
     version = 2;
     enable = true;
   };
