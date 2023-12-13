@@ -28,6 +28,9 @@
       enable = true;
       settings = let cfg = config.services.mysql;
       in {
+        mysqld = {
+          bind_address = "0.0.0.0";
+        };
         mariadb = {
           ssl_cert = "${cfg.dataDir}/fullchain.pem";
           ssl_key = "${cfg.dataDir}/key.pem";
