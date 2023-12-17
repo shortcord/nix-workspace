@@ -16,7 +16,7 @@ in {
     ./general/dyndns-ipv4.nix
     ./general/dyndns-ipv6.nix
     ./${name}/hydra.nix
-    ./${name}/ipfs.nix
+    # ./${name}/ipfs.nix
     ./${name}/minio.nix
     ./${name}/nginx.nix
     ./${name}/jellyfin.nix
@@ -105,13 +105,18 @@ in {
             IPv6SendRA = true;
             DHCPPrefixDelegation = true;
             IPv6AcceptRA = false;
+            DHCPServer = true;
           };
-          extraConfig = ''
-            [DHCPPrefixDelegation]
-            UplinkInterface=eno1
-            SubnetId=0
-            Announce=yes
-          '';
+          dhcpPrefixDelegationConfig = {
+            UplinkInterface = "eno1";
+            SubnetId = 0;
+            Announce = true;
+          };
+          dhcpServerConfig = {
+            ServerAddress= "10.18.0.1/24";
+            DNS = "10.18.0.1";
+            EmitDNS = true;
+          };
         };
         # "30-home" = {
         #   matchConfig.MACAddress = "C8:1F:66:E6:7A:54";
@@ -255,33 +260,6 @@ in {
         address =
           [ "127.0.0.1" "::1" "10.18.0.1" "192.168.15.1" ];
       };
-    };
-    dhcpd4 = {
-      enable = true;
-      authoritative = true;
-      interfaces = [ "eno2" ];
-      extraConfig = ''
-        option subnet-mask 255.255.255.0;
-        option broadcast-address 10.18.0.255;
-        option routers 10.18.0.1;
-        option domain-name-servers 10.18.0.1;
-        option domain-name "lab.shortcord.com";
-        subnet 10.18.0.0 netmask 255.255.255.0 {
-          range 10.18.0.5 10.18.0.200;
-        }
-      '';
-      machines = [
-        {
-          hostName = "lilac.lab.shortcord.com";
-          ipAddress = "10.18.0.2";
-          ethernetAddress = "14:18:77:5b:a9:87";
-        }
-        {
-          hostName = "amethyst.lab.shortcord.com";
-          ipAddress = "10.18.0.3";
-          ethernetAddress = "18:66:da:5f:d8:ff";
-        }
-      ];
     };
     frr = {
       zebra = {
