@@ -17,7 +17,7 @@ in {
     ./general/dyndns-ipv6.nix
     ./${name}/hydra.nix
     # ./${name}/ipfs.nix
-    ./${name}/minio.nix
+    # ./${name}/minio.nix
     ./${name}/nginx.nix
     ./${name}/jellyfin.nix
     ./${name}/gallery-dl-sync.nix
