@@ -6,6 +6,12 @@
       group = "netbox";
     };
   };
+  users.users = {
+    ## allow nginx user read/exec to the static directory
+    "${config.services.nginx.user}" = {
+      extraGroups = [ "netbox" ];
+    };
+  };
   systemd.services.netbox.serviceConfig.StateDirectoryMode = lib.mkForce "0755";
   systemd.services.netbox-rq.serviceConfig.StateDirectoryMode = lib.mkForce "0755";
   systemd.services.netbox-housekeeping.serviceConfig.StateDirectoryMode = lib.mkForce "0755";
