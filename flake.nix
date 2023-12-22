@@ -12,19 +12,26 @@
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    pterodactyl-wings.url = "git+https://gitlab.shortcord.com/shortcord/pterodactyl-wings-flake?ref=master";
+    pterodactyl-wings = {
+      url = "git+https://gitlab.shortcord.com/shortcord/pterodactyl-wings-flake?ref=master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixos-mailserver = {
-      url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-23.05";
+      url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-23.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     shortcord-site = {
       url = "git+https://gitlab.shortcord.com/shortcord/shortcord.com.git?ref=master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    catstdon-flake = {
+      url = "git+https://gitlab.shortcord.com/shortcord/catstodon-flake.git?ref=main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { nixpkgs, nixpkgs-unstable, colmena, ragenix, nixos-generators, flake-utils
-    , nixos-mailserver, pterodactyl-wings, shortcord-site, ... }:
+    , nixos-mailserver, pterodactyl-wings, shortcord-site, catstdon-flake, ... }:
     let scConfig = import ./config/default.nix;
     in {
       packages.x86_64-linux = {
@@ -75,9 +82,13 @@
         meta = {
           nixpkgs = import nixpkgs {
             system = "x86_64-linux";
-            overlays = [ pterodactyl-wings.overlays.default shortcord-site.overlays.default ];
+            overlays = [
+              pterodactyl-wings.overlays.default
+              shortcord-site.overlays.default
+              catstdon-flake.overlays.default
+            ];
           };
-          specialArgs = { inherit ragenix pterodactyl-wings nixos-mailserver nixpkgs-unstable shortcord-site; };
+          specialArgs = { inherit ragenix pterodactyl-wings nixos-mailserver nixpkgs-unstable shortcord-site catstdon-flake; };
         };
         defaults = {
           deployment = {
@@ -88,9 +99,13 @@
             settings = {
               experimental-features = [ "nix-command" "flakes" ];
               auto-optimise-store = true;
-              substituters = [ "https://binarycache.violet.lab.shortcord.com" ];
+              substituters = [ 
+                "https://binarycache.violet.lab.shortcord.com"
+                "https://cache.nixos.org"
+              ];
               trusted-public-keys = [
                 "binarycache.violet.lab.shortcord.com:Bq1Q/51gHInHj8dMKoaCI5lHM8XnwASajahLe1KjCdQ="
+                "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
               ];
             };
             gc = {

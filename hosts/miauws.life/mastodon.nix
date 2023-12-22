@@ -25,36 +25,25 @@ in {
         http3 = true;
         forceSSL = true;
         enableACME = true;
-
-        root = "${mastConfig.package}/public/";
-
         extraConfig = ''
           client_max_body_size 500M;
         '';
-
-        locations = {
-          "/system/".alias = "/var/lib/mastodon/public-system/";
-          "/" = { tryFiles = "$uri @proxy"; };
-          "@proxy" = {
-            proxyPass = "http://127.0.0.1:${toString (mastConfig.webPort)}";
-            proxyWebsockets = true;
-          };
-          "/api/v1/streaming/" = {
-            proxyPass =
-              "http://127.0.0.1:${toString (mastConfig.streamingPort)}/";
-            proxyWebsockets = true;
-          };
-        };
       };
     };
     mastodon = {
       enable = true;
       enableUnixSocket = false;
       localDomain = "${config.networking.fqdn}";
-      configureNginx = false;
+      configureNginx = true;
       smtp.fromAddress = "noreply@${mastConfig.localDomain}";
       extraEnvFiles = [ config.age.secrets.catstodon-env.path ];
+      
+      streamingProcesses = 4;
+      
       extraConfig = {
+        AUTHORIZED_FETCH = "true";
+        DISALLOW_UNAUTHENTICATED_API_ACCESS = "false";
+
         MAX_TOOT_CHARS = "69420";
         MAX_DESCRIPTION_CHARS = "69420";
         MAX_BIO_CHARS = "69420";
@@ -71,18 +60,7 @@ in {
         createLocally = true;
         host = "/run/postgresql";
       };
-      package = (pkgs.mastodon.override {
-        version = import ./catstodon/version.nix;
-        srcOverride = pkgs.callPackage ./catstodon/source.nix { };
-        dependenciesDir = ./catstodon/.;
-      }).overrideAttrs (self: super: {
-        mastodonModules = super.mastodonModules.overrideAttrs (a: b: {
-          yarnOfflineCache = pkgs.fetchYarnDeps {
-            yarnLock = self.src + "/yarn.lock";
-            sha256 = "sha256-8fUJ1RBQZ16R3IpA/JEcn+PO04ApQ9TkHuYKycvV8BY=";
-          };
-        });
-      });
+      package = pkgs.catstodon;
     };
     postgresqlBackup = {
       enable = true;

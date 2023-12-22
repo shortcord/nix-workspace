@@ -6,7 +6,11 @@ let
 in {
   age.secrets = {
     distributedUserSSHKey.file = ../secrets/general/distributedUserSSHKey.age;
-    wingsToken.file = ../secrets/${name}/wingsToken.age;
+    wingsToken = {
+      file = ../secrets/${name}/wingsToken.age;
+      owner = config.services.pterodactyl.wings.user;
+      group = config.services.pterodactyl.wings.group;
+    };
   };
 
   system.stateVersion = "23.05";

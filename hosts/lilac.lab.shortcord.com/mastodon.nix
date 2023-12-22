@@ -52,10 +52,7 @@
         createLocally = true;
         host = "/run/postgresql";
       };
-      package = (pkgs.mastodon.override {
-        srcOverride = pkgs.callPackage ../../pkgs/catstodon/source.nix { };
-        gemset = ../../pkgs/catstodon/gemset.nix;
-      });
+      package = pkgs.catstodon;
     };
   };
 }
