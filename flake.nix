@@ -8,10 +8,6 @@
       url = "github:yaxitech/ragenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixos-generators = {
-      url = "github:nix-community/nixos-generators";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     pterodactyl-wings = {
       url = "git+https://gitlab.shortcord.com/shortcord/pterodactyl-wings-flake?ref=master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -30,55 +26,12 @@
     };
   };
 
-  outputs = { nixpkgs, nixpkgs-unstable, colmena, ragenix, nixos-generators, flake-utils
+  outputs = { nixpkgs, nixpkgs-unstable, colmena, ragenix, flake-utils
     , nixos-mailserver, pterodactyl-wings, shortcord-site, catstdon-flake, ... }:
-    let scConfig = import ./config/default.nix;
-    in {
-      packages.x86_64-linux = {
-        iso = nixos-generators.nixosGenerate {
-          format = "iso";
-          system = "x86_64-linux";
-          modules = [ ./templates/bootiso.nix ];
-          specialArgs = { scConfig = scConfig; };
-        };
-        proxmox-lxc = nixos-generators.nixosGenerate {
-          format = "proxmox-lxc";
-          system = "x86_64-linux";
-          modules = [ ./templates/proxmox-lxc.nix ];
-          specialArgs = { scConfig = scConfig; };
-        };
-        proxmox = nixos-generators.nixosGenerate {
-          format = "proxmox";
-          system = "x86_64-linux";
-          modules = [ ./templates/proxmox.nix ];
-          specialArgs = { scConfig = scConfig; };
-        };
-        "miauws-life" = nixos-generators.nixosGenerate {
-          format = "proxmox";
-          system = "x86_64-linux";
-          modules = [ ./hosts/miauws.life.nix ];
-          specialArgs = { scConfig = scConfig; };
-        };
-      };
-
-      devShells = {
-        x86_64-darwin.default = nixpkgs.legacyPackages.x86_64-darwin.mkShell {
-          buildInputs = [
-            nixpkgs.legacyPackages.x86_64-darwin.colmena
-            nixpkgs.legacyPackages.x86_64-darwin.nixos-generators
-            nixpkgs.legacyPackages.x86_64-darwin.vim
-          ] ++ [ ragenix.packages.x86_64-darwin.default ];
-        };
-        x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.mkShell {
-          buildInputs = [
-            nixpkgs.legacyPackages.x86_64-linux.colmena
-            nixpkgs.legacyPackages.x86_64-linux.nixos-generators
-            nixpkgs.legacyPackages.x86_64-linux.vim
-          ] ++ [ ragenix.packages.x86_64-linux.default ];
-        };
-      };
-
-      colmena = {
+    let
+      inherit (nixpkgs) lib;
+      scConfig = import ./config/default.nix;
+      colmenaConfiguration = {
         meta = {
           nixpkgs = import nixpkgs {
             system = "x86_64-linux";
@@ -195,5 +148,34 @@
           imports = [ ./hosts/${name}.nix ];
         };
       };
-    };
+    in
+      {
+        devShells = {
+          x86_64-darwin.default = nixpkgs.legacyPackages.x86_64-darwin.mkShell {
+            buildInputs = [
+              nixpkgs.legacyPackages.x86_64-darwin.colmena
+              nixpkgs.legacyPackages.x86_64-darwin.nixos-generators
+              nixpkgs.legacyPackages.x86_64-darwin.vim
+            ] ++ [ ragenix.packages.x86_64-darwin.default ];
+          };
+          x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.mkShell {
+            buildInputs = [
+              nixpkgs.legacyPackages.x86_64-linux.colmena
+              nixpkgs.legacyPackages.x86_64-linux.nixos-generators
+              nixpkgs.legacyPackages.x86_64-linux.vim
+            ] ++ [ ragenix.packages.x86_64-linux.default ];
+          };
+        };
+
+        colmena = colmenaConfiguration;
+
+        nixosConfigurations = lib.pipe colmenaConfiguration
+          [
+              colmena.lib.makeHive
+              (builtins.getAttr "nodes")
+              builtins.attrValues
+              (builtins.map (node: { name = node.config.networking.hostName; value = node; }))
+              builtins.listToAttrs
+          ];
+      };
 }
