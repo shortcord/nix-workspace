@@ -53,7 +53,7 @@
               experimental-features = [ "nix-command" "flakes" ];
               auto-optimise-store = true;
               substituters = [ 
-                "https://binarycache.violet.lab.shortcord.com"
+                # "https://binarycache.violet.lab.shortcord.com"
                 "https://cache.nixos.org"
               ];
               trusted-public-keys = [
