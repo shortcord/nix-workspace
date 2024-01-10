@@ -48,13 +48,13 @@
           DHCP = "no";
           DNS = [ "127.0.0.1" "::1" ];
           Address = [ "51.81.23.224/32" "2604:2dc0:100:1b1e::30/64" ];
-          Gateway = [ "51.81.11.30" "2604:2dc0:0100:1bff:00ff:00ff:00ff:00ff" ];
+          Gateway = [ "51.81.11.254" "2604:2dc0:0100:1bff:00ff:00ff:00ff:00ff" ];
         };
         routes = [
           {
             routeConfig = {
               Scope = "link";
-              Destination = "51.81.11.30";
+              Destination = "51.81.11.254";
             };
           }
           {
