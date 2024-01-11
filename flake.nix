@@ -33,6 +33,7 @@
       scConfig = import ./config/default.nix;
       colmenaConfiguration = {
         meta = {
+          allowApplyAll = false;
           nixpkgs = import nixpkgs {
             system = "x86_64-linux";
             overlays = [
@@ -43,11 +44,14 @@
           };
           specialArgs = { inherit ragenix pterodactyl-wings nixos-mailserver nixpkgs-unstable shortcord-site catstdon-flake; };
         };
-        defaults = {
+        defaults = { name, lib, config, ... }: {
           deployment = {
             targetUser = "short";
             buildOnTarget = true;
+            tags = lib.mkOrder 1000 (lib.optional (!config.boot.isContainer) "default");
           };
+          networking.hostName = lib.mkDefault (builtins.head (lib.splitString "." name));
+          networking.domain = lib.mkDefault (builtins.concatStringsSep "." (builtins.tail (lib.splitString "." name)));
           nix = {
             settings = {
               experimental-features = [ "nix-command" "flakes" ];

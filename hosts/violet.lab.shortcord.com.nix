@@ -192,8 +192,6 @@ in {
 
   networking = {
     hostId = "7f09cf4e";
-    hostName = "violet";
-    domain = "lab.shortcord.com";
     useDHCP = false;
     useNetworkd = true;
     firewall = {

@@ -62,8 +62,6 @@ in {
   # };
 
   networking = {
-    hostName = "lilac";
-    domain = "lab.shortcord.com";
     useDHCP = true;
     nameservers = [ "10.18.0.1" ];
     firewall = {

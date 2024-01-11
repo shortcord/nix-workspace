@@ -58,8 +58,6 @@
   };
 
   networking = {
-    hostName = "ns2";
-    domain = "owo.systems";
     useDHCP = false;
     firewall = {
       enable = true;

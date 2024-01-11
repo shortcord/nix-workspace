@@ -51,8 +51,6 @@
   };
 
   networking = {
-    hostName = "vm-01";
-    domain = "hetzner.owo.systems";
     useDHCP = false;
     useNetworkd = true;
     firewall = {
@@ -90,7 +88,6 @@
   #     autoStart = true;
   #     privateNetwork = true;
   #     hostAddress6 = "fc00::1";
-  #     localAddress6 = "2a01:4f8:c012:a734::10";
   #     config = { config, pkgs, ... }: {
   #       services.httpd.enable = true;
   #       networking.firewall = {
@@ -102,14 +99,6 @@
   # };
 
   services = {
-    ndppd = {
-      enable = false;
-      proxies = {
-        "ens3" = {
-          rules = { "2a01:4f8:c012:a734::/64" = { method = "static"; }; };
-        };
-      };
-    };
     mysql = {
       package = pkgs.mariadb;
       enable = true;

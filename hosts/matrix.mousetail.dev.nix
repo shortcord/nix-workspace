@@ -5,8 +5,6 @@
   boot.isContainer = true;
 
   networking = {
-    hostName = "matrix";
-    domain = "mousetail.dev";
     firewall = {
       enable = true;
       allowedUDPPorts = [ ];

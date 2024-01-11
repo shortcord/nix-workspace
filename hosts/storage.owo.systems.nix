@@ -56,8 +56,6 @@
 
   networking = {
     useDHCP = false;
-    hostName = "storage";
-    domain = "owo.systems";
     nameservers = [ "127.0.0.1" "::1" ];
     defaultGateway = {
       address = "5.9.99.97";

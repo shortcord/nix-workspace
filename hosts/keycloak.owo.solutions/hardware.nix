@@ -38,8 +38,6 @@
   networking = {
     useDHCP = false;
     useNetworkd = true;
-    hostName = "keycloak";
-    domain = "owo.solutions";
     firewall = {
       enable = true;
       allowedTCPPorts = [ 22 ];

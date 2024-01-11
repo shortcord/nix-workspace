@@ -69,8 +69,6 @@
   };
 
   networking = {
-    hostName = "miauws";
-    domain = "life";
     useDHCP = false;
     useNetworkd = true;
     firewall = {
