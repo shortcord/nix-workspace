@@ -83,20 +83,15 @@
 
   environment.systemPackages = with pkgs; [ vim git ];
 
-  # containers = {
-  #   testing = {
-  #     autoStart = true;
-  #     privateNetwork = true;
-  #     hostAddress6 = "fc00::1";
-  #     config = { config, pkgs, ... }: {
-  #       services.httpd.enable = true;
-  #       networking.firewall = {
-  #         allowedTCPPorts = [ 22 80 ];
-  #         allowPing = true;
-  #       };
-  #     };
-  #   };
-  # };
+  containers = {
+    gitlab = {
+      autoStart = true;
+      privateNetwork = true;
+      hostAddress6 = "fc00::1";
+      localAddress6 = "2a01:4f8:c012:a734::10";
+      path = nodes."gitlab.shortcord.com".config.system.build.toplevel;
+    };
+  };
 
   services = {
     mysql = {

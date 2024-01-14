@@ -9,7 +9,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     pterodactyl-wings = {
-      url = "git+https://gitlab.shortcord.com/shortcord/pterodactyl-wings-flake?ref=master";
+      url =
+        "git+https://gitlab.shortcord.com/shortcord/pterodactyl-wings-flake?ref=master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-mailserver = {
@@ -17,17 +18,20 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     shortcord-site = {
-      url = "git+https://gitlab.shortcord.com/shortcord/shortcord.com.git?ref=master";
+      url =
+        "git+https://gitlab.shortcord.com/shortcord/shortcord.com.git?ref=master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     catstdon-flake = {
-      url = "git+https://gitlab.shortcord.com/shortcord/catstodon-flake.git?ref=main";
+      url =
+        "git+https://gitlab.shortcord.com/shortcord/catstodon-flake.git?ref=main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
   outputs = { nixpkgs, nixpkgs-unstable, colmena, ragenix, flake-utils
-    , nixos-mailserver, pterodactyl-wings, shortcord-site, catstdon-flake, ... }:
+    , nixos-mailserver, pterodactyl-wings, shortcord-site, catstdon-flake, ...
+    }:
     let
       inherit (nixpkgs) lib;
       scConfig = import ./config/default.nix;
@@ -42,21 +46,33 @@
               catstdon-flake.overlays.default
             ];
           };
-          specialArgs = { inherit ragenix pterodactyl-wings nixos-mailserver nixpkgs-unstable shortcord-site catstdon-flake; };
+          # Per node override of nixpkgs
+          ## "hostname" = { nixpkgs import stansa }
+          ## see above for example of said stansa
+          nodeNixpkgs = { };
+          specialArgs = {
+            inherit ragenix pterodactyl-wings nixos-mailserver nixpkgs-unstable
+              shortcord-site catstdon-flake;
+          };
         };
         defaults = { name, lib, config, ... }: {
           deployment = {
             targetUser = "short";
             buildOnTarget = true;
-            tags = lib.mkOrder 1000 (lib.optional (!config.boot.isContainer) "default");
+            tags = lib.mkOrder 1000
+              (lib.optional (!config.boot.isContainer) "default");
           };
-          networking.hostName = lib.mkDefault (builtins.head (lib.splitString "." name));
-          networking.domain = lib.mkDefault (builtins.concatStringsSep "." (builtins.tail (lib.splitString "." name)));
+          # Set hostname and domain to node name in flake by default
+          networking.hostName =
+            lib.mkDefault (builtins.head (lib.splitString "." name));
+          networking.domain = lib.mkDefault (builtins.concatStringsSep "."
+            (builtins.tail (lib.splitString "." name)));
+
           nix = {
             settings = {
               experimental-features = [ "nix-command" "flakes" ];
               auto-optimise-store = true;
-              substituters = [ 
+              substituters = [
                 # "https://binarycache.violet.lab.shortcord.com"
                 "https://cache.nixos.org"
               ];
@@ -142,6 +158,12 @@
           imports = [ ./hosts/${name}.nix ];
         };
 
+        "gitlab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "infra" "container" "gitlab" ];
+          deployment.targetHost = "2a01:4f8:c012:a734::10";
+          imports = [ ./containers/${name}.nix ];
+        };
+
         "miauws.life" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "miauws" ];
           imports = [ ./hosts/${name}.nix ];
@@ -152,34 +174,35 @@
           imports = [ ./hosts/${name}.nix ];
         };
       };
-    in
-      {
-        devShells = {
-          x86_64-darwin.default = nixpkgs.legacyPackages.x86_64-darwin.mkShell {
-            buildInputs = [
-              nixpkgs.legacyPackages.x86_64-darwin.colmena
-              nixpkgs.legacyPackages.x86_64-darwin.nixos-generators
-              nixpkgs.legacyPackages.x86_64-darwin.vim
-            ] ++ [ ragenix.packages.x86_64-darwin.default ];
-          };
-          x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.mkShell {
-            buildInputs = [
-              nixpkgs.legacyPackages.x86_64-linux.colmena
-              nixpkgs.legacyPackages.x86_64-linux.nixos-generators
-              nixpkgs.legacyPackages.x86_64-linux.vim
-            ] ++ [ ragenix.packages.x86_64-linux.default ];
-          };
+    in {
+      devShells = {
+        x86_64-darwin.default = nixpkgs.legacyPackages.x86_64-darwin.mkShell {
+          buildInputs = [
+            nixpkgs.legacyPackages.x86_64-darwin.colmena
+            nixpkgs.legacyPackages.x86_64-darwin.nixos-generators
+            nixpkgs.legacyPackages.x86_64-darwin.vim
+          ] ++ [ ragenix.packages.x86_64-darwin.default ];
         };
-
-        colmena = colmenaConfiguration;
-
-        nixosConfigurations = lib.pipe colmenaConfiguration
-          [
-              colmena.lib.makeHive
-              (builtins.getAttr "nodes")
-              builtins.attrValues
-              (builtins.map (node: { name = node.config.networking.hostName; value = node; }))
-              builtins.listToAttrs
-          ];
+        x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.mkShell {
+          buildInputs = [
+            nixpkgs.legacyPackages.x86_64-linux.colmena
+            nixpkgs.legacyPackages.x86_64-linux.nixos-generators
+            nixpkgs.legacyPackages.x86_64-linux.vim
+          ] ++ [ ragenix.packages.x86_64-linux.default ];
+        };
       };
+
+      colmena = colmenaConfiguration;
+
+      nixosConfigurations = lib.pipe colmenaConfiguration [
+        colmena.lib.makeHive
+        (builtins.getAttr "nodes")
+        builtins.attrValues
+        (builtins.map (node: {
+          name = node.config.networking.hostName;
+          value = node;
+        }))
+        builtins.listToAttrs
+      ];
+    };
 }
