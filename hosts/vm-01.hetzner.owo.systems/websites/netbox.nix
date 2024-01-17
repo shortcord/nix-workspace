@@ -1,7 +1,7 @@
 { name, pkgs, lib, config, ... }: {
   age.secrets = {
     netboxSecretKey = {
-      file = ../../secrets/${name}/netboxSecretKey.age;
+      file = ../../../secrets/${name}/netboxSecretKey.age;
       owner = "netbox";
       group = "netbox";
     };

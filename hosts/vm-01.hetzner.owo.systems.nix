@@ -12,13 +12,9 @@
     ./${name}/websites.nix
     ./${name}/xmpp.nix
     ./${name}/prometheus.nix
-    ./${name}/pterodactyl.nix
     ./${name}/xmpp.nix
-    ./${name}/writefreely.nix
     ./${name}/powerdns.nix
     ./${name}/uptime-kuma.nix
-    ./${name}/nextcloud.nix
-    ./${name}/netbox.nix
     ./general/all.nix
   ];
 
