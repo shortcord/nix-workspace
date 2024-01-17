@@ -1,19 +1,42 @@
 { name, nodes, pkgs, lib, config, ... }: {
   age.secrets.powerdnsConfig.file = ../../secrets/${name}/powerdnsConfig.age;
-
+  security.acme.certs."ns2.owo.systems" = {
+    postRun = let
+      homeDir = config.services.mysql.dataDir;
+      sqlUser = config.services.mysql.dataDir;
+      sqlGroup = config.services.mysql.dataDir;
+      sqlPackage = config.services.mysql.package;
+    in ''
+      cp fullchain.pem "${homeDir}/"
+      cp key.pem "${homeDir}/"
+      chown ${sqlUser}:${sqlGroup} "${homeDir}/fullchain.pem"
+      chown ${sqlUser}:${sqlGroup} "${homeDir}/key.pem"
+      # Reload Mariadb
+      ${sqlPackage}/bin/mysql -Bse 'FLUSH SSL;'
+    '';
+  };
   services = {
     mysqlBackup = {
       enable = true;
       # Backup daily
       calendar = "*-*-* 00:00:00";
       singleTransaction = true;
-      databases = [
-        "powerdns"
-      ];
+      databases = [ "powerdns" ];
     };
     mysql = {
       package = pkgs.mariadb;
       enable = true;
+      settings = let cfg = config.services.mysql;
+      in {
+        mysqld = {
+          bind_address = "0.0.0.0";
+        };
+        mariadb = {
+          ssl_cert = "${cfg.dataDir}/fullchain.pem";
+          ssl_key = "${cfg.dataDir}/key.pem";
+          ssl_ca = "/etc/ssl/certs/ca-bundle.crt";
+        };
+      };
       replication = {
         role = "master";
         serverId = 2;

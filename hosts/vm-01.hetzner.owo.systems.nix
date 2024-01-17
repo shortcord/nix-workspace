@@ -12,13 +12,9 @@
     ./${name}/websites.nix
     ./${name}/xmpp.nix
     ./${name}/prometheus.nix
-    ./${name}/pterodactyl.nix
     ./${name}/xmpp.nix
-    ./${name}/writefreely.nix
     ./${name}/powerdns.nix
     ./${name}/uptime-kuma.nix
-    ./${name}/nextcloud.nix
-    ./${name}/netbox.nix
     ./general/all.nix
   ];
 
@@ -51,8 +47,6 @@
   };
 
   networking = {
-    hostName = "vm-01";
-    domain = "hetzner.owo.systems";
     useDHCP = false;
     useNetworkd = true;
     firewall = {
@@ -85,31 +79,17 @@
 
   environment.systemPackages = with pkgs; [ vim git ];
 
-  # containers = {
-  #   testing = {
-  #     autoStart = true;
-  #     privateNetwork = true;
-  #     hostAddress6 = "fc00::1";
-  #     localAddress6 = "2a01:4f8:c012:a734::10";
-  #     config = { config, pkgs, ... }: {
-  #       services.httpd.enable = true;
-  #       networking.firewall = {
-  #         allowedTCPPorts = [ 22 80 ];
-  #         allowPing = true;
-  #       };
-  #     };
-  #   };
-  # };
+  containers = {
+    gitlab = {
+      autoStart = true;
+      privateNetwork = true;
+      hostAddress6 = "fc00::1";
+      localAddress6 = "2a01:4f8:c012:a734::10";
+      path = nodes."gitlab.shortcord.com".config.system.build.toplevel;
+    };
+  };
 
   services = {
-    ndppd = {
-      enable = false;
-      proxies = {
-        "ens3" = {
-          rules = { "2a01:4f8:c012:a734::/64" = { method = "static"; }; };
-        };
-      };
-    };
     mysql = {
       package = pkgs.mariadb;
       enable = true;

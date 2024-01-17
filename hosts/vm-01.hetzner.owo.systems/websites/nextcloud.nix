@@ -1,17 +1,17 @@
 { name, pkgs, lib, config, ... }: {
   age.secrets = {
     nextcloudDbPass = {
-      file = ../../secrets/${name}/nextcloudDbPass.age;
+      file = ../../../secrets/${name}/nextcloudDbPass.age;
       owner = "nextcloud";
       group = "nextcloud";
     };
     nextcloudAdminPass = {
-      file = ../../secrets/${name}/nextcloudAdminPass.age;
+      file = ../../../secrets/${name}/nextcloudAdminPass.age;
       owner = "nextcloud";
       group = "nextcloud";
     };
     nextcloudS3Secret = {
-      file = ../../secrets/${name}/nextcloudS3Secret.age;
+      file = ../../../secrets/${name}/nextcloudS3Secret.age;
       owner = "nextcloud";
       group = "nextcloud";
     };

@@ -2,8 +2,7 @@
   system.stateVersion = "22.11";
 
   boot.loader.grub = {
-    device = "/dev/sda";
-    version = 2;
+    device = "/dev/disk/by-id/ata-HGST_HUS726060ALE610_K8GEVAAD";
     enable = true;
   };
 
@@ -44,7 +43,7 @@
     };
   };
 
-  boot.cleanTmpDir = true;
+  boot.tmp.cleanOnBoot = true;
   zramSwap.enable = true;
 
   imports = [ ./general/all.nix ];
@@ -56,8 +55,6 @@
 
   networking = {
     useDHCP = false;
-    hostName = "storage";
-    domain = "owo.systems";
     nameservers = [ "127.0.0.1" "::1" ];
     defaultGateway = {
       address = "5.9.99.97";

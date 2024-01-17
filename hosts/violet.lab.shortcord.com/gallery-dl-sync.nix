@@ -44,6 +44,7 @@ let
     https://e621.net/posts?tags=punkypanda
     https://e621.net/posts?tags=cupofuwu
     https://e621.net/posts?tags=canphem
+    https://e621.net/posts?tags=spincraze
 
     # Characters
     https://e621.net/posts?tags=texi_%28yitexity%29

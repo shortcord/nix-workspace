@@ -51,7 +51,6 @@
     lib.mkDefault config.hardware.enableRedistributableFirmware;
 
   networking = {
-    hostName = "dellmaus";
     networkmanager.enable = true;
     firewall.enable = false;
   };

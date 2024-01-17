@@ -24,17 +24,6 @@
           add_header Content-Type text/plain;
         '';
       };
-      "freekobolds.com" = {
-        serverAliases = [ "www.freekobolds.com" ];
-        kTLS = true;
-        http2 = true;
-        http3 = true;
-        forceSSL = true;
-        enableACME = true;
-        locations."/" = {
-          return = "302 https://www.twitch.tv/touchscalytail";
-        };
-      };
       "owo.gallery" = {
         kTLS = true;
         http2 = true;

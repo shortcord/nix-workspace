@@ -1,4 +1,4 @@
-{ name, pkgs, config, ... }: {
+{ name, pkgs, config, lib, ... }: {
   age.secrets.nix-serve.file = ../../secrets/${name}/nix-serve.age;
   services = {
     nginx = {
@@ -16,7 +16,7 @@
               }";
           };
         };
-        "hydra.${config.networking.fqdn}" = {
+        "hydra.${config.networking.fqdn}" = lib.mkIf config.services.hydra.enable {
           kTLS = true;
           http2 = true;
           http3 = true;
@@ -38,16 +38,12 @@
       port = 5000;
     };
     hydra = {
-      enable = true;
+      enable = false;
       listenHost = "localhost";
       hydraURL = "https://hydra.${config.networking.fqdn}";
       notificationSender = "hydra@${config.networking.fqdn}";
+      buildMachinesFiles = [];
       useSubstitutes = false;
-      extraConfig = ''
-        <git-input>
-          timeout = 3600
-        </git-input>
-      '';
     };
   };
 }

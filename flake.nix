@@ -8,89 +8,78 @@
       url = "github:yaxitech/ragenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixos-generators = {
-      url = "github:nix-community/nixos-generators";
+    pterodactyl-wings = {
+      url =
+        "git+https://gitlab.shortcord.com/shortcord/pterodactyl-wings-flake?ref=master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    pterodactyl-wings.url = "git+https://gitlab.shortcord.com/shortcord/pterodactyl-wings-flake?ref=master";
     nixos-mailserver = {
-      url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-23.05";
+      url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-23.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     shortcord-site = {
-      url = "git+https://gitlab.shortcord.com/shortcord/shortcord.com.git?ref=master";
+      url =
+        "git+https://gitlab.shortcord.com/shortcord/shortcord.com.git?ref=master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    catstdon-flake = {
+      url =
+        "git+https://gitlab.shortcord.com/shortcord/catstodon-flake.git?ref=main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { nixpkgs, nixpkgs-unstable, colmena, ragenix, nixos-generators, flake-utils
-    , nixos-mailserver, pterodactyl-wings, shortcord-site, ... }:
-    let scConfig = import ./config/default.nix;
-    in {
-      packages.x86_64-linux = {
-        iso = nixos-generators.nixosGenerate {
-          format = "iso";
-          system = "x86_64-linux";
-          modules = [ ./templates/bootiso.nix ];
-          specialArgs = { scConfig = scConfig; };
-        };
-        proxmox-lxc = nixos-generators.nixosGenerate {
-          format = "proxmox-lxc";
-          system = "x86_64-linux";
-          modules = [ ./templates/proxmox-lxc.nix ];
-          specialArgs = { scConfig = scConfig; };
-        };
-        proxmox = nixos-generators.nixosGenerate {
-          format = "proxmox";
-          system = "x86_64-linux";
-          modules = [ ./templates/proxmox.nix ];
-          specialArgs = { scConfig = scConfig; };
-        };
-        "miauws-life" = nixos-generators.nixosGenerate {
-          format = "proxmox";
-          system = "x86_64-linux";
-          modules = [ ./hosts/miauws.life.nix ];
-          specialArgs = { scConfig = scConfig; };
-        };
-      };
-
-      devShells = {
-        x86_64-darwin.default = nixpkgs.legacyPackages.x86_64-darwin.mkShell {
-          buildInputs = [
-            nixpkgs.legacyPackages.x86_64-darwin.colmena
-            nixpkgs.legacyPackages.x86_64-darwin.nixos-generators
-            nixpkgs.legacyPackages.x86_64-darwin.vim
-          ] ++ [ ragenix.packages.x86_64-darwin.default ];
-        };
-        x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.mkShell {
-          buildInputs = [
-            nixpkgs.legacyPackages.x86_64-linux.colmena
-            nixpkgs.legacyPackages.x86_64-linux.nixos-generators
-            nixpkgs.legacyPackages.x86_64-linux.vim
-          ] ++ [ ragenix.packages.x86_64-linux.default ];
-        };
-      };
-
-      colmena = {
+  outputs = { nixpkgs, nixpkgs-unstable, colmena, ragenix, flake-utils
+    , nixos-mailserver, pterodactyl-wings, shortcord-site, catstdon-flake, ...
+    }:
+    let
+      inherit (nixpkgs) lib;
+      scConfig = import ./config/default.nix;
+      colmenaConfiguration = {
         meta = {
+          allowApplyAll = false;
           nixpkgs = import nixpkgs {
             system = "x86_64-linux";
-            overlays = [ pterodactyl-wings.overlays.default shortcord-site.overlays.default ];
+            overlays = [
+              pterodactyl-wings.overlays.default
+              shortcord-site.overlays.default
+              catstdon-flake.overlays.default
+            ];
           };
-          specialArgs = { inherit ragenix pterodactyl-wings nixos-mailserver nixpkgs-unstable shortcord-site; };
+          # Per node override of nixpkgs
+          ## "hostname" = { nixpkgs import stansa }
+          ## see above for example of said stansa
+          nodeNixpkgs = { };
+          specialArgs = {
+            inherit ragenix pterodactyl-wings nixos-mailserver nixpkgs-unstable
+              shortcord-site catstdon-flake;
+          };
         };
-        defaults = {
+        defaults = { name, lib, config, ... }: {
           deployment = {
             targetUser = "short";
             buildOnTarget = true;
+            tags = lib.mkOrder 1000
+              (lib.optional (!config.boot.isContainer) "default");
           };
+          
+          # Set hostname and domain to node name in flake by default
+          networking.hostName =
+            lib.mkDefault (builtins.head (lib.splitString "." name));
+          networking.domain = lib.mkDefault (builtins.concatStringsSep "."
+            (builtins.tail (lib.splitString "." name)));
+
           nix = {
             settings = {
               experimental-features = [ "nix-command" "flakes" ];
               auto-optimise-store = true;
-              substituters = [ "https://binarycache.violet.lab.shortcord.com" ];
+              substituters = [
+                # "https://binarycache.violet.lab.shortcord.com"
+                "https://cache.nixos.org"
+              ];
               trusted-public-keys = [
                 "binarycache.violet.lab.shortcord.com:Bq1Q/51gHInHj8dMKoaCI5lHM8XnwASajahLe1KjCdQ="
+                "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
               ];
             };
             gc = {
@@ -132,6 +121,17 @@
               openssh = { authorizedKeys.keys = scConfig.sshkeys.users.short; };
             };
           };
+          age.secrets = {
+            distributedUserSSHKey.file =
+              ./secrets/general/distributedUserSSHKey.age;
+          };
+        };
+
+        "hydra.owo.solutions" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "infra" "hydra" ];
+          age.secrets.distributedUserSSHKey.file =
+            ./secrets/general/distributedUserSSHKey.age;
+          imports = [ ./hosts/${name}.nix ];
         };
 
         "storage.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
@@ -170,6 +170,12 @@
           imports = [ ./hosts/${name}.nix ];
         };
 
+        "gitlab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "infra" "container" "gitlab" ];
+          deployment.targetHost = "2a01:4f8:c012:a734::10";
+          imports = [ ./containers/${name}.nix ];
+        };
+
         "miauws.life" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "miauws" ];
           imports = [ ./hosts/${name}.nix ];
@@ -180,5 +186,27 @@
           imports = [ ./hosts/${name}.nix ];
         };
       };
+    in {
+      devShells = {
+        x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.mkShell {
+          buildInputs = [
+            nixpkgs.legacyPackages.x86_64-linux.colmena
+            nixpkgs.legacyPackages.x86_64-linux.vim
+          ] ++ [ ragenix.packages.x86_64-linux.default ];
+        };
+      };
+
+      colmena = colmenaConfiguration;
+
+      nixosConfigurations = lib.pipe colmenaConfiguration [
+        colmena.lib.makeHive
+        (builtins.getAttr "nodes")
+        builtins.attrValues
+        (builtins.map (node: {
+          name = node.config.networking.hostName;
+          value = node;
+        }))
+        builtins.listToAttrs
+      ];
     };
 }

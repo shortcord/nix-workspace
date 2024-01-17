@@ -4,8 +4,6 @@
   imports = [ 
     (modulesPath + "/profiles/qemu-guest.nix")
     ./general/all.nix
-    ./${name}/mailserver.nix
-    ./${name}/mastodon.nix
   ];
 
   swapDevices = [ ];
@@ -28,12 +26,16 @@
 
   fileSystems = {
     "/" = {
-      device = "/dev/disk/by-uuid/9ca4a749-ee3c-4d0c-ae8b-69e64256766d";
+      device = "/dev/disk/by-uuid/8a54b50a-b8fa-4093-b4c4-55c0db8ecbab";
       fsType = "ext4";
     };
     "/boot" = {
-      device = "/dev/disk/by-uuid/9979-E152";
+      device = "/dev/disk/by-uuid/01D7-974D";
       fsType = "vfat";
+    };
+    "/nix" = {
+      device = "/dev/disk/by-uuid/13c0db3d-b4f0-448f-bc9b-a7604731fb48";
+      fsType = "xfs";
     };
   };
 
@@ -43,27 +45,11 @@
     enable = true;
     networks = {
       "10-wan" = {
-        matchConfig.MACAddress = "00:50:56:09:0B:59";
+        matchConfig.MACAddress = "12:22:95:0e:10:6c";
         networkConfig = {
-          DHCP = "no";
-          DNS = [ "127.0.0.1" "::1" ];
-          Address = [ "51.81.23.224/32" "2604:2dc0:100:1b1e::30/64" ];
-          Gateway = [ "51.81.11.254" "2604:2dc0:0100:1bff:00ff:00ff:00ff:00ff" ];
+          DHCP = "ipv6";
+          IPv6AcceptRA = true;
         };
-        routes = [
-          {
-            routeConfig = {
-              Scope = "link";
-              Destination = "51.81.11.254";
-            };
-          }
-          {
-            routeConfig = {
-              Scope = "link";
-              Destination = "2604:2dc0:0100:1bff:00ff:00ff:00ff:00ff";
-            };
-          }
-        ];
       };
     };
   };

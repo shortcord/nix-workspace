@@ -17,7 +17,9 @@
                 "--command",
                 "--",
                 "colmena",
-                "build"
+                "build",
+                "--on",
+                "@default"
             ],
             "problemMatcher": []
         },
@@ -30,7 +32,9 @@
                 "--command",
                 "--",
                 "colmena",
-                "apply"
+                "apply",
+                "--on",
+                "@default"
             ],
             "problemMatcher": []
         },
@@ -45,7 +49,7 @@
                 "colmena",
                 "build",
                 "--on",
-                "${input:targetHost}"
+                "${input:targetHost}\\*"
             ],
             "problemMatcher": []
         },
@@ -60,7 +64,7 @@
                 "colmena",
                 "apply",
                 "--on",
-                "${input:targetHost}"
+                "${input:targetHost}\\*"
             ],
             "problemMatcher": []
         }
@@ -69,7 +73,7 @@
         {
             "id": "targetHost",
             "description": "Target host to run the command on.",
-            "default": "@all",
+            "default": "",
             "type": "promptString"
         }
     ]

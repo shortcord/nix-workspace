@@ -7,6 +7,7 @@ let
     "violet.lab.shortcord.com"
     "lilac.lab.shortcord.com"
     "miauws.life"
+    "ns2.owo.solutions"
   ];
   nodeExporterTargets = [
     "pve.owo.solutions:9100"
@@ -18,6 +19,7 @@ let
     "lilac.lab.shortcord.com:9100"
     "maus.home.shortcord.com:9100"
     "node.02.servers.owo.solutions:9100"
+    "ns2.owo.solutions:9100"
   ];
   powerdnsExporterTargets =
     [ "powerdns.vm-01.hetzner.owo.systems:443" "powerdns.ns2.owo.systems:443" ];

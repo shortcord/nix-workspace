@@ -67,7 +67,7 @@
       in "!${preStartScript}";
 
       ExecStart = "${pkgs.qbittorrent-nox}/bin/qbittorrent-nox";
-      UMask = "0002";
+      UMask = "0013";
     };
 
     environment = {
