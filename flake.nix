@@ -62,6 +62,7 @@
             tags = lib.mkOrder 1000
               (lib.optional (!config.boot.isContainer) "default");
           };
+          
           # Set hostname and domain to node name in flake by default
           networking.hostName =
             lib.mkDefault (builtins.head (lib.splitString "." name));
@@ -119,6 +120,10 @@
               extraGroups = [ "wheel" ];
               openssh = { authorizedKeys.keys = scConfig.sshkeys.users.short; };
             };
+          };
+          age.secrets = {
+            distributedUserSSHKey.file =
+              ./secrets/general/distributedUserSSHKey.age;
           };
         };
 
