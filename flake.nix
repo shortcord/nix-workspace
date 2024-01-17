@@ -127,6 +127,13 @@
           };
         };
 
+        "hydra.owo.solutions" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "infra" "hydra" ];
+          age.secrets.distributedUserSSHKey.file =
+            ./secrets/general/distributedUserSSHKey.age;
+          imports = [ ./hosts/${name}.nix ];
+        };
+
         "storage.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "infra" "storage" ];
           age.secrets.distributedUserSSHKey.file =
