@@ -3,7 +3,6 @@
 
   boot.loader.grub = {
     device = "/dev/disk/by-id/ata-HGST_HUS726060ALE610_K8GEVAAD";
-    version = 2;
     enable = true;
   };
 
@@ -44,7 +43,7 @@
     };
   };
 
-  boot.cleanTmpDir = true;
+  boot.tmp.cleanOnBoot = true;
   zramSwap.enable = true;
 
   imports = [ ./general/all.nix ];

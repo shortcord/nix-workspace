@@ -26,7 +26,6 @@
     kernelParams = [ "ata-piix" "uhci_hcd" "virtio_pci" "sr_mod" "virtio_blk" ];
     loader.grub = {
       enable = true;
-      version = 2;
       device = "/dev/vda";
     };
     initrd = {
