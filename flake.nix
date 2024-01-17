@@ -181,17 +181,9 @@
       };
     in {
       devShells = {
-        x86_64-darwin.default = nixpkgs.legacyPackages.x86_64-darwin.mkShell {
-          buildInputs = [
-            nixpkgs.legacyPackages.x86_64-darwin.colmena
-            nixpkgs.legacyPackages.x86_64-darwin.nixos-generators
-            nixpkgs.legacyPackages.x86_64-darwin.vim
-          ] ++ [ ragenix.packages.x86_64-darwin.default ];
-        };
         x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.mkShell {
           buildInputs = [
             nixpkgs.legacyPackages.x86_64-linux.colmena
-            nixpkgs.legacyPackages.x86_64-linux.nixos-generators
             nixpkgs.legacyPackages.x86_64-linux.vim
           ] ++ [ ragenix.packages.x86_64-linux.default ];
         };
