@@ -22,6 +22,7 @@
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMYLWI4ixfYTbbGymECI2zKPsXPzjoJYDPcb/8R4ptX+ matrix.mousetail.dev"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJEfHEMvtBanjtNLBpzyZwDNA5ro7ORIFARnKeIj/GgS miauws.life"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHw2ZJN9Mk/MILgpdDQ3a3/o7SCPHvbT/iaWWMnMWM3O keycloak.owo.solutions"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGQk+htjVN1ywCnUXY3LeiyNOV6bbp3KKXbSCKQx7mHV hydra.owo.solutions"
       ];
     };
   };
