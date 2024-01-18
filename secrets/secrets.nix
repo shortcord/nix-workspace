@@ -57,4 +57,7 @@ in
   # Secrets for keycloak.owo.solutionss
   "keycloak.owo.solutions/keycloak-psql-password.age".publicKeys = all;
   "keycloak.owo.solutions/wireguard-mailrelay-key.age".publicKeys = all;
+
+  # Secrets for hydra.owo.solutions
+  "hydra.owo.solutions/nix-serve.age".publicKeys = all;
 }
