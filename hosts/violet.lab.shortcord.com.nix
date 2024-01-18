@@ -121,6 +121,10 @@ in {
             DNS = "10.18.0.1";
             EmitDNS = true;
           };
+          ipv6SendRAConfig = {
+            DNS = "_link_local";
+            EmitDNS = true;
+          };
         };
         # "30-home" = {
         #   matchConfig.MACAddress = "C8:1F:66:E6:7A:54";
@@ -164,8 +168,8 @@ in {
   boot = {
     kernelPackages = pkgs.linuxKernel.packages.linux_6_1;
     growPartition = true;
-    kernelModules = [ ];
-    extraModulePackages = [ ];
+    kernelModules = [ "jool" ];
+    extraModulePackages = [ pkgs.linuxKernel.packages.linux_6_1.jool ];
     kernelParams = [ "kvm-intel" ];
     loader.systemd-boot = {
       enable = true;
@@ -206,6 +210,15 @@ in {
       enableIPv6 = false;
       externalInterface = "eno1";
       internalInterfaces = [ "eno2" "eno3" ];
+    };
+    jool = {
+      enable = true;
+      nat64 = {
+        "default" = {
+          framework = "netfilter";
+          global.pool6 = "64:ff9b::/96";
+        };
+      };
     };
   };
 
@@ -257,10 +270,13 @@ in {
     resolved.enable = false;
     pdns-recursor = {
       enable = true;
+      settings = {
+        dns64-prefix = "64:ff9b::/96";
+      };
       dns = {
         port = 53;
         address =
-          [ "127.0.0.1" "::1" "10.18.0.1" "192.168.15.1" ];
+          [ "0.0.0.0" "[::]" ];
       };
     };
     frr = {
