@@ -55,14 +55,14 @@
               shortcord-site catstdon-flake;
           };
         };
-        defaults = { name, lib, config, ... }: {
+        defaults = { name, lib, config, pkgs, ... }: {
           deployment = {
             targetUser = "short";
             buildOnTarget = true;
             tags = lib.mkOrder 1000
               (lib.optional (!config.boot.isContainer) "default");
           };
-          
+
           # Set hostname and domain to node name in flake by default
           networking.hostName =
             lib.mkDefault (builtins.head (lib.splitString "." name));
@@ -88,11 +88,13 @@
               options = "--delete-older-than 2d";
             };
           };
+          
           imports = [
             ragenix.nixosModules.default
             pterodactyl-wings.nixosModules.default
             nixos-mailserver.nixosModules.default
           ];
+          
           security = {
             sudo = { wheelNeedsPassword = false; };
             acme = {
@@ -100,6 +102,7 @@
               defaults.email = "short@shortcord.com";
             };
           };
+          
           services = {
             openssh = {
               enable = true;
@@ -107,6 +110,7 @@
             };
             fail2ban = { enable = true; };
           };
+          
           users.users = {
             deployment = {
               isNormalUser = true;
@@ -121,10 +125,13 @@
               openssh = { authorizedKeys.keys = scConfig.sshkeys.users.short; };
             };
           };
+
           age.secrets = {
             distributedUserSSHKey.file =
               ./secrets/general/distributedUserSSHKey.age;
           };
+
+          environment.systemPackages = with pkgs; [ vim git dig iftop htop ];
         };
 
         "hydra.owo.solutions" = { name, nodes, pkgs, lib, config, ... }: {
@@ -153,6 +160,11 @@
             [ "infra" "nameserver" "grafana" "prometheus" "vm-01" ];
           age.secrets.distributedUserSSHKey.file =
             ./secrets/general/distributedUserSSHKey.age;
+          imports = [ ./hosts/${name}.nix ];
+        };
+
+        "gateway.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "infra" "lab" "gateway" ];
           imports = [ ./hosts/${name}.nix ];
         };
 
