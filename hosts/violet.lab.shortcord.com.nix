@@ -117,7 +117,7 @@ in {
             Announce = true;
           };
           dhcpServerConfig = {
-            ServerAddress= "10.18.0.1/24";
+            ServerAddress = "10.18.0.1/24";
             DNS = "10.18.0.1";
             EmitDNS = true;
           };
@@ -268,15 +268,28 @@ in {
       extraConfigFile = config.age.secrets.wingsToken.path;
     };
     resolved.enable = false;
-    pdns-recursor = {
+    unbound = {
       enable = true;
       settings = {
-        dns64-prefix = "64:ff9b::/96";
+        server = {
+          interface = [ "eno2" ];
+          module-config = "'dns64 validator iterator'";
+          dns64-prefix = "64:ff9b::/96";
+          interface-action = "eno2 allow";
+        };
+        forward-zone = [
+          {
+            name = ".";
+            forward-addr = "9.9.9.9";
+          }
+        ];
       };
+    };
+    pdns-recursor = {
+      enable = true;
       dns = {
         port = 53;
-        address =
-          [ "0.0.0.0" "[::]" ];
+        address = [ "127.0.0.1" "::1" ];
       };
     };
     frr = {
