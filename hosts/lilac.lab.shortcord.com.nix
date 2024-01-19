@@ -17,7 +17,6 @@ in {
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
     ./general/all.nix
-    ./general/dyndns-ipv4.nix
     ./general/dyndns-ipv6.nix
     ./${name}/hardware.nix
     ./${name}/mastodon.nix
@@ -108,7 +107,7 @@ in {
   };
 
   services = {
-  qemuGuest.enable = true;
+    qemuGuest.enable = true;
     prometheus = {
       enable = true;
       exporters = {
