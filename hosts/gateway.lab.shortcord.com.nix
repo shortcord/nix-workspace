@@ -159,6 +159,4 @@
       };
     };
   };
-
-  age.secrets.pdnsApiKey.file = ../secrets/general/pdnsApiKey.age;
 }
