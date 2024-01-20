@@ -1,6 +1,8 @@
 { name, nodes, pkgs, lib, config, ... }: {
   system.stateVersion = "23.11";
 
+  imports = [ ./general/dyndns.nix ];
+
   fileSystems = {
     "/" = {
       device = "/dev/disk/by-uuid/9671d973-8de0-4b34-844f-483db73b9b16";
@@ -26,13 +28,16 @@
         };
         "20-lan" = {
           matchConfig.MACAddress = "1c:fd:08:7b:7e:84";
-          linkConfig.RequiredForOnline = "no";
+          linkConfig = {
+            RequiredForOnline = false;
+          };
           address = [ "10.18.0.1/24" ];
           networkConfig = {
             IPv6SendRA = true;
             DHCPPrefixDelegation = true;
             IPv6AcceptRA = false;
             DHCPServer = true;
+            ConfigureWithoutCarrier = true;
           };
           dhcpPrefixDelegationConfig = {
             UplinkInterface = "eno1";
@@ -51,12 +56,15 @@
         };
         "30-home" = {
           matchConfig.MACAddress = "1c:fd:08:7b:7e:85";
-          linkConfig.RequiredForOnline = "no";
+          linkConfig = {
+            RequiredForOnline = false;
+          };
           address = [ "192.168.15.1/24" ];
           networkConfig = {
             DHCP = "no";
             DNS = "no";
             IPv6AcceptRA = false;
+            ConfigureWithoutCarrier = true;
           };
         };
       };
@@ -130,7 +138,7 @@
       enable = true;
       settings = {
         server = {
-          interface = [ "eno2" ];
+          interface = [ "enp1s0f0" "enp1s0f1" ];
           module-config = "'dns64 validator iterator'";
           dns64-prefix = "64:ff9b::/96";
           interface-action = [ "enp1s0f0 allow" "enp1s0f1 allow" ];
@@ -151,4 +159,6 @@
       };
     };
   };
+
+  age.secrets.pdnsApiKey.file = ../secrets/general/pdnsApiKey.age;
 }
