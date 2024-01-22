@@ -277,12 +277,10 @@ in {
           dns64-prefix = "64:ff9b::/96";
           interface-action = "eno2 allow";
         };
-        forward-zone = [
-          {
-            name = ".";
-            forward-addr = "9.9.9.9";
-          }
-        ];
+        forward-zone = [{
+          name = ".";
+          forward-addr = "9.9.9.9";
+        }];
       };
     };
     pdns-recursor = {
