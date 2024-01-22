@@ -105,8 +105,8 @@ in {
       enable = true;
       listenAddress = "127.0.0.1";
       port = 9090;
-      # Keep for 8 months
-      retentionTime = "243d";
+      # Keep for two years
+      retentionTime = "2y";
       # Get around sandboxing issues, fuckin' developers
       checkConfig = "syntax-only";
       exporters = {
