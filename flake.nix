@@ -88,13 +88,13 @@
               options = "--delete-older-than 2d";
             };
           };
-          
+
           imports = [
             ragenix.nixosModules.default
             pterodactyl-wings.nixosModules.default
             nixos-mailserver.nixosModules.default
           ];
-          
+
           security = {
             sudo = { wheelNeedsPassword = false; };
             acme = {
@@ -102,7 +102,7 @@
               defaults.email = "short@shortcord.com";
             };
           };
-          
+
           services = {
             openssh = {
               enable = true;
@@ -110,7 +110,7 @@
             };
             fail2ban = { enable = true; };
           };
-          
+
           users.users = {
             deployment = {
               isNormalUser = true;
@@ -131,7 +131,14 @@
               ./secrets/general/distributedUserSSHKey.age;
           };
 
-          environment.systemPackages = with pkgs; [ vim git dig iftop htop ];
+          environment.systemPackages = with pkgs; [
+            vim
+            git
+            dig
+            iftop
+            htop
+            cloud-utils
+          ];
         };
 
         "hydra.owo.solutions" = { name, nodes, pkgs, lib, config, ... }: {
