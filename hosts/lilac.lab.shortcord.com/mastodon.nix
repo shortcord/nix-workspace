@@ -16,6 +16,7 @@
         '';
       };
     };
+    opensearch = { enable = true; };
     mastodon = {
       enable = true;
       enableUnixSocket = false;
@@ -41,6 +42,12 @@
         MAX_REACTIONS = "6";
         MAX_SEARCH_RESULTS = "1000";
         MAX_REMOTE_EMOJI_SIZE = "1048576";
+
+        # Text Searching via OpenSearch
+        ES_ENABLED = "true";
+        ES_HOST = "127.0.0.1";
+        ES_PORT = "9200";
+        ES_PRESET = "single_node_cluster";
 
         ## Email stuff
         SMTP_SERVER = "10.7.210.1";
