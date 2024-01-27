@@ -292,26 +292,23 @@ in {
     };
     frr = {
       zebra = {
-        enable = false;
+        enable = true;
         config = ''
-          interface eno4
-            ip ospf bfd
+          interface eno2
             ip ospf area 0.0.0.1
-
-            ipv6 ospf6 network point-to-point
-            ipv6 ospf6 bfd
             ipv6 ospf6 area 0.0.0.1
+            multicast
         '';
       };
       ospf = {
-        enable = false;
+        enable = true;
         config = ''
           router ospf
             redistribute connected
         '';
       };
       ospf6 = {
-        enable = false;
+        enable = true;
         config = ''
           router ospf6
             redistribute connected
