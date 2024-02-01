@@ -24,7 +24,7 @@
     };
     catstdon-flake = {
       url =
-        "git+https://gitlab.shortcord.com/shortcord/catstodon-flake.git?ref=main";
+        "git+https://gitlab.shortcord.com/shortcord/maustodon-flake.git?ref=main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -194,6 +194,12 @@
           deployment.targetHost = "2a01:4f8:c012:a734::10";
           imports = [ ./containers/${name}.nix ];
         };
+
+        # "nginx.vm-01.hetzner.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
+        #   deployment.tags = [ "infra" "container" ];
+        #   deployment.targetHost = "2a01:4f8:c012:a734::11";
+        #   imports = [ ./containers/${name}.nix ];
+        # };
 
         "miauws.life" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "miauws" ];
