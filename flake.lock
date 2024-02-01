@@ -46,18 +46,18 @@
         ]
       },
       "locked": {
-        "lastModified": 1703217702,
-        "narHash": "sha256-wUiywIzixMmJHLFvHRYKWoulORs+U3Kqf0+ge6oTwAU=",
+        "lastModified": 1706815153,
+        "narHash": "sha256-91fEIpxKBUCKcluenXExmKpUGgkhKZmbfY/6zCYN2vo=",
         "ref": "main",
-        "rev": "4c5afe9b7ce32c69da89efd64ede291483f0a323",
-        "revCount": 5,
+        "rev": "be55c9033b6dc265ae314781078bacf7eb38cd34",
+        "revCount": 4,
         "type": "git",
-        "url": "https://gitlab.shortcord.com/shortcord/catstodon-flake.git"
+        "url": "https://gitlab.shortcord.com/shortcord/maustodon-flake.git"
       },
       "original": {
         "ref": "main",
         "type": "git",
-        "url": "https://gitlab.shortcord.com/shortcord/catstodon-flake.git"
+        "url": "https://gitlab.shortcord.com/shortcord/maustodon-flake.git"
       }
     },
     "colmena": {
