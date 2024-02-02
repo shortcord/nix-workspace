@@ -1,5 +1,6 @@
 { name, pkgs, config, lib, ... }: {
   age.secrets.nix-serve.file = ../../secrets/${name}/nix-serve.age;
+  nix.settings.secret-key-files = [ config.age.secrets.nix-serve.path ];
   services = {
     nginx = {
       virtualHosts = {
