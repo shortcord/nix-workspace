@@ -1,7 +1,14 @@
 { config, pkgs, ... }: 
 {
    services = {
-    jackett = { enable = true; };
+    jackett = { 
+      package = pkgs.jackett.overrideAttrs (self: super: {
+        # Because the test suite for jacket 
+        # depends on current date, which is fucking stupid
+        doCheck = false;
+      });
+      enable = true;
+    };
     nginx = {
       virtualHosts = {
         "jackett.${config.networking.fqdn}" = {
