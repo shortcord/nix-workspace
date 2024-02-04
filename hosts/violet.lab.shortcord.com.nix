@@ -20,7 +20,7 @@ in {
     ./general/dyndns-ipv4.nix
     ./general/dyndns-ipv6.nix
     ./${name}/hydra.nix
-    # ./${name}/ipfs.nix
+    ./${name}/ipfs.nix
     # ./${name}/minio.nix
     ./${name}/nginx.nix
     ./${name}/jellyfin.nix
