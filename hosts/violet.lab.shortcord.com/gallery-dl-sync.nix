@@ -68,6 +68,7 @@ let
     https://danbooru.donmai.us/posts?tags=pepero_(prprlo)
     https://danbooru.donmai.us/posts?tags=4qw5
     https://danbooru.donmai.us/posts?tags=2n5
+    https://danbooru.donmai.us/posts?tags=glidesloe
 
     # Characters
     # https://danbooru.donmai.us/posts?tags=nazrin
