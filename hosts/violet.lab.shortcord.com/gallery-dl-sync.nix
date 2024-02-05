@@ -71,9 +71,9 @@ let
     https://danbooru.donmai.us/posts?tags=glidesloe
 
     # Characters
-    # https://danbooru.donmai.us/posts?tags=nazrin
-    # https://danbooru.donmai.us/posts?tags=noelle_(genshin_impact)
-    # https://danbooru.donmai.us/posts?tags=bridget_%28guilty_gear%29
+    https://danbooru.donmai.us/posts?tags=nazrin
+    https://danbooru.donmai.us/posts?tags=noelle_(genshin_impact)
+    https://danbooru.donmai.us/posts?tags=bridget_(guilty_gear)
 
     # General
     # https://danbooru.donmai.us/posts?tags=yuri+rating:general+-meme
