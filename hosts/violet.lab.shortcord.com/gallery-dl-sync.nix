@@ -83,7 +83,8 @@ let
     # https://danbooru.donmai.us/posts?tags=maid
     # https://danbooru.donmai.us/posts?tags=kimono
     https://danbooru.donmai.us/posts?tags=food_focus
-    
+    https://danbooru.donmai.us/posts?tags=signalis
+
     # Artists
     https://www.pixiv.net/en/users/32603125
     https://www.pixiv.net/en/users/22298878
