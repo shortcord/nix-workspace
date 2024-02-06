@@ -69,6 +69,8 @@ let
     https://danbooru.donmai.us/posts?tags=4qw5
     https://danbooru.donmai.us/posts?tags=2n5
     https://danbooru.donmai.us/posts?tags=glidesloe
+    https://danbooru.donmai.us/posts?tags=the_atko
+    https://danbooru.donmai.us/posts?tags=aki_(1360505188)
 
     # Characters
     https://danbooru.donmai.us/posts?tags=nazrin
@@ -80,7 +82,8 @@ let
     # https://danbooru.donmai.us/posts?tags=maid+-furry+rating%3Ag
     # https://danbooru.donmai.us/posts?tags=maid
     # https://danbooru.donmai.us/posts?tags=kimono
-
+    https://danbooru.donmai.us/posts?tags=food_focus
+    
     # Artists
     https://www.pixiv.net/en/users/32603125
     https://www.pixiv.net/en/users/22298878
