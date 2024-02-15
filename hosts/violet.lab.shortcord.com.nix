@@ -256,8 +256,8 @@ in {
       enable = true;
       package = pkgs.pterodactyl-wings;
       openFirewall = true;
-      allocatedTCPPorts = [ 5000 5001 5002 5003 5004 5005 ];
-      allocatedUDPPorts = [ 5000 5001 5002 5003 5004 5005 ];
+      allocatedTCPPorts = [ 6000 6001 6002 6003 6004 6005 ];
+      allocatedUDPPorts = [ 6000 6001 6002 6003 6004 6005 ];
       settings = {
         api = {
           host = "127.0.0.1";

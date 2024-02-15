@@ -39,10 +39,11 @@
     kubo = {
       enable = true;
       emptyRepo = true;
-      enableGC = true;
+      enableGC = false;
       autoMigrate = false;
       localDiscovery = true;
       settings = {
+        Experimental.FilestoreEnabled = true;
         PublicGateways = {
           "${config.networking.fqdn}" = {
             Paths = [ "/ipfs" "/ipns" ];

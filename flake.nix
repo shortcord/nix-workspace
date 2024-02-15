@@ -74,7 +74,6 @@
               experimental-features = [ "nix-command" "flakes" ];
               auto-optimise-store = true;
               substituters = [
-                # "https://binarycache.violet.lab.shortcord.com"
                 "https://cache.nixos.org"
               ];
               trusted-public-keys = [
@@ -189,15 +188,10 @@
           imports = [ ./hosts/${name}.nix ];
         };
 
-        "gitlab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment.tags = [ "infra" "container" "gitlab" ];
-          deployment.targetHost = "2a01:4f8:c012:a734::10";
-          imports = [ ./containers/${name}.nix ];
-        };
-
-        # "nginx.vm-01.hetzner.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
-        #   deployment.tags = [ "infra" "container" ];
-        #   deployment.targetHost = "2a01:4f8:c012:a734::11";
+        # Awaiting Migration
+        # "gitlab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+        #   deployment.tags = [ "infra" "container" "gitlab" ];
+        #   deployment.targetHost = "2a01:4f8:c012:a734::10";
         #   imports = [ ./containers/${name}.nix ];
         # };
 
