@@ -60,7 +60,7 @@ in {
         createLocally = true;
         host = "/run/postgresql";
       };
-      package = pkgs.catstodon;
+      package = pkgs.maustodon;
     };
     postgresqlBackup = {
       enable = true;

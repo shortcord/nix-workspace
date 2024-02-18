@@ -44,6 +44,7 @@ in
   "vm-01.hetzner.owo.systems/nextcloudAdminPass.age".publicKeys = all;
   "vm-01.hetzner.owo.systems/nextcloudS3Secret.age".publicKeys = all;
   "vm-01.hetzner.owo.systems/netboxSecretKey.age".publicKeys = all;
+  "vm-01.hetzner.owo.systems/wingsToken.age".publicKeys = all;
 
   # Secrets for lilac.lab.shortcord.com
   "lilac.lab.shortcord.com/catstodon.env.age".publicKeys = all;
@@ -57,4 +58,7 @@ in
   # Secrets for keycloak.owo.solutionss
   "keycloak.owo.solutions/keycloak-psql-password.age".publicKeys = all;
   "keycloak.owo.solutions/wireguard-mailrelay-key.age".publicKeys = all;
+
+  # Secrets for hydra.owo.solutions
+  "hydra.owo.solutions/nix-serve.age".publicKeys = all;
 }

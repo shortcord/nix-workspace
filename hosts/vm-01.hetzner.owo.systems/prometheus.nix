@@ -20,6 +20,7 @@ let
     "maus.home.shortcord.com:9100"
     "node.02.servers.owo.solutions:9100"
     "ns2.owo.solutions:9100"
+    "octoprint.lab.shortcord.com:9100"
   ];
   powerdnsExporterTargets =
     [ "powerdns.vm-01.hetzner.owo.systems:443" "powerdns.ns2.owo.systems:443" ];
@@ -105,8 +106,8 @@ in {
       enable = true;
       listenAddress = "127.0.0.1";
       port = 9090;
-      # Keep for 8 months
-      retentionTime = "243d";
+      # Keep for two years
+      retentionTime = "2y";
       # Get around sandboxing issues, fuckin' developers
       checkConfig = "syntax-only";
       exporters = {
@@ -226,6 +227,10 @@ in {
           scheme = "https";
           metrics_path = "/metrics";
           static_configs = [{ targets = powerdnsExporterTargets; }];
+        }
+        {
+          job_name = "octoprint-exporter";
+          static_configs = [{ targets = [ "octoprint.lab.shortcord.com:9101" ]; }];
         }
       ];
     };

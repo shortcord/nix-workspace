@@ -67,17 +67,24 @@ let
     https://danbooru.donmai.us/posts?tags=kirushi
     https://danbooru.donmai.us/posts?tags=pepero_(prprlo)
     https://danbooru.donmai.us/posts?tags=4qw5
+    https://danbooru.donmai.us/posts?tags=2n5
+    https://danbooru.donmai.us/posts?tags=glidesloe
+    https://danbooru.donmai.us/posts?tags=the_atko
+    https://danbooru.donmai.us/posts?tags=aki_(1360505188)
+    https://danbooru.donmai.us/posts?tags=hallelujah_zeng
 
     # Characters
-    # https://danbooru.donmai.us/posts?tags=nazrin
-    # https://danbooru.donmai.us/posts?tags=noelle_(genshin_impact)
-    # https://danbooru.donmai.us/posts?tags=bridget_%28guilty_gear%29
+    https://danbooru.donmai.us/posts?tags=nazrin
+    https://danbooru.donmai.us/posts?tags=noelle_(genshin_impact)
+    https://danbooru.donmai.us/posts?tags=bridget_(guilty_gear)
 
     # General
     # https://danbooru.donmai.us/posts?tags=yuri+rating:general+-meme
     # https://danbooru.donmai.us/posts?tags=maid+-furry+rating%3Ag
     # https://danbooru.donmai.us/posts?tags=maid
     # https://danbooru.donmai.us/posts?tags=kimono
+    https://danbooru.donmai.us/posts?tags=food_focus
+    https://danbooru.donmai.us/posts?tags=signalis
 
     # Artists
     https://www.pixiv.net/en/users/32603125

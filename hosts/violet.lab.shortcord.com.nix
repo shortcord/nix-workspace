@@ -20,7 +20,7 @@ in {
     ./general/dyndns-ipv4.nix
     ./general/dyndns-ipv6.nix
     ./${name}/hydra.nix
-    # ./${name}/ipfs.nix
+    ./${name}/ipfs.nix
     # ./${name}/minio.nix
     ./${name}/nginx.nix
     ./${name}/jellyfin.nix
@@ -117,8 +117,12 @@ in {
             Announce = true;
           };
           dhcpServerConfig = {
-            ServerAddress= "10.18.0.1/24";
+            ServerAddress = "10.18.0.1/24";
             DNS = "10.18.0.1";
+            EmitDNS = true;
+          };
+          ipv6SendRAConfig = {
+            DNS = "_link_local";
             EmitDNS = true;
           };
         };
@@ -164,8 +168,8 @@ in {
   boot = {
     kernelPackages = pkgs.linuxKernel.packages.linux_6_1;
     growPartition = true;
-    kernelModules = [ ];
-    extraModulePackages = [ ];
+    kernelModules = [ "jool" ];
+    extraModulePackages = [ pkgs.linuxKernel.packages.linux_6_1.jool ];
     kernelParams = [ "kvm-intel" ];
     loader.systemd-boot = {
       enable = true;
@@ -207,6 +211,15 @@ in {
       externalInterface = "eno1";
       internalInterfaces = [ "eno2" "eno3" ];
     };
+    jool = {
+      enable = true;
+      nat64 = {
+        "default" = {
+          framework = "netfilter";
+          global.pool6 = "64:ff9b::/96";
+        };
+      };
+    };
   };
 
   nix = {
@@ -243,8 +256,8 @@ in {
       enable = true;
       package = pkgs.pterodactyl-wings;
       openFirewall = true;
-      allocatedTCPPorts = [ 5000 5001 5002 5003 5004 5005 ];
-      allocatedUDPPorts = [ 5000 5001 5002 5003 5004 5005 ];
+      allocatedTCPPorts = [ 6000 6001 6002 6003 6004 6005 ];
+      allocatedUDPPorts = [ 6000 6001 6002 6003 6004 6005 ];
       settings = {
         api = {
           host = "127.0.0.1";
@@ -255,36 +268,47 @@ in {
       extraConfigFile = config.age.secrets.wingsToken.path;
     };
     resolved.enable = false;
+    unbound = {
+      enable = true;
+      settings = {
+        server = {
+          interface = [ "eno2" ];
+          module-config = "'dns64 validator iterator'";
+          dns64-prefix = "64:ff9b::/96";
+          interface-action = "eno2 allow";
+        };
+        forward-zone = [{
+          name = ".";
+          forward-addr = "9.9.9.9";
+        }];
+      };
+    };
     pdns-recursor = {
       enable = true;
       dns = {
         port = 53;
-        address =
-          [ "127.0.0.1" "::1" "10.18.0.1" "192.168.15.1" ];
+        address = [ "127.0.0.1" "::1" ];
       };
     };
     frr = {
       zebra = {
-        enable = false;
+        enable = true;
         config = ''
-          interface eno4
-            ip ospf bfd
+          interface eno2
             ip ospf area 0.0.0.1
-
-            ipv6 ospf6 network point-to-point
-            ipv6 ospf6 bfd
             ipv6 ospf6 area 0.0.0.1
+            multicast
         '';
       };
       ospf = {
-        enable = false;
+        enable = true;
         config = ''
           router ospf
             redistribute connected
         '';
       };
       ospf6 = {
-        enable = false;
+        enable = true;
         config = ''
           router ospf6
             redistribute connected

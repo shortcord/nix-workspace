@@ -17,49 +17,12 @@ in {
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
     ./general/all.nix
-    ./general/dyndns-ipv4.nix
     ./general/dyndns-ipv6.nix
     ./${name}/hardware.nix
     ./${name}/mastodon.nix
     # ./${name}/matrix.nix
     ./${name}/postgresql.nix
   ];
-
-  # systemd.network = {
-  #   enable = true;
-  #   netdevs = {
-  #     "50-wg0" = {
-  #       netdevConfig = {
-  #         Kind = "wireguard";
-  #         Name = "wg0";
-  #         MTUBytes = "1300";
-  #       };
-  #       wireguardConfig = {
-  #         PrivateKeyFile = config.age.secrets.wireguardPrivateKey.path;
-  #         ListenPort = 51820;
-  #       };
-  #       wireguardPeers = [{
-  #         wireguardPeerConfig = {
-  #           PublicKey = "ePYkBTYZaul66VdGLG70IZcCvIaZ7aSeRrkb+hskhiQ=";
-  #           AllowedIPs = [ "10.6.210.1/32" "10.6.210.0/24" "0.0.0.0/0" ];
-  #           Endpoint = "147.135.125.64:51820";
-  #           RouteTable = "off";
-  #         };
-  #       }];
-  #     };
-  #   };
-  #   networks.wg0 = {
-  #     matchConfig.Name = "wg0";
-  #     address = [ "10.6.210.29/32" ];
-  #     routes = [{
-  #       routeConfig = {
-  #         Gateway = "10.6.210.1";
-  #         Destination = "0.0.0.0/0";
-  #         Metric = 0;
-  #       };
-  #     }];
-  #   };
-  # };
 
   networking = {
     useDHCP = true;
@@ -108,7 +71,7 @@ in {
   };
 
   services = {
-  qemuGuest.enable = true;
+    qemuGuest.enable = true;
     prometheus = {
       enable = true;
       exporters = {
@@ -119,31 +82,4 @@ in {
       };
     };
   };
-
-  # Ensure that all wireguard tunnels are up
-  # There is probably a better way for this but idk
-  # systemd = {
-  #   timers = {
-  #     "check-wireguard-tunnels" = {
-  #       wantedBy = [ "timers.target" ];
-  #       timerConfig = {
-  #         OnBootSec = "5m";
-  #         OnUnitActiveSec = "5m";
-  #         Unit = "check-wireguard-tunnels.service";
-  #       };
-  #     };
-  #   };
-  #   services = {
-  #     "check-wireguard-tunnels" = {
-  #       script = ''
-  #         ${pkgs.iputils}/bin/ping -qc1 -w1 10.6.210.1 > /dev/null || systemctl restart wireguard-wg0.service
-  #         ${pkgs.iputils}/bin/ping -qc1 -w1 10.7.210.1 > /dev/null || systemctl restart wireguard-mail-relay.service          
-  #       '';
-  #       serviceConfig = {
-  #         Type = "oneshot";
-  #         User = "root";
-  #       };
-  #     };
-  #   };
-  # };
 }
