@@ -21,8 +21,13 @@
           ipAddress4=$(${pkgs.iproute2}/bin/ip -j a show | ${pkgs.jq}/bin/jq -r '.[] | select(.address == "${netConfig.matchConfig.MACAddress}") | .addr_info[] | select(.scope == "global" and .family == "inet") | .local')
           ipAddress6=$(${pkgs.iproute2}/bin/ip -j a show | ${pkgs.jq}/bin/jq -r '.[] | select(.address == "${netConfig.matchConfig.MACAddress}") | .addr_info[] | select(.scope == "global" and .family == "inet6") | .local')
 
-          ${pkgs.curl}/bin/curl -sf --user "''${API_USERNAME}:''${API_PASSWORD}" https://powerdns-admin.vm-01.hetzner.owo.systems/nic/update\?hostname=${config.networking.fqdn}\&myip="''${ipAddress4}"
-          ${pkgs.curl}/bin/curl -sf --user "''${API_USERNAME}:''${API_PASSWORD}" https://powerdns-admin.vm-01.hetzner.owo.systems/nic/update\?hostname=${config.networking.fqdn}\&myip="''${ipAddress6}"
+          if [ ! -z "''${ipAddress4}" ]; then
+            ${pkgs.curl}/bin/curl -sf --user "''${API_USERNAME}:''${API_PASSWORD}" https://powerdns-admin.vm-01.hetzner.owo.systems/nic/update\?hostname=${config.networking.fqdn}\&myip="''${ipAddress4}"
+          fi
+
+          if [ ! -z "''${ipAddress6}" ]; then
+            ${pkgs.curl}/bin/curl -sf --user "''${API_USERNAME}:''${API_PASSWORD}" https://powerdns-admin.vm-01.hetzner.owo.systems/nic/update\?hostname=${config.networking.fqdn}\&myip="''${ipAddress6}"
+          fi
         '';
         serviceConfig = {
           Type = "oneshot";
