@@ -13,6 +13,9 @@
 
         extraConfig = ''
           client_max_body_size 500M;
+          # contentnation.net
+          deny 2a01:4f8:140:2113::2/128;
+          deny 46.4.60.46/32;
         '';
       };
     };
