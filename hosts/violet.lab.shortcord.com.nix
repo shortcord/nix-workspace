@@ -329,6 +329,18 @@ in {
         };
       };
     };
+    nginx = {
+      virtualHosts = {
+        "actual.${config.networking.fqdn}" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+          locations."/" = { proxyPass = "http://127.0.0.2:5006"; };
+        };
+      };
+    };
   };
 
   programs.dconf.enable = true;
@@ -352,6 +364,12 @@ in {
             "gitlab-runner-config:/etc/gitlab-runner"
             "/var/run/docker.sock:/var/run/docker.sock:ro"
           ];
+        };
+        "actual" = {
+          autoStart = true;
+          image = "ghcr.io/actualbudget/actual-server:latest";
+          volumes = [ "actual-data:/data:rw" ];
+          ports = [ "127.0.0.2:5006:5006" ];
         };
       };
     };
