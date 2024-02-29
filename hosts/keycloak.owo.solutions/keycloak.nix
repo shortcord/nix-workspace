@@ -48,7 +48,7 @@
       settings = {
         hostname = config.networking.fqdn;
         http-port = 8080;
-        proxy = "passthrough";
+        proxy = "edge";
         http-enabled = true;
       };
     };
