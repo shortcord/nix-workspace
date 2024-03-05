@@ -15,6 +15,7 @@ let
     "vm-01.hetzner.owo.systems:9100"
     "violet.lab.shortcord.com:9100"
     "ipfs-pin-node-01.owo.systems:9100"
+    "ipfs-01.owo.systems:9100"
     "storage.owo.systems:9100"
     "lilac.lab.shortcord.com:9100"
     "maus.home.shortcord.com:9100"
@@ -24,7 +25,8 @@ let
   ];
   powerdnsExporterTargets =
     [ "powerdns.vm-01.hetzner.owo.systems:443" "powerdns.ns2.owo.systems:443" ];
-  mysqldExporterTargets = [ "vm-01.hetzner.owo.systems:9104" "ns2.owo.systems:9104" ];
+  mysqldExporterTargets =
+    [ "vm-01.hetzner.owo.systems:9104" "ns2.owo.systems:9104" ];
 
 in {
   age.secrets = {
@@ -215,8 +217,7 @@ in {
         }
         {
           job_name = "mysqld-exporters";
-          static_configs =
-            [{ targets = mysqldExporterTargets; }];
+          static_configs = [{ targets = mysqldExporterTargets; }];
         }
         {
           job_name = "node-exporters";
@@ -230,7 +231,8 @@ in {
         }
         {
           job_name = "octoprint-exporter";
-          static_configs = [{ targets = [ "octoprint.lab.shortcord.com:9101" ]; }];
+          static_configs =
+            [{ targets = [ "octoprint.lab.shortcord.com:9101" ]; }];
         }
       ];
     };
