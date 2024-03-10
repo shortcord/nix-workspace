@@ -63,6 +63,11 @@
               (lib.optional (!config.boot.isContainer) "default");
           };
 
+          # nix-shell uses flake version
+          environment.etc.nixpkgs.source = pkgs.path;
+          nix.registry.nixpkgs.to = { path = pkgs.path; type = "path"; };
+          nix.nixPath = [ "nixpkgs=flake:nixpkgs" ];
+
           # Set hostname and domain to node name in flake by default
           networking.hostName =
             lib.mkDefault (builtins.head (lib.splitString "." name));
