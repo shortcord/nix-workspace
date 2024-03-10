@@ -47,8 +47,8 @@ in {
     };
     mysqldExporterConfig = {
       file = ../../secrets/${name}/mysqldExporterConfig.age;
-      owner = config.services.prometheus.exporters.mysqld.user;
-      group = config.services.prometheus.exporters.mysqld.group;
+      owner = "prometheus";
+      group = "prometheus";
     };
   };
   services = {
