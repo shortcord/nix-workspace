@@ -20,6 +20,7 @@
     ./${name}/xmpp.nix
     ./${name}/powerdns.nix
     ./${name}/uptime-kuma.nix
+    ./${name}/influxdb.nix
     ./general/all.nix
   ];
 
