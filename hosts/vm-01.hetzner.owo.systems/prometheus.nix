@@ -22,6 +22,7 @@ let
     "node.02.servers.owo.solutions:9100"
     "ns2.owo.solutions:9100"
     "octoprint.lab.shortcord.com:9100"
+    "svc.rocky.shinx.dev:9100"
   ];
   powerdnsExporterTargets =
     [ "powerdns.vm-01.hetzner.owo.systems:443" "powerdns.ns2.owo.systems:443" ];
