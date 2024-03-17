@@ -15,7 +15,7 @@ in {
           addSSL = true;
           enableACME = true;
           locations."/" = {
-            proxyPass = "http://${toString cfg.settings.http-bind.address}";
+            proxyPass = "http://${toString cfg.settings.http-bind-address}";
             proxyWebsockets = true;
           };
         };
