@@ -28,6 +28,7 @@ let
     [ "powerdns.vm-01.hetzner.owo.systems:443" "powerdns.ns2.owo.systems:443" ];
   mysqldExporterTargets =
     [ "vm-01.hetzner.owo.systems:9104" "ns2.owo.systems:9104" ];
+  processExporterTargets = [ "svc.rocky.shinx.dev:9256" ];
 
 in {
   age.secrets = {
@@ -223,6 +224,10 @@ in {
         {
           job_name = "node-exporters";
           static_configs = [{ targets = nodeExporterTargets; }];
+        }
+        {
+          job_name = "process-exporter";
+          static_configs = [{ targets = processExporterTargets; }];
         }
         {
           job_name = "powerdns-exporter";
