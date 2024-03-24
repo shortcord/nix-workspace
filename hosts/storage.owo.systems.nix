@@ -181,8 +181,6 @@
             proxyWebsockets = true;
             extraConfig = ''
               proxy_connect_timeout 600;
-              proxy_http_version 1.1;
-              proxy_set_header Connection "";
               chunked_transfer_encoding off;
             '';
           };
