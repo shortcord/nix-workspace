@@ -33,6 +33,11 @@
 
           locations."/" = {
             proxyPass = "http://${config.services.minio.listenAddress}";
+            extraConfig = ''
+              proxy_http_version 1.1;
+              proxy_set_header Connection "";
+              chunked_transfer_encoding off;
+            '';
           };
         };
         "minio-admin.${config.networking.fqdn}" = {
