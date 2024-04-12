@@ -20,7 +20,7 @@
 
           locations."/" = {
             extraConfig = ''
-              proxy_buffering = off;
+              proxy_buffering off;
             '';
             proxyPass = "http://127.0.0.1:${
                 toString config.services.keycloak.settings.http-port
