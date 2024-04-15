@@ -72,6 +72,7 @@ let
     https://danbooru.donmai.us/posts?tags=the_atko
     https://danbooru.donmai.us/posts?tags=aki_(1360505188)
     https://danbooru.donmai.us/posts?tags=hallelujah_zeng
+    https://danbooru.donmai.us/posts?tags=legend_knit
 
     # Characters
     https://danbooru.donmai.us/posts?tags=nazrin
