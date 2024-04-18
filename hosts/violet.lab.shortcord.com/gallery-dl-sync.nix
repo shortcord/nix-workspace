@@ -99,8 +99,7 @@ let
     https://rule34.xxx/index.php?page=post&s=list&tags=prprlo
     https://rule34.xxx/index.php?page=post&s=list&tags=pepero_(prprlo)
     https://rule34.xxx/index.php?page=post&s=list&tags=voidnosferatu
-
-    # Characters
+    https://rule34.xxx/index.php?page=post&s=list&tags=damon_(artist)
     https://rule34.xxx/index.php?page=post&s=list&tags=krekk0v+-gore+-death
   '';
   dlDirectory = "/var/gallery-dl";
