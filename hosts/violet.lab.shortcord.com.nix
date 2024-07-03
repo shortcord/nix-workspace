@@ -212,12 +212,30 @@ in {
       internalInterfaces = [ "eno2" "eno3" ];
     };
     jool = {
-      enable = true;
+      enable = false;
       nat64 = {
         "default" = {
           framework = "netfilter";
           global.pool6 = "64:ff9b::/96";
         };
+      };
+    };
+    wireguard = {
+      enable = true;
+      interfaces = {
+        # "wg0" = {
+        #   ips = [ "10.6.210.28/32" "2001:470:e07b:2::7/128" ];
+        #   mtu = 1310;
+        #   listenPort = 51820;
+        #   privateKeyFile = /run/privatekey;
+        #   peers = [{
+        #     publicKey = "ePYkBTYZaul66VdGLG70IZcCvIaZ7aSeRrkb+hskhiQ=";
+        #     presharedKey = "a1w5c8U/uN1yVJfoB8zuw9VwDqS44SzUQKZu1ZURJ2s=";
+        #     endpoint = "router.cloud.shortcord.com:51820";
+        #     persistentKeepalive = 15;
+        #     allowedIPs = [ "10.6.210.1/32" "10.6.210.0/24" "0.0.0.0/0" "::/0" ];
+        #   }];
+        # };
       };
     };
   };
@@ -269,7 +287,7 @@ in {
     };
     resolved.enable = false;
     unbound = {
-      enable = true;
+      enable = false;
       settings = {
         server = {
           interface = [ "eno2" ];
