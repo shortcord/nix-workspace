@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     colmena.url = "github:zhaofengli/colmena/release-0.4.x";
     flake-utils.url = "github:numtide/flake-utils";
@@ -14,7 +14,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-mailserver = {
-      url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-23.11";
+      url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     shortcord-site = {

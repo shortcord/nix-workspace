@@ -84,8 +84,16 @@
   };
 
   environment.systemPackages = with pkgs; [ vim git ];
+  nixpkgs.config = {
+    allowUnfree = true;
+    permittedInsecurePackages = [ "netbox-3.6.9" "nextcloud-27.1.11" ];
+  };
 
   services = {
+    zerotierone = {
+      enable = true;
+      joinNetworks = [ "56374ac9a4185213" ];
+    };
     nginx = {
       virtualHosts = {
         "wings.${config.networking.fqdn}" = {

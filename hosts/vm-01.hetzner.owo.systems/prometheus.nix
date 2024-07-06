@@ -3,8 +3,8 @@ let
   icmpTargets = [
     "home.shortcord.com"
     "router.cloud.shortcord.com"
-    "maus.home.shortcord.com"
-    "violet.lab.shortcord.com"
+    "maus.zt.shortcord.com"
+    "violet.zt.shortcord.com"
     "lilac.lab.shortcord.com"
     "miauws.life"
     "ns2.owo.solutions"
@@ -13,12 +13,12 @@ let
     "pve.owo.solutions:9100"
     "miauws.life:9100"
     "vm-01.hetzner.owo.systems:9100"
-    "violet.lab.shortcord.com:9100"
+    "violet.zt.shortcord.com:9100"
     "ipfs-pin-node-01.owo.systems:9100"
     "ipfs-01.owo.systems:9100"
     "storage.owo.systems:9100"
     "lilac.lab.shortcord.com:9100"
-    "maus.home.shortcord.com:9100"
+    "maus.zt.shortcord.com:9100"
     "node.02.servers.owo.solutions:9100"
     "ns2.owo.solutions:9100"
     "octoprint.lab.shortcord.com:9100"
@@ -29,6 +29,7 @@ let
   mysqldExporterTargets =
     [ "vm-01.hetzner.owo.systems:9104" "ns2.owo.systems:9104" ];
   processExporterTargets = [ "svc.rocky.shinx.dev:9256" ];
+  apcupsdExporterTargets = [ "violet.zt.shortcord.com:9162" ];
 
 in {
   age.secrets = {
@@ -36,16 +37,6 @@ in {
       file = ../../secrets/${name}/minioPrometheusBearerToken.age;
       owner = "prometheus";
       group = "prometheus";
-    };
-    lokiConfig = {
-      file = ../../secrets/${name}/lokiConfig.age;
-      owner = config.services.loki.user;
-      group = config.services.loki.group;
-    };
-    lokiBasicAuth = {
-      file = ../../secrets/${name}/lokiBasicAuth.age;
-      owner = config.services.nginx.user;
-      group = config.services.nginx.group;
     };
     mysqldExporterConfig = {
       file = ../../secrets/${name}/mysqldExporterConfig.age;
@@ -68,16 +59,6 @@ in {
                 toString config.services.prometheus.port
               }";
           };
-        };
-        "loki.${config.networking.fqdn}" = {
-          kTLS = true;
-          http2 = true;
-          http3 = true;
-          forceSSL = true;
-          enableACME = true;
-
-          basicAuthFile = config.age.secrets.lokiBasicAuth.path;
-          locations."/" = { proxyPass = "http://127.0.0.1:3100"; };
         };
       };
     };
@@ -230,6 +211,10 @@ in {
           static_configs = [{ targets = processExporterTargets; }];
         }
         {
+          job_name = "apcupsd-exporter";
+          static_configs = [{ targets = apcupsdExporterTargets; }];
+        }
+        {
           job_name = "powerdns-exporter";
           scheme = "https";
           metrics_path = "/metrics";
@@ -241,10 +226,6 @@ in {
             [{ targets = [ "octoprint.lab.shortcord.com:9101" ]; }];
         }
       ];
-    };
-    loki = {
-      enable = true;
-      configFile = config.age.secrets.lokiConfig.path;
     };
   };
 }

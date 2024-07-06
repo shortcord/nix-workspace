@@ -11,14 +11,24 @@ in {
       owner = config.services.pterodactyl.wings.user;
       group = config.services.pterodactyl.wings.group;
     };
+    wg0-private-key = {
+      file = ../secrets/${name}/wg0-private-key.age;
+      owner = "systemd-network";
+      group = "systemd-network";
+    };
+    acmeCredentialsFile = {
+      file = ../secrets/${name}/acmeCredentialsFile.age;
+      owner = "acme";
+      group = "acme";
+    };
   };
 
   system.stateVersion = "23.05";
 
   imports = [
     ./general/all.nix
-    ./general/dyndns-ipv4.nix
-    ./general/dyndns-ipv6.nix
+    # ./general/dyndns-ipv4.nix
+    # ./general/dyndns-ipv6.nix
     ./${name}/hydra.nix
     ./${name}/ipfs.nix
     # ./${name}/minio.nix
@@ -223,19 +233,19 @@ in {
     wireguard = {
       enable = true;
       interfaces = {
-        # "wg0" = {
-        #   ips = [ "10.6.210.28/32" "2001:470:e07b:2::7/128" ];
-        #   mtu = 1310;
-        #   listenPort = 51820;
-        #   privateKeyFile = /run/privatekey;
-        #   peers = [{
-        #     publicKey = "ePYkBTYZaul66VdGLG70IZcCvIaZ7aSeRrkb+hskhiQ=";
-        #     presharedKey = "a1w5c8U/uN1yVJfoB8zuw9VwDqS44SzUQKZu1ZURJ2s=";
-        #     endpoint = "router.cloud.shortcord.com:51820";
-        #     persistentKeepalive = 15;
-        #     allowedIPs = [ "10.6.210.1/32" "10.6.210.0/24" "0.0.0.0/0" "::/0" ];
-        #   }];
-        # };
+        "wg0" = {
+          ips = [ "10.6.210.28/32" "2001:470:e07b:2::7/128" ];
+          mtu = 1380;
+          listenPort = 51820;
+          privateKeyFile = config.age.secrets.wg0-private-key.path;
+          peers = [{
+            publicKey = "ePYkBTYZaul66VdGLG70IZcCvIaZ7aSeRrkb+hskhiQ=";
+            presharedKey = "a1w5c8U/uN1yVJfoB8zuw9VwDqS44SzUQKZu1ZURJ2s=";
+            endpoint = "router.cloud.shortcord.com:51820";
+            persistentKeepalive = 15;
+            allowedIPs = [ "10.6.210.1/32" "10.6.210.0/24" ];
+          }];
+        };
       };
     };
   };
@@ -269,7 +279,131 @@ in {
     openssh = { authorizedKeys.keys = distributedUserSSHKeyPub; };
   };
 
+  security.acme = {
+    defaults = {
+      dnsProvider = "pdns";
+      environmentFile = config.age.secrets.acmeCredentialsFile.path;
+      webroot = null;
+    };
+    # there has to be a better way :(
+    certs = {
+      "actual.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "bazarr.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "binarycache.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "filebrowser.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "ipfs.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "ipns.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "jackett.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "jellyfin.shortcord.com" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "komga.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "lidarr.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "proxmox.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "qbittorrent.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "radarr.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "repos.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "sonarr.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "wings.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+    };
+  };
+
   services = {
+    zerotierone = {
+      enable = true;
+      joinNetworks = [ "56374ac9a4185213" ];
+    };
+    apcupsd = {
+      enable = true;
+      configText = ''
+        UPSNAME primary
+        UPSTYPE usb
+        POLLTIME 1
+        NETSERVER on
+        NISIP 127.0.0.1
+        NISPORT 3551
+        BATTERYLEVEL 10
+        MINUTES 3
+      '';
+    };
     pterodactyl.wings = {
       enable = true;
       package = pkgs.pterodactyl-wings;
@@ -342,6 +476,10 @@ in {
       enable = true;
       exporters = {
         node = {
+          enable = true;
+          openFirewall = true;
+        };
+        apcupsd = {
           enable = true;
           openFirewall = true;
         };

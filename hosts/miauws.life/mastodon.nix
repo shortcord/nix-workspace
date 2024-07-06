@@ -75,9 +75,7 @@ in {
       ensureDatabases = [ mastConfig.database.name ];
       ensureUsers = [{
         name = mastConfig.database.user;
-        ensurePermissions = {
-          "DATABASE ${mastConfig.database.name}" = "ALL PRIVILEGES";
-        };
+        ensureDBOwnership = true;
       }];
     };
   };
