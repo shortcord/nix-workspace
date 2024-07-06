@@ -1,9 +1,11 @@
-{ pkgs, config, ... }: {
+{ pkgs, config, ... }: 
+let mastConfig = config.services.mastodon;
+in {
   services = {
     postgresqlBackup = {
       enable = true;
       compression = "zstd";
-      databases = [ config.services.mastodon.database.name ];
+      databases = [ mastConfig.database.name ];
     };
     postgresql = {
       enable = true;
