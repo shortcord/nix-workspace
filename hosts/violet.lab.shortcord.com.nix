@@ -421,12 +421,12 @@ in {
     };
     resolved.enable = false;
     unbound = {
-      enable = false;
+      enable = true;
       settings = {
         server = {
           interface = [ "eno2" ];
           module-config = "'dns64 validator iterator'";
-          dns64-prefix = "64:ff9b::/96";
+          # dns64-prefix = "64:ff9b::/96";
           interface-action = "eno2 allow";
         };
         forward-zone = [{
