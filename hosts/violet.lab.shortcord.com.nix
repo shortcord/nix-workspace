@@ -27,8 +27,6 @@ in {
 
   imports = [
     ./general/all.nix
-    # ./general/dyndns-ipv4.nix
-    # ./general/dyndns-ipv6.nix
     ./${name}/hydra.nix
     ./${name}/ipfs.nix
     # ./${name}/minio.nix
@@ -152,6 +150,15 @@ in {
           address = [ "192.168.15.1/24" ];
           networkConfig = {
             DHCP = "no";
+            DNS = "no";
+            IPv6AcceptRA = false;
+          };
+        };
+        "99-idrac" = {
+          matchConfig.MACAddress = "5C:F9:DD:fA:4B:5D";
+          linkConfig.RequiredForOnline = "no";
+          networkConfig = {
+            DHCP = "yes";
             DNS = "no";
             IPv6AcceptRA = false;
           };
