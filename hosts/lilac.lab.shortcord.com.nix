@@ -17,7 +17,6 @@ in {
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
     ./general/all.nix
-    ./general/dyndns-ipv6.nix
     ./${name}/hardware.nix
     ./${name}/mastodon.nix
     # ./${name}/matrix.nix
@@ -36,18 +35,6 @@ in {
     wireguard = {
       enable = true;
       interfaces = {
-        "wg0" = {
-          ips = [ "10.6.210.29/32" ];
-          mtu = 1200;
-          listenPort = 51820;
-          privateKeyFile = config.age.secrets.wireguardPrivateKey.path;
-          peers = [{
-            publicKey = "ePYkBTYZaul66VdGLG70IZcCvIaZ7aSeRrkb+hskhiQ=";
-            endpoint = "router.cloud.shortcord.com:51820";
-            persistentKeepalive = 15;
-            allowedIPs = [ "10.6.210.1/32" "10.6.210.0/24" "0.0.0.0/0" ];
-          }];
-        };
         "mail-relay" = {
           ips = [ "10.7.210.3/32" ];
           mtu = 1200;

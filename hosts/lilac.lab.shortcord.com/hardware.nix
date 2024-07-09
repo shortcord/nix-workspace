@@ -39,9 +39,9 @@
         matchConfig.MACAddress = "00:50:56:07:31:F8";
         networkConfig = {
           DHCP = "no";
-          DNS = [ "127.0.0.1" "::1" ];
-          Address = [ "147.135.84.161/32" ];
-          Gateway = [ "51.81.11.254" ];
+          DNS = [ "9.9.9.9" "2620:fe::fe" ];
+          Address = [ "147.135.84.161/32" "2604:2dc0:100:1b1e::50/128" ];
+          Gateway = [ "51.81.11.254" "2604:2dc0:0100:1bff:00ff:00ff:00ff:00ff" ];
         };
         routes = [
           {
@@ -50,12 +50,12 @@
               Destination = "51.81.11.254";
             };
           }
-          # {
-          #   routeConfig = {
-          #     Scope = "link";
-          #     Destination = "2604:2dc0:0100:1bff:00ff:00ff:00ff:00ff";
-          #   };
-          # }
+          {
+            routeConfig = {
+              Scope = "link";
+              Destination = "2604:2dc0:0100:1bff:00ff:00ff:00ff:00ff";
+            };
+          }
         ];
       };
     };
