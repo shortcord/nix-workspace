@@ -27,10 +27,15 @@
         "git+https://gitlab.shortcord.com/shortcord/maustodon-flake.git?ref=main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    headscale-flake = {
+      url = "git+https://gitlab.shortcord.com/shortcord/headscale-flake?ref=main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { nixpkgs, nixpkgs-unstable, colmena, ragenix, flake-utils
-    , nixos-mailserver, pterodactyl-wings, shortcord-site, catstdon-flake, ...
+    , nixos-mailserver, pterodactyl-wings, shortcord-site, catstdon-flake, 
+    headscale-flake, ...
     }:
     let
       inherit (nixpkgs) lib;
@@ -44,6 +49,7 @@
               pterodactyl-wings.overlays.default
               shortcord-site.overlays.default
               catstdon-flake.overlays.default
+              headscale-flake.overlays.default
             ];
           };
           # Per node override of nixpkgs
@@ -52,7 +58,7 @@
           nodeNixpkgs = { };
           specialArgs = {
             inherit ragenix pterodactyl-wings nixos-mailserver nixpkgs-unstable
-              shortcord-site catstdon-flake;
+              shortcord-site catstdon-flake headscale-flake;
           };
         };
         defaults = { name, lib, config, pkgs, ... }: {

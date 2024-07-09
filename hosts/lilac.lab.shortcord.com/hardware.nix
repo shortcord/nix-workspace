@@ -32,4 +32,32 @@
       kernelModules = [ ];
     };
   };
+  systemd.network = {
+    enable = true;
+    networks = {
+      "10-wan" = {
+        matchConfig.MACAddress = "00:50:56:07:31:F8";
+        networkConfig = {
+          DHCP = "no";
+          DNS = [ "127.0.0.1" "::1" ];
+          Address = [ "147.135.84.161/32" ];
+          Gateway = [ "51.81.11.254" ];
+        };
+        routes = [
+          {
+            routeConfig = {
+              Scope = "link";
+              Destination = "51.81.11.254";
+            };
+          }
+          # {
+          #   routeConfig = {
+          #     Scope = "link";
+          #     Destination = "2604:2dc0:0100:1bff:00ff:00ff:00ff:00ff";
+          #   };
+          # }
+        ];
+      };
+    };
+  };
 }
