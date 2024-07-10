@@ -16,6 +16,7 @@
   };
 
   services = {
+    tailscale.enable = lib.mkforce false;
     prometheus = {
       enable = true;
       exporters = {

@@ -1,11 +1,5 @@
-{ name, nodes, pkgs, lib, config, ... }:
-let
-  distributedUserSSHKeyPub = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKnmaQeov9+Xv7z/ulQ0zPVDN3ZKW4AUK8IyoVkbUKQa"
-  ];
-in {
+{ name, nodes, pkgs, lib, config, ... }: {
   age.secrets = {
-    distributedUserSSHKey.file = ../secrets/general/distributedUserSSHKey.age;
     wingsToken = {
       file = ../secrets/${name}/wingsToken.age;
       owner = config.services.pterodactyl.wings.user;
@@ -280,11 +274,6 @@ in {
 
   nixpkgs.config.allowUnfree = true;
   environment.systemPackages = with pkgs; [ vim wget curl btrfs-progs git ];
-
-  users.users.remotebuild = {
-    isNormalUser = true;
-    openssh = { authorizedKeys.keys = distributedUserSSHKeyPub; };
-  };
 
   security.acme = {
     defaults = {
