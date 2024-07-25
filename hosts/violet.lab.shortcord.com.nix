@@ -326,6 +326,7 @@
         webroot = null;
       };
       "jellyfin.shortcord.com" = {
+        extraDomainNames = [ "jellyfin.short.ts.shortcord.com" ];
         inheritDefaults = true;
         dnsProvider = "pdns";
         environmentFile = config.age.secrets.acmeCredentialsFile.path;
@@ -383,6 +384,10 @@
   };
 
   services = {
+    tailscale = {
+      useRoutingFeatures = "both";
+      extraUpFlags = [ "--advertise-routes" "10.18.0.0/24,10.200.1.0/24,fd6a:f1f3:23f4:1::/64" ];
+    };
     zerotierone = {
       enable = true;
       joinNetworks = [ "56374ac9a4185213" ];

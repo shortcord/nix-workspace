@@ -16,7 +16,9 @@
   };
 
   services = {
-    tailscale.enable = lib.mkForce false;
+    tailscale = {
+      useRoutingFeatures = "both";
+    };
     prometheus = {
       enable = true;
       exporters = {

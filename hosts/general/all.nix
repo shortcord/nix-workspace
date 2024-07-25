@@ -12,7 +12,7 @@
     tailscale = {
       enable = true;
       authKeyFile = config.age.secrets.headscaleKey.path;
-      extraUpFlags = [ "--login-server" "https://headscale.ns2.owo.systems" ];
+      extraUpFlags = [ "--login-server" "https://headscale.ns2.owo.systems" "--accept-routes" "--reset" ];
     };
   };
 }
