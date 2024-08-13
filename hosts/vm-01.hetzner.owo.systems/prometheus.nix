@@ -3,8 +3,8 @@ let
   icmpTargets = [
     "home.shortcord.com"
     "router.cloud.shortcord.com"
-    "maus.zt.shortcord.com"
-    "violet.zt.shortcord.com"
+    "maus.short.ts.shortcord.com"
+    "violet.short.ts.shortcord.com"
     "lilac.lab.shortcord.com"
     "miauws.life"
     "ns2.owo.solutions"
@@ -13,12 +13,12 @@ let
     "pve.owo.solutions:9100"
     "miauws.life:9100"
     "vm-01.hetzner.owo.systems:9100"
-    "violet.zt.shortcord.com:9100"
+    "violet.short.ts.shortcord.com:9100"
     "ipfs-pin-node-01.owo.systems:9100"
     "ipfs-01.owo.systems:9100"
     "storage.owo.systems:9100"
     "lilac.lab.shortcord.com:9100"
-    "maus.zt.shortcord.com:9100"
+    "maus.short.ts.shortcord.com:9100"
     "node.02.servers.owo.solutions:9100"
     "ns2.owo.solutions:9100"
     "octoprint.lab.shortcord.com:9100"
@@ -29,7 +29,7 @@ let
   mysqldExporterTargets =
     [ "vm-01.hetzner.owo.systems:9104" "ns2.owo.systems:9104" ];
   processExporterTargets = [ "svc.rocky.shinx.dev:9256" ];
-  apcupsdExporterTargets = [ "violet.zt.shortcord.com:9162" ];
+  apcupsdExporterTargets = [ "violet.short.ts.shortcord.com:9162" ];
 
 in {
   age.secrets = {
@@ -91,8 +91,7 @@ in {
       enable = true;
       listenAddress = "127.0.0.1";
       port = 9090;
-      # Keep for two years
-      retentionTime = "2y";
+      retentionTime = "6m";
       # Get around sandboxing issues, fuckin' developers
       checkConfig = "syntax-only";
       exporters = {

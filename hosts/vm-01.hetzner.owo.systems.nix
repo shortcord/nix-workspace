@@ -90,10 +90,6 @@
   };
 
   services = {
-    zerotierone = {
-      enable = true;
-      joinNetworks = [ "56374ac9a4185213" ];
-    };
     nginx = {
       virtualHosts = {
         "wings.${config.networking.fqdn}" = {

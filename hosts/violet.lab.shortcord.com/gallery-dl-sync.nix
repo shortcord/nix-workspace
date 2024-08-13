@@ -172,15 +172,15 @@ in {
   services.phpfpm.pools."h5ai" = {
     user = config.services.nginx.user;
     group = config.services.nginx.group;
-    phpPackage = pkgs.php81;
+    phpPackage = pkgs.php83;
     settings = {
-      pm = "dynamic";
+      pm = "static";
       "listen.owner" = config.services.nginx.user;
-      "pm.max_children" = 30;
-      "pm.start_servers" = 10;
-      "pm.min_spare_servers" = 10;
-      "pm.max_spare_servers" = 20;
-      "pm.max_requests" = 500;
+      "pm.max_children" = 50;
+      # "pm.start_servers" = 10;
+      # "pm.min_spare_servers" = 10;
+      # "pm.max_spare_servers" = 20;
+      "pm.max_requests" = 50;
     };
     phpEnv."PATH" = lib.makeBinPath [
       pkgs.ffmpeg

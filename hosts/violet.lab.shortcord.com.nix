@@ -96,37 +96,78 @@
       };
       networks = {
         "10-wan" = {
-          matchConfig.MACAddress = "C8:1F:66:E6:7A:51";
+          matchConfig.MACAddress = "98:B7:85:20:05:8A";
+          networkConfig = {
+            DHCP = "ipv4";
+            DNS = "127.0.0.1";
+            IPv6AcceptRA = false;
+          };
+          dhcpV4Config = {
+            RouteMetric = 2048;
+            Anonymize = false;
+            UseDomains = false;
+            UseDNS = false;
+          };
+          dhcpV6Config = {
+            RouteMetric = 2048;
+          };
+          routes = [{
+            routeConfig = {
+              Gateway = "_dhcp4";
+              InitialCongestionWindow = 100;
+              InitialAdvertisedReceiveWindow = 100;
+            };
+          }];
+        };
+        "11-wan2" = {
+          matchConfig.MACAddress = "c8:1f:66:e6:7a:51";
+          linkConfig.RequiredForOnline = "no";
           networkConfig = {
             DHCP = "ipv4";
             DNS = "127.0.0.1";
             IPv6AcceptRA = true;
           };
+          dhcpV4Config = {
+            RouteMetric = 1024;
+            Anonymize = false;
+            UseDomains = false;
+            UseDNS = false;
+          };
+          dhcpV6Config = {
+            RouteMetric = 1024;
+          };
+          routes = [{
+            routeConfig = {
+              Gateway = "_dhcp4";
+              InitialCongestionWindow = 100;
+              InitialAdvertisedReceiveWindow = 100;
+            };
+          }];
         };
         "20-lan" = {
           matchConfig.MACAddress = "C8:1F:66:E6:7A:52";
           linkConfig.RequiredForOnline = "no";
           address = [ "10.18.0.1/24" ];
           networkConfig = {
-            IPv6SendRA = true;
-            DHCPPrefixDelegation = true;
-            IPv6AcceptRA = false;
+            # IPv6SendRA = true;
+            # DHCPPrefixDelegation = true;
+            #IPv6AcceptRA = false;
             DHCPServer = true;
           };
-          dhcpPrefixDelegationConfig = {
-            UplinkInterface = "eno1";
-            SubnetId = 0;
-            Announce = true;
-          };
+          # dhcpPrefixDelegationConfig = {
+          #   UplinkInterface = "eno1";
+          #   SubnetId = 0;
+          #   Announce = true;
+          # };
           dhcpServerConfig = {
             ServerAddress = "10.18.0.1/24";
             DNS = "10.18.0.1";
             EmitDNS = true;
           };
-          ipv6SendRAConfig = {
-            DNS = "_link_local";
-            EmitDNS = true;
-          };
+          # ipv6SendRAConfig = {
+          #   DNS = "_link_local";
+          #   EmitDNS = true;
+          # };
         };
         # "30-home" = {
         #   matchConfig.MACAddress = "C8:1F:66:E6:7A:54";
@@ -138,16 +179,34 @@
         #     IPv6AcceptRA = false;
         #   };
         # };
-        "40-lan2" = {
-          matchConfig.MACAddress = "C8:1F:66:E6:7A:53";
-          linkConfig.RequiredForOnline = "no";
-          address = [ "192.168.15.1/24" ];
-          networkConfig = {
-            DHCP = "no";
-            DNS = "no";
-            IPv6AcceptRA = false;
-          };
-        };
+        # "40-lan2" = {
+        #   matchConfig.MACAddress = "C8:1F:66:E6:7A:53";
+        #   linkConfig.RequiredForOnline = "no";
+        #   address = [ "192.168.15.1/24" ];
+        #   networkConfig = {
+        #     DHCP = "no";
+        #     DNS = "no";
+        #     IPv6AcceptRA = false;
+        #   };
+        # };
+        # "50-fiber" = {
+        #   matchConfig.MACAddress = "98:B7:85:20:05:8A";
+        #   linkConfig.RequiredForOnline = "no";
+        #   networkConfig = {
+        #     DHCP = "ipv4";
+        #     DNS = "127.0.0.1";
+        #     IPv6AcceptRA = true;
+        #   };
+        #   dhcpV4Config = {
+        #     RouteMetric = 9999;
+        #     Anonymize = false;
+        #     UseDomains = false;
+        #     UseDNS = false;
+        #   };
+        #   dhcpV6Config = {
+        #     RouteMetric = 9999;
+        #   };
+        # };
         "99-idrac" = {
           matchConfig.MACAddress = "5C:F9:DD:fA:4B:5D";
           linkConfig.RequiredForOnline = "no";
@@ -202,25 +261,31 @@
     kernel.sysctl = {
       "net.ipv4.conf.all.forwarding" = 1;
       "net.ipv6.conf.all.forwarding" = 1;
+      "net.ipv4.route.gc_timeout" = 5;
+      "net.ipv6.route.gc_timeout" = 5;
     };
   };
 
   networking = {
     hostId = "7f09cf4e";
     useDHCP = false;
+    dhcpcd.enable = false;
     useNetworkd = true;
     firewall = {
       enable = true;
       allowedUDPPorts = [ 5201 ];
       allowedTCPPorts = [ 22 80 443 5201 ];
       allowPing = true;
-      trustedInterfaces = [ "eno1" "eno2" "eno3" "eno4" "vmbr0" ];
+      trustedInterfaces = [ 
+        "vmbr0"
+        config.services.tailscale.interfaceName
+      ];
     };
     nat = {
       enable = true;
       enableIPv6 = false;
-      externalInterface = "eno1";
-      internalInterfaces = [ "eno2" "eno3" ];
+      externalInterface = "enp68s0";
+      internalInterfaces = [ "eno2" ];
     };
     jool = {
       enable = false;
@@ -232,7 +297,7 @@
       };
     };
     wireguard = {
-      enable = true;
+      enable = false;
       interfaces = {
         "wg0" = {
           ips = [ "10.6.210.28/32" "2001:470:e07b:2::7/128" ];
@@ -242,7 +307,7 @@
           peers = [{
             publicKey = "ePYkBTYZaul66VdGLG70IZcCvIaZ7aSeRrkb+hskhiQ=";
             presharedKey = "a1w5c8U/uN1yVJfoB8zuw9VwDqS44SzUQKZu1ZURJ2s=";
-            endpoint = "router.cloud.shortcord.com:51820";
+            endpoint = "147.135.125.64:51820";
             persistentKeepalive = 15;
             allowedIPs = [ "10.6.210.1/32" "10.6.210.0/24" ];
           }];
@@ -388,12 +453,8 @@
       useRoutingFeatures = "both";
       extraUpFlags = [ "--advertise-routes" "10.18.0.0/24,10.200.1.0/24,fd6a:f1f3:23f4:1::/64" ];
     };
-    zerotierone = {
-      enable = true;
-      joinNetworks = [ "56374ac9a4185213" ];
-    };
     apcupsd = {
-      enable = true;
+      enable = false;
       configText = ''
         UPSNAME primary
         UPSTYPE usb
@@ -422,7 +483,7 @@
     };
     resolved.enable = false;
     unbound = {
-      enable = true;
+      enable = false;
       settings = {
         server = {
           interface = [ "eno2" ];
@@ -440,7 +501,7 @@
       enable = true;
       dns = {
         port = 53;
-        address = [ "127.0.0.1" "::1" ];
+        address = [ "127.0.0.1" "::1" "10.18.0.1" ];
       };
     };
     frr = {
