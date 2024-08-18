@@ -107,6 +107,15 @@
             '';
           };
         };
+        "vreygal.com" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+
+          locations."/".return = "302 https://mastodon.art/@VReygal";
+        };
       };
     };
     pterodactyl.wings = {
