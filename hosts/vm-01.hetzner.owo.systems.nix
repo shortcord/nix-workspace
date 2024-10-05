@@ -17,7 +17,7 @@
     ./${name}/websites.nix
     ./${name}/xmpp.nix
     ./${name}/prometheus.nix
-    ./${name}/xmpp.nix
+    #./${name}/xmpp.nix
     ./${name}/powerdns.nix
     ./${name}/uptime-kuma.nix
     ./${name}/influxdb.nix

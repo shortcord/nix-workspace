@@ -297,7 +297,7 @@
       };
     };
     wireguard = {
-      enable = false;
+      enable = true;
       interfaces = {
         "wg0" = {
           ips = [ "10.6.210.28/32" "2001:470:e07b:2::7/128" ];
@@ -542,7 +542,7 @@
           openFirewall = true;
         };
         apcupsd = {
-          enable = true;
+          enable = config.services.apcupsd.enable;
           openFirewall = true;
         };
       };
