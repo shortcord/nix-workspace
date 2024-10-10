@@ -88,7 +88,6 @@
                 "https://cache.nixos.org"
               ];
               trusted-public-keys = [
-                "binarycache.violet.lab.shortcord.com:Bq1Q/51gHInHj8dMKoaCI5lHM8XnwASajahLe1KjCdQ="
                 "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
               ];
             };
@@ -152,52 +151,39 @@
           ];
         };
 
-        "hydra.owo.solutions" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment.tags = [ "infra" "hydra" ];
-          age.secrets.distributedUserSSHKey.file =
-            ./secrets/general/distributedUserSSHKey.age;
-          imports = [ ./hosts/${name}.nix ];
-        };
+        # "hydra.owo.solutions" = { name, nodes, pkgs, lib, config, ... }: {
+        #   deployment.tags = [ "infra" "hydra" ];
+        #   imports = [ ./hosts/${name}.nix ];
+        # };
 
         "storage.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "infra" "storage" ];
-          age.secrets.distributedUserSSHKey.file =
-            ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
         };
 
         "ns2.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "infra" "nameserver" "ns2" ];
-          age.secrets.distributedUserSSHKey.file =
-            ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
         };
 
         "vm-01.hetzner.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags =
             [ "infra" "nameserver" "grafana" "prometheus" "vm-01" ];
-          age.secrets.distributedUserSSHKey.file =
-            ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
         };
 
-        "gateway.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment.tags = [ "infra" "lab" "gateway" ];
-          imports = [ ./hosts/${name}.nix ];
-        };
+        # "gateway.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+        #   deployment.tags = [ "infra" "lab" "gateway" ];
+        #   imports = [ ./hosts/${name}.nix ];
+        # };
 
-        "lilac.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment.tags = [ "infra" "lab" "mastodon" "lilac" ];
-          age.secrets.distributedUserSSHKey.file =
-            ./secrets/general/distributedUserSSHKey.age;
-          imports = [ ./hosts/${name}.nix ];
-        };
+        # "lilac.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+        #   deployment.tags = [ "infra" "lab" "mastodon" "lilac" ];
+        #   imports = [ ./hosts/${name}.nix ];
+        # };
 
         "violet.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "infra" "lab" "violet" ];
-          deployment.targetHost = "10.18.0.1";
-          age.secrets.distributedUserSSHKey.file =
-            ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
         };
 
@@ -208,10 +194,10 @@
         #   imports = [ ./containers/${name}.nix ];
         # };
 
-        "miauws.life" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment.tags = [ "miauws" ];
-          imports = [ ./hosts/${name}.nix ];
-        };
+        # "miauws.life" = { name, nodes, pkgs, lib, config, ... }: {
+        #   deployment.tags = [ "miauws" ];
+        #   imports = [ ./hosts/${name}.nix ];
+        # };
 
         "keycloak.owo.solutions" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "keycloak" "auth" ];
