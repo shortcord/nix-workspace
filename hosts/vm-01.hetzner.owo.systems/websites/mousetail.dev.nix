@@ -16,7 +16,16 @@ in {
       };
     };
   };
-
+ security.acme = {
+    certs = {
+      "ai.${fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+    };
+ };
   services.nginx = {
     virtualHosts = {
       "${fqdn}" = {
@@ -25,7 +34,30 @@ in {
         http3 = true;
         forceSSL = true;
         enableACME = true;
-        locations."/" = { proxyPass = "http://${bindHost}:${port}"; };
+        locations."/" = { 
+          proxyPass = "http://${bindHost}:${port}";
+        };
+      };
+      "ai.${fqdn}" = {
+        kTLS = true;
+        http2 = true;
+        http3 = true;
+        forceSSL = true;
+        enableACME = true;
+        locations."/" = { 
+            proxyPass = "https://ai.violet.lab.shortcord.com";
+            proxyWebsockets = true;
+            # This gets included after the extraConfig, god why
+            recommendedProxySettings = false;
+            extraConfig = ''
+              proxy_set_header Host ai.violet.lab.shortcord.com;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+              proxy_set_header X-Forwarded-Host ai.violet.lab.shortcord.com;
+              proxy_set_header X-Forwarded-Server ai.violet.lab.shortcord.com;
+            '';
+          };
       };
     };
   };
