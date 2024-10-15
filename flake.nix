@@ -71,6 +71,14 @@
               (lib.optional (!config.boot.isContainer) "default");
           };
 
+          age.secrets = {
+            acmeCredentialsFile = {
+              file = ./secrets/general/acmeCredentialsFile.age;
+              owner = "acme";
+              group = "acme";
+            };
+          };
+
           # nix-shell uses flake version
           environment.etc.nixpkgs.source = pkgs.path;
           nix.registry.nixpkgs.to = { path = pkgs.path; type = "path"; };
@@ -111,7 +119,12 @@
             sudo = { wheelNeedsPassword = false; };
             acme = {
               acceptTerms = true;
-              defaults.email = "short@shortcord.com";
+              defaults = {
+                email = "short@shortcord.com";
+                dnsProvider = lib.mkForce "pdns";
+                environmentFile = lib.mkForce config.age.secrets.acmeCredentialsFile.path;
+                webroot = lib.mkForce null;
+              };
             };
           };
 
