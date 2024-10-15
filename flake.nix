@@ -35,6 +35,14 @@
     let
       inherit (nixpkgs) lib;
       scConfig = import ./config/default.nix;
+      unstablePkgs = import nixpkgs-unstable {
+        system = "x86_64-linux";
+        overlays = [
+          pterodactyl-wings.overlays.default
+          shortcord-site.overlays.default
+          headscale-flake.overlays.default
+        ];
+      };
       colmenaConfiguration = {
         meta = {
           allowApplyAll = false;
@@ -52,7 +60,7 @@
           nodeNixpkgs = { };
           specialArgs = {
             inherit ragenix pterodactyl-wings nixos-mailserver nixpkgs-unstable
-              shortcord-site headscale-flake;
+              shortcord-site headscale-flake unstablePkgs;
           };
         };
         defaults = { name, lib, config, pkgs, ... }: {

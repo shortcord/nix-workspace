@@ -30,6 +30,7 @@
     ./${name}/repo-sync.nix
     ./${name}/komga.nix
     ./${name}/torrenting.nix
+    ./${name}/ai.nix
   ];
 
   fileSystems = {
@@ -501,7 +502,7 @@
       enable = true;
       dns = {
         port = 53;
-        address = [ "127.0.0.1" "::1" "10.18.0.1" ];
+        address = [ "127.0.0.1" "::1" ];
       };
     };
     frr = {
