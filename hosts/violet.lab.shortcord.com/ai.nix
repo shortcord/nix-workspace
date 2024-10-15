@@ -39,6 +39,13 @@ in {
       };
     };
     nginx = {
+      upstreams = {
+        "ollama" = {
+          servers = {
+            "${openWebUiConf.host}:${toString openWebUiConf.port}" = { };
+          };
+        };
+      };
       virtualHosts = {
         "${domainName}" = {
           kTLS = true;
@@ -47,7 +54,7 @@ in {
           forceSSL = true;
           enableACME = true;
           locations."/" = {
-            proxyPass = "http://${openWebUiConf.host}:${toString openWebUiConf.port}";
+            proxyPass = "http://ollama";
             proxyWebsockets = true;
           };
         };

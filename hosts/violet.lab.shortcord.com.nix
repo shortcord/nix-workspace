@@ -10,11 +10,6 @@
       owner = "systemd-network";
       group = "systemd-network";
     };
-    acmeCredentialsFile = {
-      file = ../secrets/${name}/acmeCredentialsFile.age;
-      owner = "acme";
-      group = "acme";
-    };
   };
 
   system.stateVersion = "23.05";
@@ -342,11 +337,6 @@
   environment.systemPackages = with pkgs; [ vim wget curl btrfs-progs git ];
 
   security.acme = {
-    defaults = {
-      dnsProvider = "pdns";
-      environmentFile = config.age.secrets.acmeCredentialsFile.path;
-      webroot = null;
-    };
     # there has to be a better way :(
     certs = {
       "actual.${config.networking.fqdn}" = {
