@@ -27,6 +27,13 @@ in {
     };
  };
   services.nginx = {
+    upstreams = {
+      "ollama" = {
+        servers = {
+          "ai.violet.lab.shortcord.com:443" = { };
+        };
+      };
+    };
     virtualHosts = {
       "${fqdn}" = {
         kTLS = true;
@@ -45,11 +52,13 @@ in {
         forceSSL = true;
         enableACME = true;
         locations."/" = { 
-            proxyPass = "https://ai.violet.lab.shortcord.com";
+            proxyPass = "https://ollama";
             proxyWebsockets = true;
             # This gets included after the extraConfig, god why
             recommendedProxySettings = false;
             extraConfig = ''
+              proxy_buffering off;
+              
               proxy_set_header Host ai.violet.lab.shortcord.com;
               proxy_set_header X-Real-IP $remote_addr;
               proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
