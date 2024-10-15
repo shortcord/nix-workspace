@@ -10,6 +10,7 @@ in
   "general/acmeCredentialsFile.age".publicKeys = all;
   "general/restic-password.age".publicKeys = all;
   "general/restic-s3-env.age".publicKeys = all;
+  "general/headscaleKey.age".publicKeys = all;
   
   # Secrets for ns2.owo.systems
   "ns2.owo.systems/wireguardPrivateKey.age".publicKeys = all;
@@ -29,6 +30,8 @@ in
   "violet.lab.shortcord.com/minioSecret.age".publicKeys = all;
   "violet.lab.shortcord.com/wingsToken.age".publicKeys = all;
   "violet.lab.shortcord.com/gallery-dl-config.age".publicKeys = all;
+  "violet.lab.shortcord.com/wg0-private-key.age".publicKeys = all;
+  "violet.lab.shortcord.com/acmeCredentialsFile.age".publicKeys = all;
 
   # Secrets for vm-01.hetzner.owo.systems
   "vm-01.hetzner.owo.systems/prometheusBasicAuthPassword.age".publicKeys = all;

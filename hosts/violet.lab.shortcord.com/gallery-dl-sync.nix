@@ -72,6 +72,7 @@ let
     https://danbooru.donmai.us/posts?tags=the_atko
     https://danbooru.donmai.us/posts?tags=aki_(1360505188)
     https://danbooru.donmai.us/posts?tags=hallelujah_zeng
+    https://danbooru.donmai.us/posts?tags=legend_knit
 
     # Characters
     https://danbooru.donmai.us/posts?tags=nazrin
@@ -98,8 +99,7 @@ let
     https://rule34.xxx/index.php?page=post&s=list&tags=prprlo
     https://rule34.xxx/index.php?page=post&s=list&tags=pepero_(prprlo)
     https://rule34.xxx/index.php?page=post&s=list&tags=voidnosferatu
-
-    # Characters
+    https://rule34.xxx/index.php?page=post&s=list&tags=damon_(artist)
     https://rule34.xxx/index.php?page=post&s=list&tags=krekk0v+-gore+-death
   '';
   dlDirectory = "/var/gallery-dl";
@@ -172,15 +172,15 @@ in {
   services.phpfpm.pools."h5ai" = {
     user = config.services.nginx.user;
     group = config.services.nginx.group;
-    phpPackage = pkgs.php81;
+    phpPackage = pkgs.php83;
     settings = {
-      pm = "dynamic";
+      pm = "static";
       "listen.owner" = config.services.nginx.user;
-      "pm.max_children" = 30;
-      "pm.start_servers" = 10;
-      "pm.min_spare_servers" = 10;
-      "pm.max_spare_servers" = 20;
-      "pm.max_requests" = 500;
+      "pm.max_children" = 50;
+      # "pm.start_servers" = 10;
+      # "pm.min_spare_servers" = 10;
+      # "pm.max_spare_servers" = 20;
+      "pm.max_requests" = 50;
     };
     phpEnv."PATH" = lib.makeBinPath [
       pkgs.ffmpeg

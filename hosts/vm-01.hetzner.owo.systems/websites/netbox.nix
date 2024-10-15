@@ -12,9 +12,11 @@
       extraGroups = [ "netbox" ];
     };
   };
-  systemd.services.netbox.serviceConfig.StateDirectoryMode = lib.mkForce "0755";
-  systemd.services.netbox-rq.serviceConfig.StateDirectoryMode = lib.mkForce "0755";
-  systemd.services.netbox-housekeeping.serviceConfig.StateDirectoryMode = lib.mkForce "0755";
+  systemd.services = {
+    netbox.serviceConfig.StateDirectoryMode = lib.mkForce "0755";
+    netbox-rq.serviceConfig.StateDirectoryMode = lib.mkForce "0755";
+    netbox-housekeeping.serviceConfig.StateDirectoryMode = lib.mkForce "0755";
+  };
   services = {
     postgresql = {
       enable = true;

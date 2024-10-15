@@ -31,9 +31,6 @@
       };
     };
   };
-  systemd.services.deluged = {
-    serviceConfig = { UMask = lib.mkForce "0002"; };
-  };
 
   systemd.services.qbittorrent = {
     # based on the plex.nix service module and
@@ -67,7 +64,7 @@
       in "!${preStartScript}";
 
       ExecStart = "${pkgs.qbittorrent-nox}/bin/qbittorrent-nox";
-      UMask = "0013";
+      UMask = "0000";
     };
 
     environment = {

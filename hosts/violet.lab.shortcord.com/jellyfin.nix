@@ -22,6 +22,7 @@
     nginx = {
       virtualHosts = {
         "jellyfin.shortcord.com" = {
+          serverAliases = [ "jellyfin.short.ts.shortcord.com" ];
           kTLS = true;
           http2 = true;
           http3 = true;

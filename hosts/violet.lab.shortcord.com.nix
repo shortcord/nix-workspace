@@ -1,15 +1,19 @@
-{ name, nodes, pkgs, lib, config, ... }:
-let
-  distributedUserSSHKeyPub = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKnmaQeov9+Xv7z/ulQ0zPVDN3ZKW4AUK8IyoVkbUKQa"
-  ];
-in {
+{ name, nodes, pkgs, lib, config, ... }: {
   age.secrets = {
-    distributedUserSSHKey.file = ../secrets/general/distributedUserSSHKey.age;
     wingsToken = {
       file = ../secrets/${name}/wingsToken.age;
       owner = config.services.pterodactyl.wings.user;
       group = config.services.pterodactyl.wings.group;
+    };
+    wg0-private-key = {
+      file = ../secrets/${name}/wg0-private-key.age;
+      owner = "systemd-network";
+      group = "systemd-network";
+    };
+    acmeCredentialsFile = {
+      file = ../secrets/${name}/acmeCredentialsFile.age;
+      owner = "acme";
+      group = "acme";
     };
   };
 
@@ -17,8 +21,6 @@ in {
 
   imports = [
     ./general/all.nix
-    ./general/dyndns-ipv4.nix
-    ./general/dyndns-ipv6.nix
     ./${name}/hydra.nix
     ./${name}/ipfs.nix
     # ./${name}/minio.nix
@@ -28,6 +30,7 @@ in {
     ./${name}/repo-sync.nix
     ./${name}/komga.nix
     ./${name}/torrenting.nix
+    ./${name}/ai.nix
   ];
 
   fileSystems = {
@@ -94,37 +97,78 @@ in {
       };
       networks = {
         "10-wan" = {
-          matchConfig.MACAddress = "C8:1F:66:E6:7A:51";
+          matchConfig.MACAddress = "98:B7:85:20:05:8A";
+          networkConfig = {
+            DHCP = "ipv4";
+            DNS = "127.0.0.1";
+            IPv6AcceptRA = false;
+          };
+          dhcpV4Config = {
+            RouteMetric = 2048;
+            Anonymize = false;
+            UseDomains = false;
+            UseDNS = false;
+          };
+          dhcpV6Config = {
+            RouteMetric = 2048;
+          };
+          routes = [{
+            routeConfig = {
+              Gateway = "_dhcp4";
+              InitialCongestionWindow = 100;
+              InitialAdvertisedReceiveWindow = 100;
+            };
+          }];
+        };
+        "11-wan2" = {
+          matchConfig.MACAddress = "c8:1f:66:e6:7a:51";
+          linkConfig.RequiredForOnline = "no";
           networkConfig = {
             DHCP = "ipv4";
             DNS = "127.0.0.1";
             IPv6AcceptRA = true;
           };
+          dhcpV4Config = {
+            RouteMetric = 1024;
+            Anonymize = false;
+            UseDomains = false;
+            UseDNS = false;
+          };
+          dhcpV6Config = {
+            RouteMetric = 1024;
+          };
+          routes = [{
+            routeConfig = {
+              Gateway = "_dhcp4";
+              InitialCongestionWindow = 100;
+              InitialAdvertisedReceiveWindow = 100;
+            };
+          }];
         };
         "20-lan" = {
           matchConfig.MACAddress = "C8:1F:66:E6:7A:52";
           linkConfig.RequiredForOnline = "no";
           address = [ "10.18.0.1/24" ];
           networkConfig = {
-            IPv6SendRA = true;
-            DHCPPrefixDelegation = true;
-            IPv6AcceptRA = false;
+            # IPv6SendRA = true;
+            # DHCPPrefixDelegation = true;
+            #IPv6AcceptRA = false;
             DHCPServer = true;
           };
-          dhcpPrefixDelegationConfig = {
-            UplinkInterface = "eno1";
-            SubnetId = 0;
-            Announce = true;
-          };
+          # dhcpPrefixDelegationConfig = {
+          #   UplinkInterface = "eno1";
+          #   SubnetId = 0;
+          #   Announce = true;
+          # };
           dhcpServerConfig = {
             ServerAddress = "10.18.0.1/24";
             DNS = "10.18.0.1";
             EmitDNS = true;
           };
-          ipv6SendRAConfig = {
-            DNS = "_link_local";
-            EmitDNS = true;
-          };
+          # ipv6SendRAConfig = {
+          #   DNS = "_link_local";
+          #   EmitDNS = true;
+          # };
         };
         # "30-home" = {
         #   matchConfig.MACAddress = "C8:1F:66:E6:7A:54";
@@ -136,12 +180,39 @@ in {
         #     IPv6AcceptRA = false;
         #   };
         # };
-        "40-lan2" = {
-          matchConfig.MACAddress = "C8:1F:66:E6:7A:53";
+        # "40-lan2" = {
+        #   matchConfig.MACAddress = "C8:1F:66:E6:7A:53";
+        #   linkConfig.RequiredForOnline = "no";
+        #   address = [ "192.168.15.1/24" ];
+        #   networkConfig = {
+        #     DHCP = "no";
+        #     DNS = "no";
+        #     IPv6AcceptRA = false;
+        #   };
+        # };
+        # "50-fiber" = {
+        #   matchConfig.MACAddress = "98:B7:85:20:05:8A";
+        #   linkConfig.RequiredForOnline = "no";
+        #   networkConfig = {
+        #     DHCP = "ipv4";
+        #     DNS = "127.0.0.1";
+        #     IPv6AcceptRA = true;
+        #   };
+        #   dhcpV4Config = {
+        #     RouteMetric = 9999;
+        #     Anonymize = false;
+        #     UseDomains = false;
+        #     UseDNS = false;
+        #   };
+        #   dhcpV6Config = {
+        #     RouteMetric = 9999;
+        #   };
+        # };
+        "99-idrac" = {
+          matchConfig.MACAddress = "5C:F9:DD:fA:4B:5D";
           linkConfig.RequiredForOnline = "no";
-          address = [ "192.168.15.1/24" ];
           networkConfig = {
-            DHCP = "no";
+            DHCP = "yes";
             DNS = "no";
             IPv6AcceptRA = false;
           };
@@ -191,32 +262,56 @@ in {
     kernel.sysctl = {
       "net.ipv4.conf.all.forwarding" = 1;
       "net.ipv6.conf.all.forwarding" = 1;
+      "net.ipv4.route.gc_timeout" = 5;
+      "net.ipv6.route.gc_timeout" = 5;
     };
   };
 
   networking = {
     hostId = "7f09cf4e";
     useDHCP = false;
+    dhcpcd.enable = false;
     useNetworkd = true;
     firewall = {
       enable = true;
       allowedUDPPorts = [ 5201 ];
       allowedTCPPorts = [ 22 80 443 5201 ];
       allowPing = true;
-      trustedInterfaces = [ "eno1" "eno2" "eno3" "eno4" "vmbr0" ];
+      trustedInterfaces = [ 
+        "vmbr0"
+        config.services.tailscale.interfaceName
+      ];
     };
     nat = {
       enable = true;
       enableIPv6 = false;
-      externalInterface = "eno1";
-      internalInterfaces = [ "eno2" "eno3" ];
+      externalInterface = "enp68s0";
+      internalInterfaces = [ "eno2" ];
     };
     jool = {
-      enable = true;
+      enable = false;
       nat64 = {
         "default" = {
           framework = "netfilter";
           global.pool6 = "64:ff9b::/96";
+        };
+      };
+    };
+    wireguard = {
+      enable = true;
+      interfaces = {
+        "wg0" = {
+          ips = [ "10.6.210.28/32" "2001:470:e07b:2::7/128" ];
+          mtu = 1380;
+          listenPort = 51820;
+          privateKeyFile = config.age.secrets.wg0-private-key.path;
+          peers = [{
+            publicKey = "ePYkBTYZaul66VdGLG70IZcCvIaZ7aSeRrkb+hskhiQ=";
+            presharedKey = "a1w5c8U/uN1yVJfoB8zuw9VwDqS44SzUQKZu1ZURJ2s=";
+            endpoint = "147.135.125.64:51820";
+            persistentKeepalive = 15;
+            allowedIPs = [ "10.6.210.1/32" "10.6.210.0/24" ];
+          }];
         };
       };
     };
@@ -246,12 +341,132 @@ in {
   nixpkgs.config.allowUnfree = true;
   environment.systemPackages = with pkgs; [ vim wget curl btrfs-progs git ];
 
-  users.users.remotebuild = {
-    isNormalUser = true;
-    openssh = { authorizedKeys.keys = distributedUserSSHKeyPub; };
+  security.acme = {
+    defaults = {
+      dnsProvider = "pdns";
+      environmentFile = config.age.secrets.acmeCredentialsFile.path;
+      webroot = null;
+    };
+    # there has to be a better way :(
+    certs = {
+      "actual.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "bazarr.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "binarycache.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "filebrowser.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "ipfs.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "ipns.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "jackett.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "jellyfin.shortcord.com" = {
+        extraDomainNames = [ "jellyfin.short.ts.shortcord.com" ];
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "komga.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "lidarr.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "proxmox.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "qbittorrent.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "radarr.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "repos.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "sonarr.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "wings.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+    };
   };
 
   services = {
+    tailscale = {
+      useRoutingFeatures = "both";
+      extraUpFlags = [ "--advertise-routes" "10.18.0.0/24,10.200.1.0/24,fd6a:f1f3:23f4:1::/64" ];
+    };
+    apcupsd = {
+      enable = false;
+      configText = ''
+        UPSNAME primary
+        UPSTYPE usb
+        POLLTIME 1
+        NETSERVER on
+        NISIP 127.0.0.1
+        NISPORT 3551
+        BATTERYLEVEL 10
+        MINUTES 3
+      '';
+    };
     pterodactyl.wings = {
       enable = true;
       package = pkgs.pterodactyl-wings;
@@ -269,12 +484,12 @@ in {
     };
     resolved.enable = false;
     unbound = {
-      enable = true;
+      enable = false;
       settings = {
         server = {
           interface = [ "eno2" ];
           module-config = "'dns64 validator iterator'";
-          dns64-prefix = "64:ff9b::/96";
+          # dns64-prefix = "64:ff9b::/96";
           interface-action = "eno2 allow";
         };
         forward-zone = [{
@@ -327,6 +542,22 @@ in {
           enable = true;
           openFirewall = true;
         };
+        apcupsd = {
+          enable = config.services.apcupsd.enable;
+          openFirewall = true;
+        };
+      };
+    };
+    nginx = {
+      virtualHosts = {
+        "actual.${config.networking.fqdn}" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+          locations."/" = { proxyPass = "http://127.0.0.2:5006"; };
+        };
       };
     };
   };
@@ -352,6 +583,12 @@ in {
             "gitlab-runner-config:/etc/gitlab-runner"
             "/var/run/docker.sock:/var/run/docker.sock:ro"
           ];
+        };
+        "actual" = {
+          autoStart = true;
+          image = "ghcr.io/actualbudget/actual-server:latest";
+          volumes = [ "actual-data:/data:rw" ];
+          ports = [ "127.0.0.2:5006:5006" ];
         };
       };
     };

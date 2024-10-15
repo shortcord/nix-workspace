@@ -59,7 +59,7 @@
   networking = {
     useDHCP = false;
     firewall = {
-      enable = true;
+      enable = false;
       allowedUDPPorts = [ 53 ];
       allowedTCPPorts = [ 53 22 80 443 ];
       allowPing = true;

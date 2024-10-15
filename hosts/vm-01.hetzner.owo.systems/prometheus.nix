@@ -3,8 +3,8 @@ let
   icmpTargets = [
     "home.shortcord.com"
     "router.cloud.shortcord.com"
-    "maus.home.shortcord.com"
-    "violet.lab.shortcord.com"
+    "maus.short.ts.shortcord.com"
+    "violet.short.ts.shortcord.com"
     "lilac.lab.shortcord.com"
     "miauws.life"
     "ns2.owo.solutions"
@@ -13,18 +13,23 @@ let
     "pve.owo.solutions:9100"
     "miauws.life:9100"
     "vm-01.hetzner.owo.systems:9100"
-    "violet.lab.shortcord.com:9100"
+    "violet.short.ts.shortcord.com:9100"
     "ipfs-pin-node-01.owo.systems:9100"
+    "ipfs-01.owo.systems:9100"
     "storage.owo.systems:9100"
     "lilac.lab.shortcord.com:9100"
-    "maus.home.shortcord.com:9100"
+    "maus.short.ts.shortcord.com:9100"
     "node.02.servers.owo.solutions:9100"
     "ns2.owo.solutions:9100"
     "octoprint.lab.shortcord.com:9100"
+    "svc.rocky.shinx.dev:9100"
   ];
   powerdnsExporterTargets =
     [ "powerdns.vm-01.hetzner.owo.systems:443" "powerdns.ns2.owo.systems:443" ];
-  mysqldExporterTargets = [ "vm-01.hetzner.owo.systems:9104" "ns2.owo.systems:9104" ];
+  mysqldExporterTargets =
+    [ "vm-01.hetzner.owo.systems:9104" "ns2.owo.systems:9104" ];
+  processExporterTargets = [ "svc.rocky.shinx.dev:9256" ];
+  apcupsdExporterTargets = [ "violet.short.ts.shortcord.com:9162" ];
 
 in {
   age.secrets = {
@@ -33,20 +38,10 @@ in {
       owner = "prometheus";
       group = "prometheus";
     };
-    lokiConfig = {
-      file = ../../secrets/${name}/lokiConfig.age;
-      owner = config.services.loki.user;
-      group = config.services.loki.group;
-    };
-    lokiBasicAuth = {
-      file = ../../secrets/${name}/lokiBasicAuth.age;
-      owner = config.services.nginx.user;
-      group = config.services.nginx.group;
-    };
     mysqldExporterConfig = {
       file = ../../secrets/${name}/mysqldExporterConfig.age;
-      owner = config.services.prometheus.exporters.mysqld.user;
-      group = config.services.prometheus.exporters.mysqld.group;
+      owner = "prometheus";
+      group = "prometheus";
     };
   };
   services = {
@@ -64,16 +59,6 @@ in {
                 toString config.services.prometheus.port
               }";
           };
-        };
-        "loki.${config.networking.fqdn}" = {
-          kTLS = true;
-          http2 = true;
-          http3 = true;
-          forceSSL = true;
-          enableACME = true;
-
-          basicAuthFile = config.age.secrets.lokiBasicAuth.path;
-          locations."/" = { proxyPass = "http://127.0.0.1:3100"; };
         };
       };
     };
@@ -106,8 +91,7 @@ in {
       enable = true;
       listenAddress = "127.0.0.1";
       port = 9090;
-      # Keep for two years
-      retentionTime = "2y";
+      retentionTime = "6m";
       # Get around sandboxing issues, fuckin' developers
       checkConfig = "syntax-only";
       exporters = {
@@ -215,12 +199,19 @@ in {
         }
         {
           job_name = "mysqld-exporters";
-          static_configs =
-            [{ targets = mysqldExporterTargets; }];
+          static_configs = [{ targets = mysqldExporterTargets; }];
         }
         {
           job_name = "node-exporters";
           static_configs = [{ targets = nodeExporterTargets; }];
+        }
+        {
+          job_name = "process-exporter";
+          static_configs = [{ targets = processExporterTargets; }];
+        }
+        {
+          job_name = "apcupsd-exporter";
+          static_configs = [{ targets = apcupsdExporterTargets; }];
         }
         {
           job_name = "powerdns-exporter";
@@ -230,13 +221,10 @@ in {
         }
         {
           job_name = "octoprint-exporter";
-          static_configs = [{ targets = [ "octoprint.lab.shortcord.com:9101" ]; }];
+          static_configs =
+            [{ targets = [ "octoprint.lab.shortcord.com:9101" ]; }];
         }
       ];
-    };
-    loki = {
-      enable = true;
-      configFile = config.age.secrets.lokiConfig.path;
     };
   };
 }

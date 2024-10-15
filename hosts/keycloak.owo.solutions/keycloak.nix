@@ -19,6 +19,11 @@
           enableACME = true;
 
           locations."/" = {
+            extraConfig = ''
+              proxy_buffer_size 128k;
+              proxy_buffers 4 256k;
+              proxy_busy_buffers_size 256k;
+            '';
             proxyPass = "http://127.0.0.1:${
                 toString config.services.keycloak.settings.http-port
               }";
@@ -48,7 +53,7 @@
       settings = {
         hostname = config.networking.fqdn;
         http-port = 8080;
-        proxy = "passthrough";
+        proxy = "edge";
         http-enabled = true;
       };
     };

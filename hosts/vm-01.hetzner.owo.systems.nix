@@ -17,9 +17,10 @@
     ./${name}/websites.nix
     ./${name}/xmpp.nix
     ./${name}/prometheus.nix
-    ./${name}/xmpp.nix
+    #./${name}/xmpp.nix
     ./${name}/powerdns.nix
     ./${name}/uptime-kuma.nix
+    ./${name}/influxdb.nix
     ./general/all.nix
   ];
 
@@ -83,16 +84,9 @@
   };
 
   environment.systemPackages = with pkgs; [ vim git ];
-
-  containers = {
-    # Awaiting Migration
-    # gitlab = {
-    #   autoStart = true;
-    #   privateNetwork = true;
-    #   hostAddress6 = "fc00::1";
-    #   localAddress6 = "2a01:4f8:c012:a734::10";
-    #   path = nodes."gitlab.shortcord.com".config.system.build.toplevel;
-    # };
+  nixpkgs.config = {
+    allowUnfree = true;
+    permittedInsecurePackages = [ "netbox-3.6.9" "nextcloud-27.1.11" ];
   };
 
   services = {
@@ -112,6 +106,15 @@
               client_max_body_size 0;
             '';
           };
+        };
+        "vreygal.com" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+
+          locations."/".return = "302 https://mastodon.art/@VReygal";
         };
       };
     };

@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     colmena.url = "github:zhaofengli/colmena/release-0.4.x";
     flake-utils.url = "github:numtide/flake-utils";
@@ -14,7 +14,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-mailserver = {
-      url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-23.11";
+      url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     shortcord-site = {
@@ -22,19 +22,27 @@
         "git+https://gitlab.shortcord.com/shortcord/shortcord.com.git?ref=master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    catstdon-flake = {
-      url =
-        "git+https://gitlab.shortcord.com/shortcord/maustodon-flake.git?ref=main";
+    headscale-flake = {
+      url = "git+https://gitlab.shortcord.com/shortcord/headscale-flake?ref=main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
   outputs = { nixpkgs, nixpkgs-unstable, colmena, ragenix, flake-utils
-    , nixos-mailserver, pterodactyl-wings, shortcord-site, catstdon-flake, ...
+    , nixos-mailserver, pterodactyl-wings, shortcord-site, 
+    headscale-flake, ...
     }:
     let
       inherit (nixpkgs) lib;
       scConfig = import ./config/default.nix;
+      unstablePkgs = import nixpkgs-unstable {
+        system = "x86_64-linux";
+        overlays = [
+          pterodactyl-wings.overlays.default
+          shortcord-site.overlays.default
+          headscale-flake.overlays.default
+        ];
+      };
       colmenaConfiguration = {
         meta = {
           allowApplyAll = false;
@@ -43,7 +51,7 @@
             overlays = [
               pterodactyl-wings.overlays.default
               shortcord-site.overlays.default
-              catstdon-flake.overlays.default
+              headscale-flake.overlays.default
             ];
           };
           # Per node override of nixpkgs
@@ -52,7 +60,7 @@
           nodeNixpkgs = { };
           specialArgs = {
             inherit ragenix pterodactyl-wings nixos-mailserver nixpkgs-unstable
-              shortcord-site catstdon-flake;
+              shortcord-site headscale-flake unstablePkgs;
           };
         };
         defaults = { name, lib, config, pkgs, ... }: {
@@ -62,6 +70,11 @@
             tags = lib.mkOrder 1000
               (lib.optional (!config.boot.isContainer) "default");
           };
+
+          # nix-shell uses flake version
+          environment.etc.nixpkgs.source = pkgs.path;
+          nix.registry.nixpkgs.to = { path = pkgs.path; type = "path"; };
+          nix.nixPath = [ "nixpkgs=flake:nixpkgs" ];
 
           # Set hostname and domain to node name in flake by default
           networking.hostName =
@@ -137,54 +150,43 @@
             iftop
             htop
             cloud-utils
+            speedtest-cli
           ];
         };
 
-        "hydra.owo.solutions" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment.tags = [ "infra" "hydra" ];
-          age.secrets.distributedUserSSHKey.file =
-            ./secrets/general/distributedUserSSHKey.age;
-          imports = [ ./hosts/${name}.nix ];
-        };
+        # "hydra.owo.solutions" = { name, nodes, pkgs, lib, config, ... }: {
+        #   deployment.tags = [ "infra" "hydra" ];
+        #   imports = [ ./hosts/${name}.nix ];
+        # };
 
         "storage.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "infra" "storage" ];
-          age.secrets.distributedUserSSHKey.file =
-            ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
         };
 
         "ns2.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "infra" "nameserver" "ns2" ];
-          age.secrets.distributedUserSSHKey.file =
-            ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
         };
 
         "vm-01.hetzner.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags =
             [ "infra" "nameserver" "grafana" "prometheus" "vm-01" ];
-          age.secrets.distributedUserSSHKey.file =
-            ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
         };
 
-        "gateway.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment.tags = [ "infra" "lab" "gateway" ];
-          imports = [ ./hosts/${name}.nix ];
-        };
+        # "gateway.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+        #   deployment.tags = [ "infra" "lab" "gateway" ];
+        #   imports = [ ./hosts/${name}.nix ];
+        # };
 
-        "lilac.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment.tags = [ "infra" "lab" "mastodon" "lilac" ];
-          age.secrets.distributedUserSSHKey.file =
-            ./secrets/general/distributedUserSSHKey.age;
-          imports = [ ./hosts/${name}.nix ];
-        };
+        # "lilac.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+        #   deployment.tags = [ "infra" "lab" "mastodon" "lilac" ];
+        #   imports = [ ./hosts/${name}.nix ];
+        # };
 
         "violet.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "infra" "lab" "violet" ];
-          age.secrets.distributedUserSSHKey.file =
-            ./secrets/general/distributedUserSSHKey.age;
           imports = [ ./hosts/${name}.nix ];
         };
 
@@ -195,10 +197,10 @@
         #   imports = [ ./containers/${name}.nix ];
         # };
 
-        "miauws.life" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment.tags = [ "miauws" ];
-          imports = [ ./hosts/${name}.nix ];
-        };
+        # "miauws.life" = { name, nodes, pkgs, lib, config, ... }: {
+        #   deployment.tags = [ "miauws" ];
+        #   imports = [ ./hosts/${name}.nix ];
+        # };
 
         "keycloak.owo.solutions" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "keycloak" "auth" ];
