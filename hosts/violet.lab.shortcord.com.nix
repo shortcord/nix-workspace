@@ -81,6 +81,7 @@
 
   systemd = {
     network = {
+      wait-online.anyInterface = true;
       enable = true;
       netdevs = {
         vmbr0 = {
@@ -553,6 +554,7 @@
   };
 
   programs.dconf.enable = true;
+  programs.nix-ld.enable = true;
   virtualisation = {
     libvirtd.enable = true;
     docker = {
