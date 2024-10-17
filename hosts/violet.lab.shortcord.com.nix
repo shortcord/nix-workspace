@@ -18,7 +18,6 @@
     ./general/all.nix
     ./${name}/hydra.nix
     ./${name}/ipfs.nix
-    # ./${name}/minio.nix
     ./${name}/nginx.nix
     ./${name}/jellyfin.nix
     ./${name}/gallery-dl-sync.nix
@@ -146,64 +145,14 @@
           linkConfig.RequiredForOnline = "no";
           address = [ "10.18.0.1/24" ];
           networkConfig = {
-            # IPv6SendRA = true;
-            # DHCPPrefixDelegation = true;
-            #IPv6AcceptRA = false;
             DHCPServer = true;
           };
-          # dhcpPrefixDelegationConfig = {
-          #   UplinkInterface = "eno1";
-          #   SubnetId = 0;
-          #   Announce = true;
-          # };
           dhcpServerConfig = {
             ServerAddress = "10.18.0.1/24";
             DNS = "10.18.0.1";
             EmitDNS = true;
           };
-          # ipv6SendRAConfig = {
-          #   DNS = "_link_local";
-          #   EmitDNS = true;
-          # };
         };
-        # "30-home" = {
-        #   matchConfig.MACAddress = "C8:1F:66:E6:7A:54";
-        #   linkConfig.RequiredForOnline = "no";
-        #   address = [ "192.168.15.2/24" ];
-        #   networkConfig = {
-        #     DHCP = "no";
-        #     DNS = "no";
-        #     IPv6AcceptRA = false;
-        #   };
-        # };
-        # "40-lan2" = {
-        #   matchConfig.MACAddress = "C8:1F:66:E6:7A:53";
-        #   linkConfig.RequiredForOnline = "no";
-        #   address = [ "192.168.15.1/24" ];
-        #   networkConfig = {
-        #     DHCP = "no";
-        #     DNS = "no";
-        #     IPv6AcceptRA = false;
-        #   };
-        # };
-        # "50-fiber" = {
-        #   matchConfig.MACAddress = "98:B7:85:20:05:8A";
-        #   linkConfig.RequiredForOnline = "no";
-        #   networkConfig = {
-        #     DHCP = "ipv4";
-        #     DNS = "127.0.0.1";
-        #     IPv6AcceptRA = true;
-        #   };
-        #   dhcpV4Config = {
-        #     RouteMetric = 9999;
-        #     Anonymize = false;
-        #     UseDomains = false;
-        #     UseDNS = false;
-        #   };
-        #   dhcpV6Config = {
-        #     RouteMetric = 9999;
-        #   };
-        # };
         "99-idrac" = {
           matchConfig.MACAddress = "5C:F9:DD:fA:4B:5D";
           linkConfig.RequiredForOnline = "no";
@@ -553,8 +502,10 @@
     };
   };
 
-  programs.dconf.enable = true;
-  programs.nix-ld.enable = true;
+  programs = {
+    dconf.enable = true;
+    nix-ld.enable = true;
+  };
   virtualisation = {
     libvirtd.enable = true;
     docker = {
@@ -613,20 +564,4 @@
       };
     };
   };
-
-  # containers = {
-  #   abittorrent = {
-  #     autoStart = true;
-  #     privateNetwork = true;
-  #     hostBridge = "vmbr0";
-  #     localAddress6 = "fd6f:357c:c101::2/64";
-  #     config = { config, pkgs, ... }: {
-  #       services.httpd.enable = true;
-  #       networking.firewall = {
-  #         allowedTCPPorts = [ 80 ];
-  #         allowPing = true;
-  #       };
-  #     };
-  #   };
-  # };
 }
