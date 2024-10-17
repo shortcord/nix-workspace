@@ -9,23 +9,22 @@
       group = config.services.pterodactyl.wings.group;
     };
   };
-
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
     ./${name}/hardware.nix
     ./${name}/nginx.nix
     ./${name}/websites.nix
-    ./${name}/xmpp.nix
     ./${name}/prometheus.nix
-    #./${name}/xmpp.nix
     ./${name}/powerdns.nix
     ./${name}/uptime-kuma.nix
     ./${name}/influxdb.nix
+    ./${name}/ai.nix
     ./general/all.nix
   ];
 
   systemd.network = {
     enable = true;
+    wait-online.anyInterface = true;
     networks = {
       "20-wan" = {
         matchConfig = {

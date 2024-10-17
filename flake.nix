@@ -22,15 +22,10 @@
         "git+https://gitlab.shortcord.com/shortcord/shortcord.com.git?ref=master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    headscale-flake = {
-      url = "git+https://gitlab.shortcord.com/shortcord/headscale-flake?ref=main";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs = { nixpkgs, nixpkgs-unstable, colmena, ragenix, flake-utils
-    , nixos-mailserver, pterodactyl-wings, shortcord-site, 
-    headscale-flake, ...
+    , nixos-mailserver, pterodactyl-wings, shortcord-site, ...
     }:
     let
       inherit (nixpkgs) lib;
@@ -40,7 +35,6 @@
         overlays = [
           pterodactyl-wings.overlays.default
           shortcord-site.overlays.default
-          headscale-flake.overlays.default
         ];
       };
       colmenaConfiguration = {
@@ -51,7 +45,6 @@
             overlays = [
               pterodactyl-wings.overlays.default
               shortcord-site.overlays.default
-              headscale-flake.overlays.default
             ];
           };
           # Per node override of nixpkgs
@@ -60,7 +53,7 @@
           nodeNixpkgs = { };
           specialArgs = {
             inherit ragenix pterodactyl-wings nixos-mailserver nixpkgs-unstable
-              shortcord-site headscale-flake unstablePkgs;
+              shortcord-site unstablePkgs;
           };
         };
         defaults = { name, lib, config, pkgs, ... }: {
