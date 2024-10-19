@@ -1,4 +1,11 @@
 { config, pkgs, ... }: {
   users.groups."torrents" = {};
-  imports = [ ./qbittorrent.nix ./sonarr.nix ./radarr.nix ./jackett.nix ./bazarr.nix ./lidarr.nix ];
+  imports = [ 
+    ./torrents/qbittorrent.nix
+    ./torrents/sonarr.nix
+    ./torrents/radarr.nix
+    ./torrents/jackett.nix
+    ./torrents/bazarr.nix
+    ./torrents/lidarr.nix
+  ];
 }

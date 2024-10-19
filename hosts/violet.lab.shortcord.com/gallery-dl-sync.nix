@@ -88,6 +88,12 @@ let
     https://danbooru.donmai.us/posts?tags=signalis
 
     # Artists
+    https://danbooru.donmai.us/posts?tags=yun_ling
+    https://danbooru.donmai.us/posts?tags=anthony_brault
+    https://danbooru.donmai.us/posts?tags=arc_draws
+    https://danbooru.donmai.us/posts?tags=lhlclllx97
+
+    # Artists
     https://www.pixiv.net/en/users/32603125
     https://www.pixiv.net/en/users/22298878
     https://www.pixiv.net/en/users/3439325
