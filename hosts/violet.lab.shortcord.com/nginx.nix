@@ -9,21 +9,6 @@
     recommendedProxySettings = true;
     recommendedBrotliSettings = true;
     virtualHosts = {
-      "proxmox.${config.networking.fqdn}" = {
-        kTLS = true;
-        http2 = true;
-        http3 = true;
-        forceSSL = true;
-        enableACME = true;
-
-        locations."/" = {
-          proxyPass = "https://10.18.0.3:8006";
-          proxyWebsockets = true;
-          extraConfig = ''
-            client_max_body_size 0;
-          '';
-        };
-      };
       "wings.${config.networking.fqdn}" = {
         kTLS = true;
         http2 = true;
