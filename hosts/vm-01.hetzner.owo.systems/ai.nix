@@ -19,7 +19,7 @@ in {
   services = {
     open-webui = {
       enable = true;
-      package = unstablePkgs.open-webui;
+      package = pkgs.open-webui;
       host = namespacedHost;
       port = 8080;
       environment = {

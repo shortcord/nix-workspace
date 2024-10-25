@@ -59,7 +59,7 @@
         defaults = { name, lib, config, pkgs, ... }: {
           deployment = {
             targetUser = "short";
-            buildOnTarget = true;
+            buildOnTarget = false;
             tags = lib.mkOrder 1000
               (lib.optional (!config.boot.isContainer) "default");
           };
