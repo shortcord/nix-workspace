@@ -218,8 +218,12 @@ in {
         }
         {
           job_name = "octoprint-exporter";
+          scheme = "https";
+          metrics_path = "/prom-metrics";
+          scrape_interval = "5s";
+          scrape_timeout = "3s";
           static_configs =
-            [{ targets = [ "octoprint.lab.shortcord.com:9101" ]; }];
+            [{ targets = [ "printer1.feta.shortcord.com" "printer2.feta.shortcord.com" ]; }];
         }
       ];
     };
