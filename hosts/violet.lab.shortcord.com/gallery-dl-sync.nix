@@ -183,9 +183,6 @@ in {
       pm = "static";
       "listen.owner" = config.services.nginx.user;
       "pm.max_children" = 50;
-      # "pm.start_servers" = 10;
-      # "pm.min_spare_servers" = 10;
-      # "pm.max_spare_servers" = 20;
       "pm.max_requests" = 50;
     };
     phpEnv."PATH" = lib.makeBinPath [
