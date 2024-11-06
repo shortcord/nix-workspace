@@ -19,9 +19,14 @@ in {
     ./general/all.nix
     ./${name}/hardware.nix
     ./${name}/mastodon.nix
-    # ./${name}/matrix.nix
     ./${name}/postgresql.nix
   ];
+
+  systemd = {
+    network = {
+      wait-online.anyInterface = true;
+    };
+  };
 
   networking = {
     useDHCP = false;

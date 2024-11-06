@@ -22,10 +22,15 @@
         "git+https://gitlab.shortcord.com/shortcord/shortcord.com.git?ref=master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    maustodon-flake = {
+      url =
+        "git+https://gitlab.shortcord.com/shortcord/maustodon-flake.git?ref=main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { nixpkgs, nixpkgs-unstable, colmena, ragenix, flake-utils
-    , nixos-mailserver, pterodactyl-wings, shortcord-site, ...
+    , nixos-mailserver, pterodactyl-wings, shortcord-site, maustodon-flake, ...
     }:
     let
       inherit (nixpkgs) lib;
@@ -35,6 +40,7 @@
         overlays = [
           pterodactyl-wings.overlays.default
           shortcord-site.overlays.default
+          maustodon-flake.overlays.default
         ];
       };
       colmenaConfiguration = {
@@ -45,6 +51,7 @@
             overlays = [
               pterodactyl-wings.overlays.default
               shortcord-site.overlays.default
+              maustodon-flake.overlays.default
             ];
           };
           # Per node override of nixpkgs
@@ -53,7 +60,7 @@
           nodeNixpkgs = { };
           specialArgs = {
             inherit ragenix pterodactyl-wings nixos-mailserver nixpkgs-unstable
-              shortcord-site unstablePkgs;
+              shortcord-site unstablePkgs maustodon-flake;
           };
         };
         defaults = { name, lib, config, pkgs, ... }: {
@@ -186,10 +193,10 @@
         #   imports = [ ./hosts/${name}.nix ];
         # };
 
-        # "lilac.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
-        #   deployment.tags = [ "infra" "lab" "mastodon" "lilac" ];
-        #   imports = [ ./hosts/${name}.nix ];
-        # };
+        "lilac.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "infra" "lab" "mastodon" "lilac" ];
+          imports = [ ./hosts/${name}.nix ];
+        };
 
         "violet.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "infra" "lab" "violet" ];
