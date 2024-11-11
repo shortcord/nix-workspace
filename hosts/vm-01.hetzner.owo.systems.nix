@@ -19,6 +19,7 @@
     ./${name}/uptime-kuma.nix
     ./${name}/influxdb.nix
     ./${name}/ai.nix
+    ./${name}/xmpp.nix
     ./general/all.nix
   ];
 
