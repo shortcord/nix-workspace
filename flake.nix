@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     colmena.url = "github:zhaofengli/colmena/release-0.4.x";
     flake-utils.url = "github:numtide/flake-utils";
@@ -14,7 +14,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-mailserver = {
-      url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-24.05";
+      url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     shortcord-site = {
@@ -77,6 +77,7 @@
               owner = "acme";
               group = "acme";
             };
+            pia-userpass.file = ./secrets/general/pia.age;
           };
 
           # nix-shell uses flake version
