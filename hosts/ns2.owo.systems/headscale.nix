@@ -4,7 +4,6 @@ in {
   services = {
     headscale = {
       enable = true;
-      package = unstablePkgs.headscale;
       address = "127.0.0.1";
       port = 7979;
       settings = {
