@@ -59,6 +59,8 @@
         hostname = config.networking.fqdn;
         http-port = 8080;
         http-enabled = true;
+        proxy-headers = "forwarded";
+        proxy-trusted-addresses = "127.0.0.0/8";
       };
     };
   };
