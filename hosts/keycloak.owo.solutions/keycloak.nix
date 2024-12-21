@@ -2,6 +2,11 @@
   age.secrets.keycloak-psql-password.file =
     ../../secrets/${name}/keycloak-psql-password.age;
   networking = { firewall = { allowedTCPPorts = [ 80 443 ]; }; };
+  systemd = {
+    network = {
+      wait-online.anyInterface = true;
+    };
+  };
   services = {
     nginx = {
       enable = true;
@@ -53,7 +58,6 @@
       settings = {
         hostname = config.networking.fqdn;
         http-port = 8080;
-        proxy = "edge";
         http-enabled = true;
       };
     };

@@ -44,7 +44,7 @@
       allowPing = true;
     };
     wireguard = {
-      enable = true;
+      enable = false;
       interfaces = {
         "mail-relay" = {
           ips = [ "10.7.210.4/32" ];
