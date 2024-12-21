@@ -55,8 +55,8 @@
             ];
           };
           # Per node override of nixpkgs
-          ## "hostname" = { nixpkgs import stansa }
-          ## see above for example of said stansa
+          ## "hostname" = { nixpkgs import stanza }
+          ## see above for example of said stanza
           nodeNixpkgs = { };
           specialArgs = {
             inherit ragenix pterodactyl-wings nixos-mailserver nixpkgs-unstable
