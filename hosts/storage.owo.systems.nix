@@ -50,7 +50,6 @@
 
   age.secrets = {
     minioSecret.file = ../secrets/${name}/minioSecret.age;
-    acmeCredentialsFile.file = ../secrets/${name}/acmeCredentialsFile.age;
   };
 
   networking = {
