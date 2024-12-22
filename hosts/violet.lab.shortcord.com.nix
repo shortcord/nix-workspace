@@ -402,13 +402,13 @@
         client
         dev tun
         proto udp
-        remote 84.239.16.146 1198
+        remote 149.40.50.13 1198
         resolv-retry infinite
         nobind
         persist-key
         persist-tun
-        cipher aes-256-cbc
-        auth sha256
+        cipher aes-128-cbc
+        auth sha1
         tls-client
         remote-cert-tls server
 
@@ -416,23 +416,6 @@
         compress
         verb 1
         reneg-sec 0
-        <crl-verify>
-        -----BEGIN X509 CRL-----
-        MIICWDCCAUAwDQYJKoZIhvcNAQENBQAwgegxCzAJBgNVBAYTAlVTMQswCQYDVQQI
-        EwJDQTETMBEGA1UEBxMKTG9zQW5nZWxlczEgMB4GA1UEChMXUHJpdmF0ZSBJbnRl
-        cm5ldCBBY2Nlc3MxIDAeBgNVBAsTF1ByaXZhdGUgSW50ZXJuZXQgQWNjZXNzMSAw
-        HgYDVQQDExdQcml2YXRlIEludGVybmV0IEFjY2VzczEgMB4GA1UEKRMXUHJpdmF0
-        ZSBJbnRlcm5ldCBBY2Nlc3MxLzAtBgkqhkiG9w0BCQEWIHNlY3VyZUBwcml2YXRl
-        aW50ZXJuZXRhY2Nlc3MuY29tFw0xNjA3MDgxOTAwNDZaFw0zNjA3MDMxOTAwNDZa
-        MCYwEQIBARcMMTYwNzA4MTkwMDQ2MBECAQYXDDE2MDcwODE5MDA0NjANBgkqhkiG
-        9w0BAQ0FAAOCAQEAQZo9X97ci8EcPYu/uK2HB152OZbeZCINmYyluLDOdcSvg6B5
-        jI+ffKN3laDvczsG6CxmY3jNyc79XVpEYUnq4rT3FfveW1+Ralf+Vf38HdpwB8EW
-        B4hZlQ205+21CALLvZvR8HcPxC9KEnev1mU46wkTiov0EKc+EdRxkj5yMgv0V2Re
-        ze7AP+NQ9ykvDScH4eYCsmufNpIjBLhpLE2cuZZXBLcPhuRzVoU3l7A9lvzG9mjA
-        5YijHJGHNjlWFqyrn1CfYS6koa4TGEPngBoAziWRbDGdhEgJABHrpoaFYaL61zqy
-        MR6jC0K2ps9qyZAN74LEBedEfK7tBOzWMwr58A==
-        -----END X509 CRL-----
-        </crl-verify>
 
         <ca>
         -----BEGIN CERTIFICATE-----
