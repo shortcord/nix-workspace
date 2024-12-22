@@ -56,10 +56,10 @@
         passwordFile = config.age.secrets.keycloak-psql-password.path;
       };
       settings = {
-        hostname = config.networking.fqdn;
+        hostname = "https://${config.networking.fqdn}";
         http-port = 8080;
         http-enabled = true;
-        proxy-headers = "forwarded";
+        proxy-headers = "xforwarded";
         proxy-trusted-addresses = "127.0.0.0/8";
       };
     };
