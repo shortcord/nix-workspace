@@ -284,9 +284,11 @@
 
   nixpkgs.config = {
     allowUnfree = true;
+    ## TODO: Update these packages
     permittedInsecurePackages = [ 
       "dotnet-sdk-6.0.428"
       "aspnetcore-runtime-6.0.36"
+      "qbittorrent-nox-4.6.4"
     ];
   };
   environment.systemPackages = with pkgs; [ vim wget curl btrfs-progs git ];
