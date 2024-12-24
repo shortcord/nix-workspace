@@ -72,12 +72,29 @@
           };
 
           age.secrets = {
+            distributedUserSSHKey.file =
+              ./secrets/general/distributedUserSSHKey.age;
             acmeCredentialsFile = {
               file = ./secrets/general/acmeCredentialsFile.age;
               owner = "acme";
               group = "acme";
             };
             pia-userpass.file = ./secrets/general/pia.age;
+          };
+
+          ## TODO: await for a patch to remove --update-input
+          # ref: https://github.com/NixOS/nixpkgs/issues/349734
+          system.autoUpgrade = {
+            enable = true;
+            flake = "git+https://gitlab.shortcord.com/shortcord/nix-workspace.git?ref=main";
+            flags = [
+              "--update-input"
+              "nixpkgs"
+              "--no-write-lock-file"
+              "-L" # print build logs
+            ];
+            dates = "02:00";
+            randomizedDelaySec = "45min";
           };
 
           # nix-shell uses flake version
@@ -150,11 +167,6 @@
               extraGroups = [ "wheel" ];
               openssh = { authorizedKeys.keys = scConfig.sshkeys.users.short; };
             };
-          };
-
-          age.secrets = {
-            distributedUserSSHKey.file =
-              ./secrets/general/distributedUserSSHKey.age;
           };
 
           environment.systemPackages = with pkgs; [
