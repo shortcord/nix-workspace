@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     colmena.url = "github:zhaofengli/colmena/release-0.4.x";
     flake-utils.url = "github:numtide/flake-utils";
@@ -14,7 +14,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-mailserver = {
-      url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-24.05";
+      url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     shortcord-site = {
@@ -22,15 +22,15 @@
         "git+https://gitlab.shortcord.com/shortcord/shortcord.com.git?ref=master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    headscale-flake = {
-      url = "git+https://gitlab.shortcord.com/shortcord/headscale-flake?ref=main";
+    maustodon-flake = {
+      url =
+        "git+https://gitlab.shortcord.com/shortcord/maustodon-flake.git?ref=main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
   outputs = { nixpkgs, nixpkgs-unstable, colmena, ragenix, flake-utils
-    , nixos-mailserver, pterodactyl-wings, shortcord-site, 
-    headscale-flake, ...
+    , nixos-mailserver, pterodactyl-wings, shortcord-site, maustodon-flake, ...
     }:
     let
       inherit (nixpkgs) lib;
@@ -40,7 +40,7 @@
         overlays = [
           pterodactyl-wings.overlays.default
           shortcord-site.overlays.default
-          headscale-flake.overlays.default
+          maustodon-flake.overlays.default
         ];
       };
       colmenaConfiguration = {
@@ -51,32 +51,50 @@
             overlays = [
               pterodactyl-wings.overlays.default
               shortcord-site.overlays.default
-              headscale-flake.overlays.default
+              maustodon-flake.overlays.default
             ];
           };
           # Per node override of nixpkgs
-          ## "hostname" = { nixpkgs import stansa }
-          ## see above for example of said stansa
+          ## "hostname" = { nixpkgs import stanza }
+          ## see above for example of said stanza
           nodeNixpkgs = { };
           specialArgs = {
             inherit ragenix pterodactyl-wings nixos-mailserver nixpkgs-unstable
-              shortcord-site headscale-flake unstablePkgs;
+              shortcord-site unstablePkgs maustodon-flake;
           };
         };
         defaults = { name, lib, config, pkgs, ... }: {
           deployment = {
             targetUser = "short";
-            buildOnTarget = true;
+            buildOnTarget = false;
             tags = lib.mkOrder 1000
               (lib.optional (!config.boot.isContainer) "default");
           };
 
           age.secrets = {
+            distributedUserSSHKey.file =
+              ./secrets/general/distributedUserSSHKey.age;
             acmeCredentialsFile = {
               file = ./secrets/general/acmeCredentialsFile.age;
               owner = "acme";
               group = "acme";
             };
+            pia-userpass.file = ./secrets/general/pia.age;
+          };
+
+          ## TODO: await for a patch to remove --update-input
+          # ref: https://github.com/NixOS/nixpkgs/issues/349734
+          system.autoUpgrade = {
+            enable = true;
+            flake = "git+https://gitlab.shortcord.com/shortcord/nix-workspace.git?ref=main";
+            flags = [
+              "--update-input"
+              "nixpkgs"
+              "--no-write-lock-file"
+              "-L" # print build logs
+            ];
+            dates = "02:00";
+            randomizedDelaySec = "45min";
           };
 
           # nix-shell uses flake version
@@ -151,11 +169,6 @@
             };
           };
 
-          age.secrets = {
-            distributedUserSSHKey.file =
-              ./secrets/general/distributedUserSSHKey.age;
-          };
-
           environment.systemPackages = with pkgs; [
             vim
             git
@@ -193,10 +206,10 @@
         #   imports = [ ./hosts/${name}.nix ];
         # };
 
-        # "lilac.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
-        #   deployment.tags = [ "infra" "lab" "mastodon" "lilac" ];
-        #   imports = [ ./hosts/${name}.nix ];
-        # };
+        "lilac.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "infra" "lab" "mastodon" "lilac" ];
+          imports = [ ./hosts/${name}.nix ];
+        };
 
         "violet.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "infra" "lab" "violet" ];

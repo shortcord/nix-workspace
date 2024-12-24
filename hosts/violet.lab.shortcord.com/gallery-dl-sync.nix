@@ -88,6 +88,12 @@ let
     https://danbooru.donmai.us/posts?tags=signalis
 
     # Artists
+    https://danbooru.donmai.us/posts?tags=yun_ling
+    https://danbooru.donmai.us/posts?tags=anthony_brault
+    https://danbooru.donmai.us/posts?tags=arc_draws
+    https://danbooru.donmai.us/posts?tags=lhlclllx97
+
+    # Artists
     https://www.pixiv.net/en/users/32603125
     https://www.pixiv.net/en/users/22298878
     https://www.pixiv.net/en/users/3439325
@@ -177,9 +183,6 @@ in {
       pm = "static";
       "listen.owner" = config.services.nginx.user;
       "pm.max_children" = 50;
-      # "pm.start_servers" = 10;
-      # "pm.min_spare_servers" = 10;
-      # "pm.max_spare_servers" = 20;
       "pm.max_requests" = 50;
     };
     phpEnv."PATH" = lib.makeBinPath [

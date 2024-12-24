@@ -1,4 +1,4 @@
-{ name, nodes, pkgs, lib, config, ... }:
+{ name, nodes, pkgs, lib, config, unstablePkgs, ... }:
 let hsConf = config.services.headscale;
 in {
   services = {
@@ -7,13 +7,17 @@ in {
       address = "127.0.0.1";
       port = 7979;
       settings = {
+        database = {
+          type = "sqlite3";
+          sqlite.path = "/var/lib/headscale/db.sqlite";
+        };
         server_url = "https://headscale.${config.networking.fqdn}";
-        dns_config = {
+        dns = {
           magic_dns = true;
           base_domain = "ts.shortcord.com";
-          nameservers =
+          nameservers.global =
             [ "9.9.9.9" "149.112.112.112" "2620:fe::fe" "2620:fe::9" ];
-          override_local_dns = true;
+          use_username_in_magic_dns = true;
         };
         ip_prefixes = [ "100.64.0.0/10" "fd7a:115c:a1e0::/48" ];
         prefixes = {

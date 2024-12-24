@@ -11,7 +11,8 @@ in
   "general/restic-password.age".publicKeys = all;
   "general/restic-s3-env.age".publicKeys = all;
   "general/headscaleKey.age".publicKeys = all;
-  
+  "general/pia.age".publicKeys = all;
+
   # Secrets for ns2.owo.systems
   "ns2.owo.systems/wireguardPrivateKey.age".publicKeys = all;
   "ns2.owo.systems/wireguardPresharedKey.age".publicKeys = all;

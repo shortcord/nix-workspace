@@ -18,14 +18,12 @@
     ./general/all.nix
     ./${name}/hydra.nix
     ./${name}/ipfs.nix
-    # ./${name}/minio.nix
     ./${name}/nginx.nix
     ./${name}/jellyfin.nix
     ./${name}/gallery-dl-sync.nix
     ./${name}/repo-sync.nix
     ./${name}/komga.nix
     ./${name}/torrenting.nix
-    ./${name}/ai.nix
   ];
 
   fileSystems = {
@@ -81,6 +79,7 @@
 
   systemd = {
     network = {
+      wait-online.anyInterface = true;
       enable = true;
       netdevs = {
         vmbr0 = {
@@ -145,64 +144,14 @@
           linkConfig.RequiredForOnline = "no";
           address = [ "10.18.0.1/24" ];
           networkConfig = {
-            # IPv6SendRA = true;
-            # DHCPPrefixDelegation = true;
-            #IPv6AcceptRA = false;
             DHCPServer = true;
           };
-          # dhcpPrefixDelegationConfig = {
-          #   UplinkInterface = "eno1";
-          #   SubnetId = 0;
-          #   Announce = true;
-          # };
           dhcpServerConfig = {
             ServerAddress = "10.18.0.1/24";
             DNS = "10.18.0.1";
             EmitDNS = true;
           };
-          # ipv6SendRAConfig = {
-          #   DNS = "_link_local";
-          #   EmitDNS = true;
-          # };
         };
-        # "30-home" = {
-        #   matchConfig.MACAddress = "C8:1F:66:E6:7A:54";
-        #   linkConfig.RequiredForOnline = "no";
-        #   address = [ "192.168.15.2/24" ];
-        #   networkConfig = {
-        #     DHCP = "no";
-        #     DNS = "no";
-        #     IPv6AcceptRA = false;
-        #   };
-        # };
-        # "40-lan2" = {
-        #   matchConfig.MACAddress = "C8:1F:66:E6:7A:53";
-        #   linkConfig.RequiredForOnline = "no";
-        #   address = [ "192.168.15.1/24" ];
-        #   networkConfig = {
-        #     DHCP = "no";
-        #     DNS = "no";
-        #     IPv6AcceptRA = false;
-        #   };
-        # };
-        # "50-fiber" = {
-        #   matchConfig.MACAddress = "98:B7:85:20:05:8A";
-        #   linkConfig.RequiredForOnline = "no";
-        #   networkConfig = {
-        #     DHCP = "ipv4";
-        #     DNS = "127.0.0.1";
-        #     IPv6AcceptRA = true;
-        #   };
-        #   dhcpV4Config = {
-        #     RouteMetric = 9999;
-        #     Anonymize = false;
-        #     UseDomains = false;
-        #     UseDNS = false;
-        #   };
-        #   dhcpV6Config = {
-        #     RouteMetric = 9999;
-        #   };
-        # };
         "99-idrac" = {
           matchConfig.MACAddress = "5C:F9:DD:fA:4B:5D";
           linkConfig.RequiredForOnline = "no";
@@ -333,8 +282,15 @@
     distributedBuilds = lib.mkForce false;
   };
 
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config = {
+    allowUnfree = true;
+    permittedInsecurePackages = [ 
+      "dotnet-sdk-6.0.428"
+      "aspnetcore-runtime-6.0.36"
+    ];
+  };
   environment.systemPackages = with pkgs; [ vim wget curl btrfs-progs git ];
+
 
   security.acme = {
     # there has to be a better way :(
@@ -440,6 +396,66 @@
   };
 
   services = {
+    openvpn.servers.pia = {
+      autoStart = true;
+      config = ''
+        client
+        dev tun
+        proto udp
+        remote 149.40.50.13 1198
+        resolv-retry infinite
+        nobind
+        persist-key
+        persist-tun
+        cipher aes-128-cbc
+        auth sha1
+        tls-client
+        remote-cert-tls server
+
+        auth-user-pass ${config.age.secrets.pia-userpass.path}
+        compress
+        verb 1
+        reneg-sec 0
+
+        <ca>
+        -----BEGIN CERTIFICATE-----
+        MIIFqzCCBJOgAwIBAgIJAKZ7D5Yv87qDMA0GCSqGSIb3DQEBDQUAMIHoMQswCQYD
+        VQQGEwJVUzELMAkGA1UECBMCQ0ExEzARBgNVBAcTCkxvc0FuZ2VsZXMxIDAeBgNV
+        BAoTF1ByaXZhdGUgSW50ZXJuZXQgQWNjZXNzMSAwHgYDVQQLExdQcml2YXRlIElu
+        dGVybmV0IEFjY2VzczEgMB4GA1UEAxMXUHJpdmF0ZSBJbnRlcm5ldCBBY2Nlc3Mx
+        IDAeBgNVBCkTF1ByaXZhdGUgSW50ZXJuZXQgQWNjZXNzMS8wLQYJKoZIhvcNAQkB
+        FiBzZWN1cmVAcHJpdmF0ZWludGVybmV0YWNjZXNzLmNvbTAeFw0xNDA0MTcxNzM1
+        MThaFw0zNDA0MTIxNzM1MThaMIHoMQswCQYDVQQGEwJVUzELMAkGA1UECBMCQ0Ex
+        EzARBgNVBAcTCkxvc0FuZ2VsZXMxIDAeBgNVBAoTF1ByaXZhdGUgSW50ZXJuZXQg
+        QWNjZXNzMSAwHgYDVQQLExdQcml2YXRlIEludGVybmV0IEFjY2VzczEgMB4GA1UE
+        AxMXUHJpdmF0ZSBJbnRlcm5ldCBBY2Nlc3MxIDAeBgNVBCkTF1ByaXZhdGUgSW50
+        ZXJuZXQgQWNjZXNzMS8wLQYJKoZIhvcNAQkBFiBzZWN1cmVAcHJpdmF0ZWludGVy
+        bmV0YWNjZXNzLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAPXD
+        L1L9tX6DGf36liA7UBTy5I869z0UVo3lImfOs/GSiFKPtInlesP65577nd7UNzzX
+        lH/P/CnFPdBWlLp5ze3HRBCc/Avgr5CdMRkEsySL5GHBZsx6w2cayQ2EcRhVTwWp
+        cdldeNO+pPr9rIgPrtXqT4SWViTQRBeGM8CDxAyTopTsobjSiYZCF9Ta1gunl0G/
+        8Vfp+SXfYCC+ZzWvP+L1pFhPRqzQQ8k+wMZIovObK1s+nlwPaLyayzw9a8sUnvWB
+        /5rGPdIYnQWPgoNlLN9HpSmsAcw2z8DXI9pIxbr74cb3/HSfuYGOLkRqrOk6h4RC
+        OfuWoTrZup1uEOn+fw8CAwEAAaOCAVQwggFQMB0GA1UdDgQWBBQv63nQ/pJAt5tL
+        y8VJcbHe22ZOsjCCAR8GA1UdIwSCARYwggESgBQv63nQ/pJAt5tLy8VJcbHe22ZO
+        sqGB7qSB6zCB6DELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRMwEQYDVQQHEwpM
+        b3NBbmdlbGVzMSAwHgYDVQQKExdQcml2YXRlIEludGVybmV0IEFjY2VzczEgMB4G
+        A1UECxMXUHJpdmF0ZSBJbnRlcm5ldCBBY2Nlc3MxIDAeBgNVBAMTF1ByaXZhdGUg
+        SW50ZXJuZXQgQWNjZXNzMSAwHgYDVQQpExdQcml2YXRlIEludGVybmV0IEFjY2Vz
+        czEvMC0GCSqGSIb3DQEJARYgc2VjdXJlQHByaXZhdGVpbnRlcm5ldGFjY2Vzcy5j
+        b22CCQCmew+WL/O6gzAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBDQUAA4IBAQAn
+        a5PgrtxfwTumD4+3/SYvwoD66cB8IcK//h1mCzAduU8KgUXocLx7QgJWo9lnZ8xU
+        ryXvWab2usg4fqk7FPi00bED4f4qVQFVfGfPZIH9QQ7/48bPM9RyfzImZWUCenK3
+        7pdw4Bvgoys2rHLHbGen7f28knT2j/cbMxd78tQc20TIObGjo8+ISTRclSTRBtyC
+        GohseKYpTS9himFERpUgNtefvYHbn70mIOzfOJFTVqfrptf9jXa9N8Mpy3ayfodz
+        1wiqdteqFXkTYoSDctgKMiZ6GdocK9nMroQipIQtpnwd4yBDWIyC6Bvlkrq5TQUt
+        YDQ8z9v+DMO6iwyIDRiU
+        -----END CERTIFICATE-----
+        </ca>
+
+        disable-occ
+      '';
+    };
     tailscale = {
       useRoutingFeatures = "both";
       extraUpFlags = [ "--advertise-routes" "10.18.0.0/24,10.200.1.0/24,fd6a:f1f3:23f4:1::/64" ];
@@ -495,31 +511,6 @@
         address = [ "127.0.0.1" "::1" ];
       };
     };
-    frr = {
-      zebra = {
-        enable = true;
-        config = ''
-          interface eno2
-            ip ospf area 0.0.0.1
-            ipv6 ospf6 area 0.0.0.1
-            multicast
-        '';
-      };
-      ospf = {
-        enable = true;
-        config = ''
-          router ospf
-            redistribute connected
-        '';
-      };
-      ospf6 = {
-        enable = true;
-        config = ''
-          router ospf6
-            redistribute connected
-        '';
-      };
-    };
     btrfs.autoScrub = {
       enable = true;
       interval = "weekly";
@@ -552,7 +543,10 @@
     };
   };
 
-  programs.dconf.enable = true;
+  programs = {
+    dconf.enable = true;
+    nix-ld.enable = true;
+  };
   virtualisation = {
     libvirtd.enable = true;
     docker = {
@@ -611,20 +605,4 @@
       };
     };
   };
-
-  # containers = {
-  #   abittorrent = {
-  #     autoStart = true;
-  #     privateNetwork = true;
-  #     hostBridge = "vmbr0";
-  #     localAddress6 = "fd6f:357c:c101::2/64";
-  #     config = { config, pkgs, ... }: {
-  #       services.httpd.enable = true;
-  #       networking.firewall = {
-  #         allowedTCPPorts = [ 80 ];
-  #         allowPing = true;
-  #       };
-  #     };
-  #   };
-  # };
 }

@@ -9,23 +9,23 @@
       group = config.services.pterodactyl.wings.group;
     };
   };
-
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
     ./${name}/hardware.nix
     ./${name}/nginx.nix
     ./${name}/websites.nix
-    ./${name}/xmpp.nix
     ./${name}/prometheus.nix
-    #./${name}/xmpp.nix
     ./${name}/powerdns.nix
     ./${name}/uptime-kuma.nix
     ./${name}/influxdb.nix
+    ./${name}/ai.nix
+    ./${name}/xmpp.nix
     ./general/all.nix
   ];
 
   systemd.network = {
     enable = true;
+    wait-online.anyInterface = true;
     networks = {
       "20-wan" = {
         matchConfig = {
@@ -72,11 +72,7 @@
             publicKey = "2a8w4y36L4hiG2ijQKZOfKTar28A4SPtupZnTXVUrTI=";
             persistentKeepalive = 15;
             allowedIPs = [ "10.7.210.1/32" ];
-            endpoint = builtins.concatStringsSep ":" [
-              nodes."ns2.owo.systems".config.networking.fqdn
-              (toString
-                nodes."ns2.owo.systems".config.networking.wireguard.interfaces.wg1.listenPort)
-            ];
+            endpoint = "66.135.9.121:51820";
           }];
         };
       };
@@ -86,7 +82,7 @@
   environment.systemPackages = with pkgs; [ vim git ];
   nixpkgs.config = {
     allowUnfree = true;
-    permittedInsecurePackages = [ "netbox-3.6.9" "nextcloud-27.1.11" ];
+    permittedInsecurePackages = [ "netbox-3.7.8" "nextcloud-27.1.11" ];
   };
 
   services = {

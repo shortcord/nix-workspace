@@ -29,6 +29,7 @@ colmana apply --on @default
 
 - Violet has the UPS monitoring on it, uh don't forget that, it will just power off if that cable is missing.
 
+- NS2's headscale instance is kind of a mess right now, using stable's config generation with unstable's package means duplicated settings and stuff. Currently it "works" but is really finicky, I should really just pull that out into it's own flake that does everything correctly.
 ## TODOs
 
 [ ] Fix ACME on all hosts, make them use PDNS API.

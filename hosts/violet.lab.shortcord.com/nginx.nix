@@ -9,21 +9,6 @@
     recommendedProxySettings = true;
     recommendedBrotliSettings = true;
     virtualHosts = {
-      "proxmox.${config.networking.fqdn}" = {
-        kTLS = true;
-        http2 = true;
-        http3 = true;
-        forceSSL = true;
-        enableACME = true;
-
-        locations."/" = {
-          proxyPass = "https://10.18.0.3:8006";
-          proxyWebsockets = true;
-          extraConfig = ''
-            client_max_body_size 0;
-          '';
-        };
-      };
       "wings.${config.networking.fqdn}" = {
         kTLS = true;
         http2 = true;
@@ -40,5 +25,25 @@
         };
       };
     };
+    streamConfig = "
+      upstream twitch {
+        hash $remote_addr consistent;
+        server ingest.global-contribute.live-video.net:1935;
+      }
+
+      upstream owncast {
+        server owncast.owo.solutions:1935;
+      }
+
+      server {
+        listen 100.64.0.4:1935 reuseport;
+        proxy_pass twitch;
+      }
+
+      server {
+        listen 100.64.0.4:1936 reuseport;
+        proxy_pass owncast;
+      }
+    ";
   };
 }

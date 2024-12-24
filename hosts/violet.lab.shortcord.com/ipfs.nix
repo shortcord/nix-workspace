@@ -67,50 +67,6 @@
               ];
               ID = "12D3KooWNGmh5EBpPBXGGcFnrMtBW6u9Z61HgyHAobjo2ANhq1kL";
             }
-            {
-              Addrs = [ ];
-              ID = "12D3KooWDdHkmE24QM4LdUotNJhLRw4vjT3hEDGxCdsB35wb1usb";
-            }
-            {
-              Addrs = [ ];
-              ID = "12D3KooWE3gerBqRL1YAQf8dkokfmbgVSo6DcDtxW3NTsJJRqbux";
-            }
-            {
-              Addrs = [ ];
-              ID = "12D3KooWM63pJ1xhDjqKvH8bEyzowwmfB5tP9UndMP2T2WjDBF7Y";
-            }
-            {
-              Addrs = [ ];
-              ID = "12D3KooWQvpkLdMxMX2xfBGe44nQu2BiLyiuaLvYSXL15Cfwiowk";
-            }
-            {
-              Addrs = [ ];
-              ID = "12D3KooWQf7Z78nUizJyhETrKx1NgqbxPTRoQ8NhZAeSjhQWRRnQ";
-            }
-            {
-              Addrs = [ "/dns6/dl.lxd.bsocat.net/tcp/4001" ];
-              ID = "12D3KooWQvvJkr8fqUAJWcwe6Tysng3AQyKtSBnTG85rW5vm4B67";
-            }
-            {
-              Addrs = [ "/dns6/ipfs.home.bsocat.net/tcp/4001" ];
-              ID = "12D3KooWGHPei7QWiX8vJjHgEkoC4QDWcGKdJf9bE8noP1dAWS21";
-            }
-            {
-              Addrs = [ "/dns6/gnutoo.home.bsocat.net/tcp/4001" ];
-              ID = "12D3KooWNoPhenCQSsdfKJvJ8g2R1bHbw7M7s5arykhqJCVd5F2B";
-            }
-            {
-              Addrs = [ "/dns6/ipfs1.lxd.bsocat.net/tcp/4001" ];
-              ID = "12D3KooWFkQFKVSgmDfUggx5de5wSbAtfegBnashkP8VN8rESRUX";
-            }
-            {
-              Addrs = [ "/dns6/ipfs2.lxd.bsocat.net/tcp/4001" ];
-              ID = "12D3KooWLSr7JRSYooakhq58vZowUcCaW4ff31tHaGTrWDDaCL8W";
-            }
-            {
-              Addrs = [ "/dns6/ipfs3.lxd.bsocat.net/tcp/4001" ];
-              ID = "12D3KooWS3ZiwYPxL4iB3xh32oQs7Cm61ZN7sCsQXhvTGyfybn91";
-            }
           ];
         };
         Datastore = { StorageMax = "1000GB"; };

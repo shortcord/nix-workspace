@@ -2,9 +2,8 @@
 let
   ollamaPerDir = "/var/lib/ollama";
   namespacedHost = "127.0.0.5";
-  ollamaConf = config.services.ollama;
   openWebUiConf = config.services.open-webui;
-  domainName = "ai.${config.networking.fqdn}";
+  domainName = "ai.mousetail.dev";
 in {
   security.acme = {
     # there has to be a better way :(
@@ -18,24 +17,16 @@ in {
     };
   };
   services = {
-    ollama = { 
-      enable = true;
-      package = unstablePkgs.ollama;
-      writablePaths = [ ollamaPerDir ];
-      models = ollamaPerDir;
-      listenAddress = "${namespacedHost}:11434";
-      sandbox = false;
-    };
     open-webui = {
       enable = true;
-      package = unstablePkgs.open-webui;
+      package = pkgs.open-webui;
       host = namespacedHost;
       port = 8080;
       environment = {
         ANONYMIZED_TELEMETRY = "False";
         DO_NOT_TRACK = "True";
         SCARF_NO_ANALYTICS = "True";
-        OLLAMA_API_BASE_URL = "http://${ollamaConf.listenAddress}";
+        OLLAMA_API_BASE_URL = "http://maus.short.ts.shortcord.com:11434";
       };
     };
     nginx = {
@@ -53,9 +44,10 @@ in {
           http3 = true;
           forceSSL = true;
           enableACME = true;
-          locations."/" = {
+          locations."/" = { 
             proxyPass = "http://ollama";
             proxyWebsockets = true;
+            recommendedProxySettings = true;
           };
         };
       };

@@ -37,6 +37,7 @@
 
   systemd = {
     network = {
+      wait-online.anyInterface = true;
       enable = true;
       networks = {
         "10-wan" = {
