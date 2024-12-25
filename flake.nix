@@ -90,6 +90,10 @@
             flags = [
               "--update-input"
               "nixpkgs"
+              "--update-input"
+              "nixpkgs-unstable"
+              "--update-input"
+              "maustodon-flake"
               "--no-write-lock-file"
               "-L" # print build logs
             ];
