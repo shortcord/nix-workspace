@@ -106,13 +106,13 @@
           dhcpV6Config = {
             RouteMetric = 2048;
           };
-          routes = [{
-            routeConfig = {
+          routes = [
+            {
               Gateway = "_dhcp4";
               InitialCongestionWindow = 100;
               InitialAdvertisedReceiveWindow = 100;
-            };
-          }];
+            }
+          ];
         };
         "11-wan2" = {
           matchConfig.MACAddress = "c8:1f:66:e6:7a:51";

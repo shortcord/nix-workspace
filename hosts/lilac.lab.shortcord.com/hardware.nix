@@ -45,16 +45,12 @@
         };
         routes = [
           {
-            routeConfig = {
-              Scope = "link";
-              Destination = "51.81.11.254";
-            };
+            Scope = "link";
+            Destination = "51.81.11.254";
           }
           {
-            routeConfig = {
-              Scope = "link";
-              Destination = "2604:2dc0:0100:1bff:00ff:00ff:00ff:00ff";
-            };
+            Scope = "link";
+            Destination = "2604:2dc0:0100:1bff:00ff:00ff:00ff:00ff";
           }
         ];
       };

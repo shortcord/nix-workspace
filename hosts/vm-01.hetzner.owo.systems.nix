@@ -42,12 +42,12 @@
           IPv6ProxyNDPAddress = builtins.map (ct: ct.localAddress6)
             (builtins.attrValues config.containers);
         };
-        routes = [{
-          routeConfig = {
+        routes = [
+          {
             Scope = "link";
             Destination = "172.31.1.1";
-          };
-        }];
+          }
+        ];
       };
     };
   };
