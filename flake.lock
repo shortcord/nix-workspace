@@ -274,11 +274,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1734967219,
-        "narHash": "sha256-Ij5k3vczdZDqkOMvWqr9PcJS3NZhiRjiCfqQu9gqdwo=",
+        "lastModified": 1735571904,
+        "narHash": "sha256-kB8xN7+huThuNmQ93SIx54//o34nG2o8g+n7rkzR7WM=",
         "ref": "main",
-        "rev": "3df65493b6a59110f7036c639170aa163cb78d02",
-        "revCount": 18,
+        "rev": "50f29e84ee9143e503c49285f8990c01f5ea671f",
+        "revCount": 19,
         "type": "git",
         "url": "https://gitlab.shortcord.com/shortcord/maustodon-flake.git"
       },
@@ -361,11 +361,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1734875076,
-        "narHash": "sha256-Pzyb+YNG5u3zP79zoi8HXYMs15Q5dfjDgwCdUI5B0nY=",
+        "lastModified": 1735531152,
+        "narHash": "sha256-As8I+ebItDKtboWgDXYZSIjGlKeqiLBvjxsQHUmAf1Q=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "1807c2b91223227ad5599d7067a61665c52d1295",
+        "rev": "3ffbbdbac0566a0977da3d2657b89cbcfe9a173b",
         "type": "github"
       },
       "original": {
