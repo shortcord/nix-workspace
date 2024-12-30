@@ -220,12 +220,11 @@
           imports = [ ./hosts/${name}.nix ];
         };
 
-        # Awaiting Migration
-        # "gitlab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
-        #   deployment.tags = [ "infra" "container" "gitlab" ];
-        #   deployment.targetHost = "2a01:4f8:c012:a734::10";
-        #   imports = [ ./containers/${name}.nix ];
-        # };
+        "gitlab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "infra" "container" "gitlab" ];
+          deployment.targetHost = "2a01:4f8:c012:a734::10";
+          imports = [ ./containers/${name}.nix ];
+        };
 
         # "miauws.life" = { name, nodes, pkgs, lib, config, ... }: {
         #   deployment.tags = [ "miauws" ];
