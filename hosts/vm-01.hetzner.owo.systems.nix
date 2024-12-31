@@ -159,5 +159,13 @@
     oci-containers.backend = "docker";
   };
 
-  users.users.short = { extraGroups = [ "wheel" "docker" ]; };
+  users.users = {
+    short = { extraGroups = [ "wheel" "docker" ]; };
+    theresnotime = {
+      isNormalUser = true;
+      openssh = {
+        authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEFHoL3e9jjUsOuqeFfyYIwPTrb/iVyJiOtDT3V4vHG6" ];
+      };
+    };
+  };
 }
