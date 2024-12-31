@@ -460,7 +460,7 @@
     };
     tailscale = {
       useRoutingFeatures = "both";
-      extraUpFlags = [ "--advertise-routes" "10.18.0.0/24,10.200.1.0/24,fd6a:f1f3:23f4:1::/64" ];
+      extraUpFlags = [ "--advertise-routes" "10.18.0.0/24,10.200.1.0/24,fd6a:f1f3:23f4:1::/64" "--accept-dns=false" ];
     };
     apcupsd = {
       enable = false;
@@ -512,6 +512,9 @@
         port = 53;
         address = [ "127.0.0.1" "::1" ];
       };
+      forwardZones = {
+          "short.ts.shortcord.com" = "100.100.100.100";
+        };
     };
     btrfs.autoScrub = {
       enable = true;
