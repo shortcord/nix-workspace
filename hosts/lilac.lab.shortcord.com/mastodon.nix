@@ -62,7 +62,7 @@
         createLocally = true;
         host = "/run/postgresql";
       };
-      package = pkgs.maustodon;
+      package = pkgs.catstodon;
     };
   };
 }
