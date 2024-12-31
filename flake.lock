@@ -274,11 +274,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1735571904,
-        "narHash": "sha256-kB8xN7+huThuNmQ93SIx54//o34nG2o8g+n7rkzR7WM=",
+        "lastModified": 1735625275,
+        "narHash": "sha256-/bb/JjIT4aAm3ucVusQsivW6IqYsCSQheHEiX6GMvXE=",
         "ref": "main",
-        "rev": "50f29e84ee9143e503c49285f8990c01f5ea671f",
-        "revCount": 19,
+        "rev": "1fd315e8bcf535290d5ee51772875cda10879fec",
+        "revCount": 20,
         "type": "git",
         "url": "https://gitlab.shortcord.com/shortcord/maustodon-flake.git"
       },
