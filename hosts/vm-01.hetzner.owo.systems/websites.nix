@@ -8,5 +8,6 @@
         ./websites/pterodactyl.nix
         ./websites/nextcloud.nix
         ./websites/speedtest.nix
+        ./websites/maus.gay.nix
     ];
 }
