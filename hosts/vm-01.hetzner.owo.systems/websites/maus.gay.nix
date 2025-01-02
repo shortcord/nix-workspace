@@ -1,5 +1,11 @@
 { pkgs, config, ... }:
 {
+  security.acme.certs = {
+    "maus.gay" = {
+      dnsProvider = null;
+    };
+  };
+
   services.nginx = {
     virtualHosts = {
       "maus.gay" = {
