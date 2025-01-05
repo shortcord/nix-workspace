@@ -187,10 +187,10 @@
           ];
         };
 
-        # "hydra.owo.solutions" = { name, nodes, pkgs, lib, config, ... }: {
-        #   deployment.tags = [ "infra" "hydra" ];
-        #   imports = [ ./hosts/${name}.nix ];
-        # };
+        "hydra.owo.solutions" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "infra" "hydra" ];
+          imports = [ ./hosts/${name}.nix ];
+        };
 
         "storage.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "infra" "storage" ];
@@ -208,10 +208,10 @@
           imports = [ ./hosts/${name}.nix ];
         };
 
-        # "gateway.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
-        #   deployment.tags = [ "infra" "lab" "gateway" ];
-        #   imports = [ ./hosts/${name}.nix ];
-        # };
+        "gateway.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "infra" "lab" "gateway" ];
+          imports = [ ./hosts/${name}.nix ];
+        };
 
         "lilac.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "infra" "lab" "mastodon" "lilac" ];
@@ -229,10 +229,10 @@
           imports = [ ./containers/${name}.nix ];
         };
 
-        # "miauws.life" = { name, nodes, pkgs, lib, config, ... }: {
-        #   deployment.tags = [ "miauws" ];
-        #   imports = [ ./hosts/${name}.nix ];
-        # };
+        "miauws.life" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "miauws" ];
+          imports = [ ./hosts/${name}.nix ];
+        };
 
         "keycloak.owo.solutions" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "keycloak" "auth" ];
