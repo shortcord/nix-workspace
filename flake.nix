@@ -34,25 +34,32 @@
     }:
     let
       inherit (nixpkgs) lib;
+      
+      overlays = [
+        pterodactyl-wings.overlays.default
+        shortcord-site.overlays.default
+        maustodon-flake.overlays.default
+        colmena.overlays.default
+        ragenix.overlays.default
+      ];
+
+      imports = [
+        ragenix.nixosModules.default
+        pterodactyl-wings.nixosModules.default
+        nixos-mailserver.nixosModules.default
+      ];
+
       scConfig = import ./config/default.nix;
       unstablePkgs = import nixpkgs-unstable {
         system = "x86_64-linux";
-        overlays = [
-          pterodactyl-wings.overlays.default
-          shortcord-site.overlays.default
-          maustodon-flake.overlays.default
-        ];
+        overlays = overlays;
       };
       colmenaConfiguration = {
         meta = {
           allowApplyAll = false;
           nixpkgs = import nixpkgs {
             system = "x86_64-linux";
-            overlays = [
-              pterodactyl-wings.overlays.default
-              shortcord-site.overlays.default
-              maustodon-flake.overlays.default
-            ];
+            overlays = overlays;
           };
           # Per node override of nixpkgs
           ## "hostname" = { nixpkgs import stanza }
@@ -131,11 +138,7 @@
             };
           };
 
-          imports = [
-            ragenix.nixosModules.default
-            pterodactyl-wings.nixosModules.default
-            nixos-mailserver.nixosModules.default
-          ];
+          imports = imports;
 
           security = {
             sudo = { wheelNeedsPassword = false; };
@@ -237,15 +240,6 @@
         };
       };
     in {
-      devShells = {
-        x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.mkShell {
-          buildInputs = [
-            nixpkgs.legacyPackages.x86_64-linux.colmena
-            nixpkgs.legacyPackages.x86_64-linux.vim
-          ] ++ [ ragenix.packages.x86_64-linux.default ];
-        };
-      };
-
       colmena = colmenaConfiguration;
 
       nixosConfigurations = lib.pipe colmenaConfiguration [
@@ -258,5 +252,18 @@
         }))
         builtins.listToAttrs
       ];
-    };
+    } // flake-utils.lib.eachDefaultSystem (system: 
+    let 
+      pkgs = import nixpkgs {
+        system = "${system}";
+        overlays = overlays;
+      };
+    in {
+      devShells.default = pkgs.mkShell {
+        buildInputs = [ 
+          pkgs.ragenix
+          pkgs.colmena
+        ];
+      };
+    });
 }
