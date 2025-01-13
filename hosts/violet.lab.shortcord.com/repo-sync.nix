@@ -2,7 +2,7 @@
 let
   webRoot = "/var/repo-mirrors";
   dlDirectory = "${webRoot}/archlinux";
-  upstream = "rsync://mirror.dal10.us.leaseweb.net/archlinux/";
+  upstream = "rsync://mirrors.edge.kernel.org/archlinux/";
 in {
   fileSystems = {
     "/var/repo-mirrors" = {
