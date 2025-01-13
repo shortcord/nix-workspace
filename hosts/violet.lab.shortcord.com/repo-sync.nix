@@ -24,8 +24,8 @@ in {
       "repo-sync-arch-process" = {
         wantedBy = [ "timers.target" ];
         timerConfig = {
-          OnActiveSec = "1w";
-          OnUnitActiveSec = "1w";
+          OnActiveSec = "1d";
+          OnUnitActiveSec = "1d";
           Unit = "repo-sync-arch-process.service";
         };
       };
