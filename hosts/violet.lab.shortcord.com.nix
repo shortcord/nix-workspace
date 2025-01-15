@@ -404,7 +404,7 @@
         client
         dev tun
         proto udp
-        remote 149.40.50.13 1198
+        remote 140.228.21.121 1198
         resolv-retry infinite
         nobind
         persist-key
