@@ -9,5 +9,6 @@
         ./websites/nextcloud.nix
         ./websites/speedtest.nix
         ./websites/maus.gay.nix
+        ./websites/jackett.nix
     ];
 }
