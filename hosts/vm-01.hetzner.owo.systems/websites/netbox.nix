@@ -28,6 +28,7 @@
     };
     netbox = {
       enable = true;
+      package = pkgs.netbox;
       listenAddress = "127.0.0.1";
       secretKeyFile = config.age.secrets.netboxSecretKey.path;
       extraConfig = ''
