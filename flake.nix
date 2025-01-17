@@ -27,10 +27,14 @@
         "git+https://gitlab.shortcord.com/shortcord/maustodon-flake.git?ref=main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixos-generators = {
+      url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { nixpkgs, nixpkgs-unstable, colmena, ragenix, flake-utils
-    , nixos-mailserver, pterodactyl-wings, shortcord-site, maustodon-flake, ...
+    , nixos-mailserver, pterodactyl-wings, shortcord-site, maustodon-flake, nixos-generators, ...
     }:
     let
       inherit (nixpkgs) lib;
@@ -47,6 +51,7 @@
         ragenix.nixosModules.default
         pterodactyl-wings.nixosModules.default
         nixos-mailserver.nixosModules.default
+        nixos-generators.nixosModules.all-formats
       ];
 
       scConfig = import ./config/default.nix;
@@ -239,8 +244,6 @@
           imports = [ ./hosts/${name}.nix ];
         };
       };
-    in {
-      colmena = colmenaConfiguration;
 
       nixosConfigurations = lib.pipe colmenaConfiguration [
         colmena.lib.makeHive
@@ -250,8 +253,20 @@
           name = node.config.networking.hostName;
           value = node;
         }))
+      ];
+
+      vmPackages = lib.pipe nixosConfigurations [
+        (builtins.filter (obj: obj.value.config.boot.isContainer))
+        (builtins.map (node: {
+          name = "vm-${node.value.config.networking.hostName}";
+          value = node.value.config.formats.proxmox;
+        }))
         builtins.listToAttrs
       ];
+    in {
+      colmena = colmenaConfiguration;
+      nixosConfigurations = builtins.listToAttrs nixosConfigurations;
+      vmPackages = vmPackages;
     } // flake-utils.lib.eachDefaultSystem (system: 
     let 
       pkgs = import nixpkgs {
@@ -265,5 +280,7 @@
           pkgs.colmena
         ];
       };
+    })// flake-utils.lib.eachSystem [ "x86_64-linux" ] (system: {
+      packages = vmPackages;
     });
 }

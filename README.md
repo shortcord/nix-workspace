@@ -1,13 +1,25 @@
 # Maus's NixOS definitions
 
 
-My deployment is handled via Colmena.
+My deployment is handled via Colmena and `nixos-upgrade.service` pulling from `main`.
 ```bash
+# Enter devshell
+nix develop
 # If building on Violet
-colmana apply --on @default --no-build-target
-# otherwise
 colmana apply --on @default
+# otherwise
+colmana apply --on @default --build-on-target
 ```
+
+## Building Proxmox VMAs
+
+[nixos-generators](https://github.com/nix-community/nixos-generators) is responsible for building the VMAs that Proxmox expects, currently it will generate packages with `vm-` prefix and hostname, for example `nix build .#vm-gitlab` will build the VMA for the Gitlab container and shit out a result file.
+
+This piggybacks on how I tell colmena to deploy only to physical hosts and not containers, however it means *any* container could be build as a VM. Maybe neat for migrations but not ideal right now.
+
+The major benefit of this is that all the defaults defined for the colmena hive propagate down to the built VM, meaning I can define a machine in nix, shit out a VMA, upload, and boot without having to even ssh into an install os. This makes building up a new machine painless.
+
+Eh it works, fuck it.
 
 ## Notes
 
@@ -17,23 +29,15 @@ colmana apply --on @default
 
 - Violet is kinda a shit-show, one day I'll either rebuild it and separate out the services into their own containers/VMs or I guess cry (Most likely cry).
 
-- Violet's network config is odd. There are two WANs, `eno1` is the default gateway while `enp68s0`'s metric makes it a second one. The reason behind this is
-    
-    A) Automatic failover of primary internet
-    
-    B) Torrenting
+- ~~Violet has the UPS monitoring on it, uh don't forget that, it will just power off if that cable is missing.~~ Disabled until I move the rack, again.
 
-    `enp68s0` is connected to my T-Mobile home internet gateway and sits behind a CNAT so have fun finding me.
+- ~~NS2's headscale instance is kind of a mess right now, using stable's config generation with unstable's package means duplicated settings and stuff. Currently it "works" but is really finicky, I should really just pull that out into it's own flake that does everything correctly.~~ Should be fine now with 24.11 (fingers crossed).
 
-    Sadly the primary internet doesn't support IPv6, so it's disabled on both interfaces, mainly so I don't have to fuck with route weights.
 
-- Violet has the UPS monitoring on it, uh don't forget that, it will just power off if that cable is missing.
-
-- NS2's headscale instance is kind of a mess right now, using stable's config generation with unstable's package means duplicated settings and stuff. Currently it "works" but is really finicky, I should really just pull that out into it's own flake that does everything correctly.
 ## TODOs
 
 [ ] Fix ACME on all hosts, make them use PDNS API.
 
-[ ] Fix the damned systemd-networkd-wait-online.service, god damn systemd.
+[x] Fix the damned systemd-networkd-wait-online.service, god damn systemd.
 
 [ ] At some point install a GPU in violet, or build up another computer to host Jellyfin and ollama.
