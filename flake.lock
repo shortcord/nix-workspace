@@ -188,11 +188,11 @@
         "systems": "systems_3"
       },
       "locked": {
-        "lastModified": 1701680307,
-        "narHash": "sha256-kAuep2h5ajznlPMD9rnQyffWG8EM/C73lejGofXvdM8=",
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "4022d587cbbfd70fe950c1e2083a02621806a725",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
         "type": "github"
       },
       "original": {
@@ -231,11 +231,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1701687253,
-        "narHash": "sha256-qJCMxIKWXonJODPF2oV7mCd0xu7VYVenTucrY0bizto=",
+        "lastModified": 1733668782,
+        "narHash": "sha256-tPsqU00FhgdFr0JiQUiBMgPVbl1jbPCY5gbFiJycL3I=",
         "owner": "nix-community",
         "repo": "gomod2nix",
-        "rev": "001bbfa22e2adeb87c34c6015e5694e88721cabe",
+        "rev": "514283ec89c39ad0079ff2f3b1437404e4cba608",
         "type": "github"
       },
       "original": {
@@ -420,11 +420,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1705617172,
-        "narHash": "sha256-QNOWRPJEP7p3Q/XfwLHmOFjuZA3NdmK0gGDs8Hc4ZYQ=",
+        "lastModified": 1736022709,
+        "narHash": "sha256-1c9gcXZVkZ3e2EvSRyiNU7xjCn41/EQLXye/LtM7oCg=",
         "ref": "master",
-        "rev": "002f8675de6cf2c23b662396a1fd87febb0e9d2e",
-        "revCount": 18,
+        "rev": "9fc8803beadb1497e1c3ec4e4d1f0efe007120cc",
+        "revCount": 20,
         "type": "git",
         "url": "https://gitlab.shortcord.com/shortcord/pterodactyl-wings-flake"
       },
