@@ -42,7 +42,10 @@ in {
       name = "writefreely";
     };
     admin.name = "short";
-    settings.app.single_user = true;
+    settings.app = {
+      single_user = true;
+      federation = true;
+    };
     settings.server = {
       static_parent_dir = "${static_assets}";
       port = 18080;
