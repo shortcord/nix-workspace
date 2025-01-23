@@ -4,6 +4,8 @@ let
   namespacedHost = "127.0.0.5";
   openWebUiConf = config.services.open-webui;
   domainName = "ai.mousetail.dev";
+
+  open-webui-pkg = pkgs.callpackage ./packages/open-webui {};
 in {
   security.acme = {
     # there has to be a better way :(
@@ -19,7 +21,7 @@ in {
   services = {
     open-webui = {
       enable = true;
-      package = pkgs.open-webui;
+      package = unstablePkgs.open-webui;
       host = namespacedHost;
       port = 8080;
       environment = {
