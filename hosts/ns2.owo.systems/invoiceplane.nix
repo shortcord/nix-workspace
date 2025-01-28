@@ -4,7 +4,7 @@ let
 in {
   age.secrets = {
     invoiceplane-dbpwd = {
-      file = ../secrets/${name}/invoiceplane-dbpwd.age;
+      file = ../../secrets/${name}/invoiceplane-dbpwd.age;
       owner = config.services.nginx.user;
       group = config.services.nginx.group;
     };
