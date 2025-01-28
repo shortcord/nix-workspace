@@ -8,6 +8,7 @@
     ./${name}/powerdns.nix
     ./${name}/headscale.nix
     ./${name}/jellyfin.nix
+    ./${name}/invoiceplane.nix
   ];
 
   age.secrets = {
