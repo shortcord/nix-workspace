@@ -18,6 +18,7 @@ in
   "ns2.owo.systems/wireguardPresharedKey.age".publicKeys = all;
   "ns2.owo.systems/powerdnsConfig.age".publicKeys = all;
   "ns2.owo.systems/mysqldExporterConfig.age".publicKeys = all;
+  "ns2.owo.systems/invoiceplane-dbpwd.age".publicKeys = all;
   
   # Secrets for storage.owo.systems
   "storage.owo.systems/minioSecret.age".publicKeys = all;

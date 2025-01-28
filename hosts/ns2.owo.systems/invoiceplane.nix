@@ -1,8 +1,14 @@
 { name, nodes, pkgs, lib, config, ... }:
 let
   host = "invoices.owo.solutions";
-  passwordFile = pkgs.writeText "invoiceplanePasswd" "password";
 in {
+  age.secrets = {
+    invoiceplane-dbpwd = {
+      file = ../secrets/${name}/invoiceplane-dbpwd.age;
+      owner = config.services.nginx.user;
+      group = config.services.nginx.group;
+    };
+  };
   services = {
     invoiceplane = {
       webserver = "nginx";
@@ -19,7 +25,7 @@ in {
         database = {
           host = "127.0.0.1";
           user = "invoiceplane";
-          passwordFile = passwordFile;
+          passwordFile = config.age.secrets.invoiceplane-dbpwd.path;
           name = "invoiceplane";
           createLocally = false;
         };
