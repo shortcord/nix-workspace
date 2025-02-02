@@ -18,7 +18,7 @@
   };
   services = {
     nextcloud = {
-      enable = true;
+      enable = false;
       https = true;
       package = pkgs.nextcloud30;
       hostName = "nextcloud.owo.solutions";
@@ -61,12 +61,12 @@
         };
       };
     };
-    nginx.virtualHosts."${config.services.nextcloud.hostName}" = {
-      kTLS = true;
-      http2 = true;
-      http3 = true;
-      forceSSL = true;
-      enableACME = true;
-    };
+    # nginx.virtualHosts."${config.services.nextcloud.hostName}" = {
+    #   kTLS = true;
+    #   http2 = true;
+    #   http3 = true;
+    #   forceSSL = true;
+    #   enableACME = true;
+    # };
   };
 }
