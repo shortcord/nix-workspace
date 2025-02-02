@@ -29,40 +29,43 @@ let
     '';
   };
 in {
-  services.writefreely = {
-    enable = true;
-    host = "blog.mousetail.dev";
-    acme.enable = true;
-    nginx = {
-      enable = false;
-      forceSSL = true;
-    };
-    database = {
-      type = "sqlite3";
-      name = "writefreely";
-    };
-    admin.name = "short";
-    settings.app = {
-      single_user = true;
-      federation = true;
-    };
-    settings.server = {
-      static_parent_dir = "${static_assets}";
-      port = 18080;
-    };
-  };
-  services.nginx.virtualHosts."${cfg.host}" = {
-    kTLS = true;
-    http2 = true;
-    http3 = true;
-    forceSSL = true;
-    enableACME = true;
-    locations = {
-      "/" = {
-        proxyPass = "http://127.0.0.1:18080";
+  systemd.services.writefreely.path = with pkgs; [ openssl ];
+  services = {
+    writefreely = {
+      enable = true;
+      host = "blog.mousetail.dev";
+      acme.enable = true;
+      nginx = {
+        enable = false;
+        forceSSL = true;
       };
-      "~ ^/(css|img|js|fonts)/" = {
-        root = "${static_assets}/static";
+      database = {
+        type = "sqlite3";
+        name = "writefreely";
+      };
+      admin.name = "short";
+      settings.app = {
+        single_user = true;
+        federation = true;
+      };
+      settings.server = {
+        static_parent_dir = "${static_assets}";
+        port = 18080;
+      };
+    };
+    nginx.virtualHosts."${cfg.host}" = {
+      kTLS = true;
+      http2 = true;
+      http3 = true;
+      forceSSL = true;
+      enableACME = true;
+      locations = {
+        "/" = {
+          proxyPass = "http://127.0.0.1:18080";
+        };
+        "~ ^/(css|img|js|fonts)/" = {
+          root = "${static_assets}/static";
+        };
       };
     };
   };
