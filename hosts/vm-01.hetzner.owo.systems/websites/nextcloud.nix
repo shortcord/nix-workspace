@@ -18,7 +18,7 @@
   };
   services = {
     nextcloud = {
-      enable = false;
+      enable = true;
       https = true;
       package = pkgs.nextcloud30;
       hostName = "nextcloud.owo.solutions";
