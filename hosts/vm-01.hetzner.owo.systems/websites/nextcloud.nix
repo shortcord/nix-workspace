@@ -61,12 +61,12 @@
         };
       };
     };
-    # nginx.virtualHosts."${config.services.nextcloud.hostName}" = {
-    #   kTLS = true;
-    #   http2 = true;
-    #   http3 = true;
-    #   forceSSL = true;
-    #   enableACME = true;
-    # };
+    nginx.virtualHosts."${config.services.nextcloud.hostName}" = {
+      kTLS = true;
+      http2 = true;
+      http3 = true;
+      forceSSL = true;
+      enableACME = true;
+    };
   };
 }
