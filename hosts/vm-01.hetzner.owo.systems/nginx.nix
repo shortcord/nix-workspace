@@ -2,6 +2,16 @@
   networking.firewall = lib.mkIf config.networking.firewall.enable {
     allowedTCPPorts = [ 80 443 ];
   };
+
+  security.acme.certs = {
+    "ip.mousetail.dev" = {
+      inheritDefaults = true;
+      dnsProvider = "pdns";
+      environmentFile = config.age.secrets.acmeCredentialsFile.path;
+      webroot = null;
+    };
+  };
+
   services.nginx = {
     package = pkgs.nginxQuic;
     enable = true;
