@@ -151,9 +151,10 @@
               acceptTerms = true;
               defaults = {
                 email = "short@shortcord.com";
-                dnsProvider = lib.mkForce "pdns";
-                environmentFile = lib.mkForce config.age.secrets.acmeCredentialsFile.path;
-                webroot = lib.mkForce null;
+                dnsProvider = "pdns";
+                environmentFile = config.age.secrets.acmeCredentialsFile.path;
+                webroot = null;
+                renewInterval = "weekly";
               };
             };
           };
@@ -256,17 +257,16 @@
       ];
 
       vmPackages = lib.pipe nixosConfigurations [
-        (builtins.filter (obj: obj.value.config.boot.isContainer))
+        (builtins.filter (obj: !obj.value.config.boot.isContainer))
         (builtins.map (node: {
           name = "vm-${node.value.config.networking.hostName}";
           value = node.value.config.formats.proxmox;
         }))
         builtins.listToAttrs
       ];
-    in {
+    in {      
       colmena = colmenaConfiguration;
       nixosConfigurations = builtins.listToAttrs nixosConfigurations;
-      vmPackages = vmPackages;
     } // flake-utils.lib.eachDefaultSystem (system: 
     let 
       pkgs = import nixpkgs {
@@ -280,7 +280,7 @@
           pkgs.colmena
         ];
       };
-    })// flake-utils.lib.eachSystem [ "x86_64-linux" ] (system: {
-      packages = vmPackages;
+    }) // flake-utils.lib.eachSystem [ "x86_64-linux" ] (system: {
+      packages.vm = vmPackages;
     });
 }
