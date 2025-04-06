@@ -1,7 +1,7 @@
 { name, nodes, pkgs, lib, config, ... }: {
   system.stateVersion = "23.11";
 
-  imports = [ ./general/dyndns.nix ];
+  imports = [ ./general/all.nix ];
 
   fileSystems = {
     "/" = {
