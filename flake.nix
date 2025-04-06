@@ -214,8 +214,8 @@
           imports = [ ./hosts/${name}.nix ];
         };
 
-        "gateway.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment.tags = [ "infra" "lab" "gateway" ];
+        "lavender.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "infra" "lab" ];
           imports = [ ./hosts/${name}.nix ];
         };
 
