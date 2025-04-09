@@ -15,7 +15,7 @@
     "/var/lib/minio/data" = {
       device = "/dev/disk/by-label/DATA";
       fsType = "xfs";
-      options = [ "noatime" "nodiratime" "rw" "defaults" ]
+      options = [ "noatime" "nodiratime" "rw" "defaults" ];
     };
   };
 
