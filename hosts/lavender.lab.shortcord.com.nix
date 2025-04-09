@@ -1,5 +1,5 @@
 { name, nodes, pkgs, lib, config, ... }: {
-  system.stateVersion = "23.11";
+  system.stateVersion = "24.11";
 
   imports = [ ./general/all.nix ];
 
