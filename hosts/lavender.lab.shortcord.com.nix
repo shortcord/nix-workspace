@@ -12,6 +12,11 @@
       device = "/dev/disk/by-label/NIXBOOT";
       fsType = "vfat";
     };
+    "/var/lib/minio/data" = {
+      device = "/dev/disk/by-label/DATA";
+      fsType = "xfs";
+      options = [ "noatime" "nodiratime" "rw" "defaults" ]
+    };
   };
 
   systemd = {
@@ -78,6 +83,12 @@
         port = 53;
         address = [ "127.0.0.1" "::1" ];
       };
+    };
+    minio = {
+      enable = true;
+      listenAddress = "127.0.0.1:9000";
+      consoleAddress = "127.0.0.1:9001";
+      region = "de-01";
     };
   };
 }
