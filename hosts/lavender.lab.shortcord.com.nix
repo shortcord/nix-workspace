@@ -91,5 +91,62 @@
       consoleAddress = "127.0.0.1:9001";
       region = "de-01";
     };
+    nginx = {
+      package = pkgs.nginxQuic;
+      enable = true;
+      recommendedTlsSettings = true;
+      recommendedZstdSettings = true;
+      recommendedOptimisation = true;
+      recommendedGzipSettings = true;
+      recommendedProxySettings = true;
+      recommendedBrotliSettings = true;
+      eventsConfig = ''
+        worker_connections 20000;
+      '';
+      virtualHosts = {
+        "admin.${config.networking.fqdn}" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+
+          extraConfig = ''
+            ignore_invalid_headers off;
+            client_max_body_size 0;
+            proxy_buffering off;
+            proxy_request_buffering off;
+            proxy_set_header X-NginX-Proxy true;
+            chunked_transfer_encoding off;
+          '';
+
+          locations."/" = {
+            proxyPass = "http://${config.services.minio.consoleAddress}";
+            proxyWebsockets = true;
+          };
+        };
+        "storage.${config.networking.fqdn}" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+
+          extraConfig = ''
+            ignore_invalid_headers off;
+            client_max_body_size 0;
+            proxy_buffering off;
+            proxy_request_buffering off;
+            proxy_set_header X-NginX-Proxy true;
+            chunked_transfer_encoding off;
+          '';
+
+          locations."/" = {
+            proxyPass = "http://${config.services.minio.consoleAddress}";
+            proxyWebsockets = true;
+          };
+        };
+      };
+    };
   };
 }
