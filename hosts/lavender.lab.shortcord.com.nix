@@ -22,6 +22,7 @@
   systemd = {
     network = {
       enable = true;
+      wait-online.anyInterface = true;
       networks = {
         "10-lan" = {
           matchConfig.MACAddress = "14:18:77:5b:a9:87";
