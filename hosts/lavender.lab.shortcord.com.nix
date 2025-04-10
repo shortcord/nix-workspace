@@ -142,7 +142,7 @@
           '';
 
           locations."/" = {
-            proxyPass = "http://${config.services.minio.consoleAddress}";
+            proxyPass = "http://${config.services.minio.listenAddress}";
             proxyWebsockets = true;
           };
         };
