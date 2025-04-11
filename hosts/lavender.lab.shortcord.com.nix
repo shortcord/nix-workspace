@@ -77,6 +77,24 @@
     };
   };
 
+  security.acme = {
+    # there has to be a better way :(
+    certs = {
+      "admin.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+      "storage.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+    };
+  };
+
   services = {
     pdns-recursor = {
       enable = true;
