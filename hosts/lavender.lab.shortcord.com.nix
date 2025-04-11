@@ -95,6 +95,10 @@
     };
   };
 
+  age.secrets = {
+    minioSecret.file = ../secrets/${name}/minioSecret.age;
+  };
+
   services = {
     pdns-recursor = {
       enable = true;
@@ -105,6 +109,7 @@
     };
     minio = {
       enable = true;
+      rootCredentialsFile = config.age.secrets.minioSecret.path;
       listenAddress = "127.0.0.1:9000";
       consoleAddress = "127.0.0.1:9001";
       region = "de-01";
