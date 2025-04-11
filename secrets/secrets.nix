@@ -66,4 +66,8 @@ in
 
   # Secrets for hydra.owo.solutions
   "hydra.owo.solutions/nix-serve.age".publicKeys = all;
+
+  # lavender.lab.shortcord.com
+  "lavender.lab.shortcord.com/minioSecret.age".publicKeys = all;
+
 }
