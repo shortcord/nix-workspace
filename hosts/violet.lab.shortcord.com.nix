@@ -476,7 +476,7 @@
       '';
     };
     pterodactyl.wings = {
-      enable = true;
+      enable = false;
       package = pkgs.pterodactyl-wings;
       openFirewall = true;
       allocatedTCPPorts = [ 6000 6001 6002 6003 6004 6005 ];
