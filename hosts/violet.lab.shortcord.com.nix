@@ -1,10 +1,10 @@
 { name, nodes, pkgs, lib, config, ... }: {
   age.secrets = {
-    wingsToken = {
-      file = ../secrets/${name}/wingsToken.age;
-      owner = config.services.pterodactyl.wings.user;
-      group = config.services.pterodactyl.wings.group;
-    };
+    # wingsToken = {
+    #   file = ../secrets/${name}/wingsToken.age;
+    #   owner = config.services.pterodactyl.wings.user;
+    #   group = config.services.pterodactyl.wings.group;
+    # };
     wg0-private-key = {
       file = ../secrets/${name}/wg0-private-key.age;
       owner = "systemd-network";
