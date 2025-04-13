@@ -291,7 +291,7 @@
       "qbittorrent-nox-4.6.4"
     ];
   };
-  environment.systemPackages = with pkgs; [ vim wget curl btrfs-progs git ];
+  environment.systemPackages = with pkgs; [ vim wget curl btrfs-progs git gcc ];
 
 
   security.acme = {
