@@ -73,7 +73,7 @@
     # "/nix" = {
     #   device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
     #   fsType = "btrfs";
-    #   options = [ "noatime" "degraded" "compress=zstd" "discard=async" "space_cache=v2" "subvolid=598" ];
+    #   options = [ "noatime" "degraded" "compress=zstd" "discard=async" "space_cache=v2" "subvolid=1140" ];
     # };
   };
 
@@ -291,7 +291,7 @@
       "qbittorrent-nox-4.6.4"
     ];
   };
-  environment.systemPackages = with pkgs; [ vim wget curl btrfs-progs git gcc ];
+  environment.systemPackages = with pkgs; [ vim wget curl btrfs-progs git ];
 
 
   security.acme = {
@@ -545,11 +545,6 @@
           locations."/" = { proxyPass = "http://127.0.0.2:5006"; };
         };
       };
-    };
-    distccd = {
-      enable = true;
-      stats.enable = true;
-      allowedClients = [ "100.64.0.0/16" ];
     };
   };
 
