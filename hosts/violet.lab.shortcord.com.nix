@@ -546,6 +546,11 @@
         };
       };
     };
+    distcc = {
+      enable = true;
+      stats.enable = true;
+      allowedClients = [ "100.64.0.0/16" ];
+    };
   };
 
   programs = {
