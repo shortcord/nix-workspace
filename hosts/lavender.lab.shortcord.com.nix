@@ -167,6 +167,10 @@
           locations."/" = {
             proxyPass = "http://${config.services.minio.listenAddress}";
             proxyWebsockets = true;
+            extraConfig = ''
+              proxy_connect_timeout 600;
+              chunked_transfer_encoding off;
+            '';
           };
         };
       };
