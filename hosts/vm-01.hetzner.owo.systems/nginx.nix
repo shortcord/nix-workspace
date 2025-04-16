@@ -23,7 +23,7 @@
     recommendedBrotliSettings = true;
     virtualHosts = {
       "ip.mousetail.dev" = {
-        serverAliases = [ "ipv4.mousetail.dev" "ipv6.mousetail.dev" "tailscale.mousetail.dev" ];
+        serverAliases = [ "ipv4.mousetail.dev" "ipv6.mousetail.dev" ];
         kTLS = true;
         http2 = true;
         http3 = true;
