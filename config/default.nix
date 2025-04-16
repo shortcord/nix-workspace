@@ -4,6 +4,7 @@
       short = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINaxLI7oCJcUxfjGXXgs9YI7DimlFbtWE+R22jDF6Zxl short@maus"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICqcmQeDrJdqJFCd25dJzW4YB298X98ls9v24LCjzne2 short@Mauss-MacBook-Pro.local"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPrDWhYX7ALenoIyMYh6MzYBGbbgSLSWbz9EfzEkxo0k short@dell-g3"
       ];
       deployment = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOzNDt0mA8dV9l5A/1tIgLVBf6ynUjjZN0Dckvs3kRIG deployment@gitlab.shortcord.com"
