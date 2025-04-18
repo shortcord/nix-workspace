@@ -31,6 +31,9 @@
         mysqld = {
           server_id = 2;
           bind_address = "0.0.0.0";
+          log_bin = true;
+          log_basename = "mysql_1";
+          binlog_format = "mixed";
         };
         mariadb = {
           ssl_cert = "${cfg.dataDir}/fullchain.pem";
