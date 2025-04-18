@@ -45,4 +45,26 @@
       };
     };
   };
+
+  virtualisation = {
+    docker = {
+      enable = true;
+      autoPrune = {
+        enable = true;
+        dates = "weekly";
+        flags = [ "--all" ];
+      };
+    };
+    oci-containers = {
+      backend = "docker";
+      containers = {
+        "maxscale" = {
+          autoStart = true;
+          image = "docker.io/mariadb/maxscale:latest";
+          volumes = [ "maxscale-config:/var/lib/maxscale/:rw" ];
+          ports = [ "3366:3366" ];
+        };
+      };
+    };
+  };
 }
