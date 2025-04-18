@@ -37,14 +37,10 @@
           ssl_ca = "/etc/ssl/certs/ca-bundle.crt";
         };
       };
-      replication = {
-        role = "master";
-        serverId = 2;
-        ## This information is only here to prevent the init script
-        # from erroring out during deployment 
-        masterUser = "replication_user";
-        masterPassword = "temppassword";
-        slaveHost = "10.7.210.2";
+      settings = {
+        mysqld = {
+          server_id = 2;
+        };
       };
     };
     powerdns = {
