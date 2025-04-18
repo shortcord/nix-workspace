@@ -67,6 +67,7 @@
       trustedInterfaces = [
         "wg1"
         config.services.tailscale.interfaceName
+        "docker0"
       ];
     };
   };
