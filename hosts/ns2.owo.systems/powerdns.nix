@@ -29,17 +29,13 @@
       settings = let cfg = config.services.mysql;
       in {
         mysqld = {
+          server_id = 2;
           bind_address = "0.0.0.0";
         };
         mariadb = {
           ssl_cert = "${cfg.dataDir}/fullchain.pem";
           ssl_key = "${cfg.dataDir}/key.pem";
           ssl_ca = "/etc/ssl/certs/ca-bundle.crt";
-        };
-      };
-      settings = {
-        mysqld = {
-          server_id = 2;
         };
       };
     };
