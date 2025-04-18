@@ -137,14 +137,15 @@
     mysql = {
       package = pkgs.mariadb;
       enable = true;
-      replication = {
-        role = "slave";
-        serverId = 3;
-        ## This information is only here to prevent the init script
-        # from erroring out during deployment 
-        masterHost = "10.7.210.1";
-        masterUser = "replication_user";
-        masterPassword = "temppassword";
+      settings = let cfg = config.services.mysql;
+      in {
+        mysqld = {
+          server_id = 3;
+          bind_address = "0.0.0.0";
+          log_bin = true;
+          log_basename = "mysql_1";
+          binlog_format = "mixed";
+        };
       };
     };
   };
