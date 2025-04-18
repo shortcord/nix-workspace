@@ -60,11 +60,14 @@
   networking = {
     useDHCP = false;
     firewall = {
-      enable = false;
+      enable = true;
       allowedUDPPorts = [ 53 ];
       allowedTCPPorts = [ 53 22 80 443 ];
       allowPing = true;
-      trustedInterfaces = [ "wg1" ];
+      trustedInterfaces = [
+        "wg1"
+        config.services.tailscale.interfaceName
+      ];
     };
   };
 
