@@ -44,7 +44,7 @@
       config = {
         dbtype = "mysql";
         dbpassFile = config.age.secrets.nextcloudDbPass.path;
-        dbhost = "ns2.short.ts.shortcord.com";
+        dbhost = "127.0.0.1:3366";
         defaultPhoneRegion = "US";
         trustedProxies = [ "127.0.0.1" ];
         adminpassFile = config.age.secrets.nextcloudAdminPass.path;

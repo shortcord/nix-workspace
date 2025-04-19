@@ -61,8 +61,8 @@
 
         launch=gmysql
 
-        gmysql-port=3306
-        gmysql-host=$SQL_HOST
+        gmysql-port=3366
+        gmysql-host=127.0.0.1
         gmysql-dbname=$SQL_DATABASE
         gmysql-user=$SQL_USER
         gmysql-password=$SQL_PASSWORD
