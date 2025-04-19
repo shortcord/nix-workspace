@@ -170,7 +170,6 @@
       };
     };
   };
-  };
 
   users.users = {
     short = { extraGroups = [ "wheel" "docker" ]; };
