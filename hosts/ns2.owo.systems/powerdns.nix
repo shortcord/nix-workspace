@@ -35,6 +35,7 @@
           log_basename = "mysql_1";
           binlog_format = "mixed";
           skip_name_resolve = true;
+          max_connect_errros = 4294967295;
         };
         mariadb = {
           ssl_cert = "${cfg.dataDir}/fullchain.pem";
