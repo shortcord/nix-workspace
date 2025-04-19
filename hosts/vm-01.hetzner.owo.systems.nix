@@ -60,6 +60,11 @@
       allowedUDPPorts = [ 51820 ];
       allowedTCPPorts = [ 22 ];
       allowPing = true;
+      trustedInterfaces = [
+        "wg0"
+        config.services.tailscale.interfaceName
+        "docker0"
+      ];
     };
     wireguard = {
       enable = true;
