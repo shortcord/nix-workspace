@@ -98,7 +98,7 @@
           # ref: https://github.com/NixOS/nixpkgs/issues/349734
           system.autoUpgrade = {
             enable = true;
-            flake = "git+https://github.com/shortcord/nix-workspace.git?ref=main";
+            flake = "git+https://gitlab.shortcord.com/shortcord/nix-workspace.git?ref=main";
             flags = [
               "--update-input"
               "nixpkgs"
