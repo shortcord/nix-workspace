@@ -1,19 +1,19 @@
 { name, nodes, pkgs, lib, config, ... }: {
   age.secrets.powerdnsConfig.file = ../../secrets/${name}/powerdnsConfig.age;
   security.acme.certs."ns2.owo.systems" = {
-    postRun = let
-      homeDir = config.services.mysql.dataDir;
-      sqlUser = config.services.mysql.dataDir;
-      sqlGroup = config.services.mysql.dataDir;
-      sqlPackage = config.services.mysql.package;
-    in ''
-      cp fullchain.pem "${homeDir}/"
-      cp key.pem "${homeDir}/"
-      chown ${sqlUser}:${sqlGroup} "${homeDir}/fullchain.pem"
-      chown ${sqlUser}:${sqlGroup} "${homeDir}/key.pem"
-      # Reload Mariadb
-      ${sqlPackage}/bin/mysql -Bse 'FLUSH SSL;'
-    '';
+    # postRun = let
+    #   homeDir = config.services.mysql.dataDir;
+    #   sqlUser = config.services.mysql.dataDir;
+    #   sqlGroup = config.services.mysql.dataDir;
+    #   sqlPackage = config.services.mysql.package;
+    # in ''
+    #   cp fullchain.pem "${homeDir}/"
+    #   cp key.pem "${homeDir}/"
+    #   chown ${sqlUser}:${sqlGroup} "${homeDir}/fullchain.pem"
+    #   chown ${sqlUser}:${sqlGroup} "${homeDir}/key.pem"
+    #   # Reload Mariadb
+    #   ${sqlPackage}/bin/mysql -Bse 'FLUSH SSL;'
+    # '';
   };
   services = {
     mysqlBackup = {
@@ -36,11 +36,6 @@
           binlog_format = "mixed";
           skip_name_resolve = true;
           max_connect_errors = 4294967295;
-        };
-        mariadb = {
-          ssl_cert = "${cfg.dataDir}/fullchain.pem";
-          ssl_key = "${cfg.dataDir}/key.pem";
-          ssl_ca = "/etc/ssl/certs/ca-bundle.crt";
         };
       };
     };
