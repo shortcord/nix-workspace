@@ -24,6 +24,7 @@
     ./${name}/repo-sync.nix
     ./${name}/komga.nix
     ./${name}/torrenting.nix
+    ./${name}/aureus.nix
   ];
 
   fileSystems = {
