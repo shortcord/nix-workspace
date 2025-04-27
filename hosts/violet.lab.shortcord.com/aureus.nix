@@ -35,10 +35,10 @@ in {
         enableACME = true;
 
         root = "${wwwRoot}/public";
-        index = "index.php";
 
         locations = {
             "/" = {
+                index = "index.php";
                 tryFiles = "$uri $uri/ /index.php?$query_string =404";
             };
             "/favicon.ico" = {
