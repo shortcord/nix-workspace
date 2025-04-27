@@ -39,7 +39,7 @@ in {
         locations = {
             "/" = {
                 index = "index.php";
-                tryFiles = "$uri $uri/ /index.php?$query_string =404";
+                tryFiles = "$uri $uri/ /index.php?$query_string";
             };
             "/favicon.ico" = {
                 extraConfig = ''
