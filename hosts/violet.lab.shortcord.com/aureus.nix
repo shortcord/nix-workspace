@@ -2,6 +2,16 @@
 let
   dlDirectory = "/var/www/aureus";
 in {
+  security.acme = {
+    certs = {
+      "erp.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
+    };
+  };
   services.phpfpm.pools."aureus" = {
     user = config.services.nginx.user;
     group = config.services.nginx.group;
