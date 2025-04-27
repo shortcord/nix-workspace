@@ -35,6 +35,7 @@ in {
         enableACME = true;
 
         root = "${wwwRoot}/public";
+        index = "index.php";
 
         locations = {
             "/" = {
