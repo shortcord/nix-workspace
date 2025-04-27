@@ -1,6 +1,6 @@
 { name, pkgs, lib, config, ... }:
 let
-  dlDirectory = "/var/www/aureus";
+  wwwRoot = "/var/www/aureus";
 in {
   security.acme = {
     certs = {
@@ -34,7 +34,7 @@ in {
         forceSSL = true;
         enableACME = true;
 
-        root = dlDirectory;
+        root = "${wwwRoot}/public";
 
         locations = {
             "/" = {
