@@ -1,4 +1,10 @@
 { name, pkgs, config, lib, ... }: {
+  security.acme.certs."qbittorrent.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
   fileSystems = {
     "/var/lib/qbittorrent" = {
       device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";

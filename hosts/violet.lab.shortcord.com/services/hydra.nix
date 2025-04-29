@@ -1,6 +1,20 @@
 { name, pkgs, config, lib, ... }: {
-  age.secrets.nix-serve.file = ../../secrets/${name}/nix-serve.age;
+  age.secrets.nix-serve.file = ../../../secrets/${name}/nix-serve.age;
   nix.settings.secret-key-files = [ config.age.secrets.nix-serve.path ];
+  security.acme.certs = {
+    "binarycache.${config.networking.fqdn}" = {
+      inheritDefaults = true;
+      dnsProvider = "pdns";
+      environmentFile = config.age.secrets.acmeCredentialsFile.path;
+      webroot = null;
+    };
+    "hydra.${config.networking.fqdn}" = {
+      inheritDefaults = true;
+      dnsProvider = "pdns";
+      environmentFile = config.age.secrets.acmeCredentialsFile.path;
+      webroot = null;
+    };
+  };
   services = {
     nginx = {
       virtualHosts = {
@@ -17,19 +31,20 @@
               }";
           };
         };
-        "hydra.${config.networking.fqdn}" = lib.mkIf config.services.hydra.enable {
-          kTLS = true;
-          http2 = true;
-          http3 = true;
-          forceSSL = true;
-          enableACME = true;
+        "hydra.${config.networking.fqdn}" =
+          lib.mkIf config.services.hydra.enable {
+            kTLS = true;
+            http2 = true;
+            http3 = true;
+            forceSSL = true;
+            enableACME = true;
 
-          locations."/" = {
-            proxyPass = "http://${config.services.hydra.listenHost}:${
-                toString config.services.hydra.port
-              }";
+            locations."/" = {
+              proxyPass = "http://${config.services.hydra.listenHost}:${
+                  toString config.services.hydra.port
+                }";
+            };
           };
-        };
       };
     };
     nix-serve = {
@@ -43,7 +58,7 @@
       listenHost = "localhost";
       hydraURL = "https://hydra.${config.networking.fqdn}";
       notificationSender = "hydra@${config.networking.fqdn}";
-      buildMachinesFiles = [];
+      buildMachinesFiles = [ ];
       useSubstitutes = false;
     };
   };

@@ -125,8 +125,14 @@ in {
     };
   };
   age.secrets.gallery-dl-config.file =
-    ../../secrets/${name}/gallery-dl-config.age;
+    ../../../secrets/${name}/gallery-dl-config.age;
   environment.etc."gallery-dl-pages.txt".source = pages;
+  security.acme.certs."filebrowser.${config.networking.fqdn}" = {
+    inheritDefaults = true;
+    dnsProvider = "pdns";
+    environmentFile = config.age.secrets.acmeCredentialsFile.path;
+    webroot = null;
+  };
   systemd = {
     timers = {
       "gallery-dl-process" = {

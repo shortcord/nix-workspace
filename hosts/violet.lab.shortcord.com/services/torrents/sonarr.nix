@@ -1,26 +1,32 @@
 { config, pkgs, ... }: {
+  security.acme.certs."sonarr.${config.networking.fqdn}" = {
+        inheritDefaults = true;
+        dnsProvider = "pdns";
+        environmentFile = config.age.secrets.acmeCredentialsFile.path;
+        webroot = null;
+      };
   services = {
-    radarr = { 
+    sonarr = {
       enable = true;
       group = "torrents";
     };
     nginx = {
       virtualHosts = {
-        "radarr.${config.networking.fqdn}" = {
+        "sonarr.${config.networking.fqdn}" = {
           kTLS = true;
           http2 = true;
           http3 = true;
           forceSSL = true;
           enableACME = true;
           locations."/" = {
-            proxyPass = "http://127.0.0.1:7878";
+            proxyPass = "http://127.0.0.1:8989";
             proxyWebsockets = true;
           };
         };
       };
     };
   };
-  systemd.services.radarr = {
+  systemd.services.sonarr = {
     serviceConfig = {
       UMask = "0013";
     };

@@ -1,4 +1,10 @@
 { pkgs, config, ... }: {
+  security.acme.certs."komga.${config.networking.fqdn}" = {
+    inheritDefaults = true;
+    dnsProvider = "pdns";
+    environmentFile = config.age.secrets.acmeCredentialsFile.path;
+    webroot = null;
+  };
   virtualisation = {
     oci-containers = {
       containers = {
@@ -6,10 +12,7 @@
           user = "1000:100";
           autoStart = true;
           image = "docker.io/gotson/komga:1.5.1";
-          volumes = [
-            "komga-config:/config:rw"
-            "/var/lib/komga:/data:rw"
-          ];
+          volumes = [ "komga-config:/config:rw" "/var/lib/komga:/data:rw" ];
           ports = [ "127.0.0.2:25600:25600" ];
         };
       };
@@ -24,10 +27,7 @@
           http3 = true;
           forceSSL = true;
           enableACME = true;
-          locations."/" = {
-            proxyPass =
-              "http://127.0.0.2:25600";
-          };
+          locations."/" = { proxyPass = "http://127.0.0.2:25600"; };
         };
       };
     };

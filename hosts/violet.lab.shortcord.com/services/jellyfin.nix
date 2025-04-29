@@ -13,6 +13,13 @@
       ];
     };
   };
+  security.acme.certs."jellyfin.shortcord.com" = {
+    extraDomainNames = [ "jellyfin.short.ts.shortcord.com" ];
+    inheritDefaults = true;
+    dnsProvider = "pdns";
+    environmentFile = config.age.secrets.acmeCredentialsFile.path;
+    webroot = null;
+  };
   networking.firewall = { allowedUDPPorts = [ 1900 7359 ]; };
   services = {
     jellyfin = {

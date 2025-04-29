@@ -1,4 +1,18 @@
 { pkgs, config, ... }: {
+  security.acme.certs = {
+    "ipfs.${config.networking.fqdn}" = {
+      inheritDefaults = true;
+      dnsProvider = "pdns";
+      environmentFile = config.age.secrets.acmeCredentialsFile.path;
+      webroot = null;
+    };
+    "ipns.${config.networking.fqdn}" = {
+      inheritDefaults = true;
+      dnsProvider = "pdns";
+      environmentFile = config.age.secrets.acmeCredentialsFile.path;
+      webroot = null;
+    };
+  };
   fileSystems = {
     "/var/lib/ipfs" = {
       device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
@@ -59,15 +73,13 @@
           "/ip4/104.131.131.82/udp/4001/quic/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ"
         ];
         Peering = {
-          Peers = [
-            {
-              Addrs = [ 
-                "/dns4/ipfs-01.owo.systems/tcp/4001"
-                "/dns6/ipfs-01.owo.systems/tcp/4001"
-              ];
-              ID = "12D3KooWNGmh5EBpPBXGGcFnrMtBW6u9Z61HgyHAobjo2ANhq1kL";
-            }
-          ];
+          Peers = [{
+            Addrs = [
+              "/dns4/ipfs-01.owo.systems/tcp/4001"
+              "/dns6/ipfs-01.owo.systems/tcp/4001"
+            ];
+            ID = "12D3KooWNGmh5EBpPBXGGcFnrMtBW6u9Z61HgyHAobjo2ANhq1kL";
+          }];
         };
         Datastore = { StorageMax = "1000GB"; };
         Addresses = {

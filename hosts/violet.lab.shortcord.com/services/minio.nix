@@ -13,7 +13,7 @@
       ];
     };
   };
-  age.secrets.minioSecret.file = ../../secrets/${name}/minioSecret.age;
+  age.secrets.minioSecret.file = ../../../secrets/${name}/minioSecret.age;
   services = {
     nginx = {
       virtualHosts = {
