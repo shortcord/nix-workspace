@@ -4,6 +4,7 @@
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     colmena.url = "github:zhaofengli/colmena/release-0.4.x";
     flake-utils.url = "github:numtide/flake-utils";
+    nixfmt.url = "github:serokell/nixfmt";
     ragenix = {
       url = "github:yaxitech/ragenix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -34,11 +35,11 @@
   };
 
   outputs = { nixpkgs, nixpkgs-unstable, colmena, ragenix, flake-utils
-    , nixos-mailserver, pterodactyl-wings, shortcord-site, maustodon-flake, nixos-generators, ...
-    }:
+    , nixos-mailserver, pterodactyl-wings, shortcord-site, maustodon-flake
+    , nixos-generators, nixfmt, ... }:
     let
       inherit (nixpkgs) lib;
-      
+
       overlays = [
         pterodactyl-wings.overlays.default
         shortcord-site.overlays.default
@@ -98,7 +99,8 @@
           # ref: https://github.com/NixOS/nixpkgs/issues/349734
           system.autoUpgrade = {
             enable = true;
-            flake = "git+https://gitlab.shortcord.com/shortcord/nix-workspace.git?ref=main";
+            flake =
+              "git+https://gitlab.shortcord.com/shortcord/nix-workspace.git?ref=main";
             flags = [
               "--update-input"
               "nixpkgs"
@@ -115,7 +117,10 @@
 
           # nix-shell uses flake version
           environment.etc.nixpkgs.source = pkgs.path;
-          nix.registry.nixpkgs.to = { path = pkgs.path; type = "path"; };
+          nix.registry.nixpkgs.to = {
+            path = pkgs.path;
+            type = "path";
+          };
           nix.nixPath = [ "nixpkgs=flake:nixpkgs" ];
 
           # Set hostname and domain to node name in flake by default
@@ -128,9 +133,7 @@
             settings = {
               experimental-features = [ "nix-command" "flakes" ];
               auto-optimise-store = true;
-              substituters = [
-                "https://cache.nixos.org"
-              ];
+              substituters = [ "https://cache.nixos.org" ];
               trusted-public-keys = [
                 "binarycache.violet.lab.shortcord.com:Bq1Q/51gHInHj8dMKoaCI5lHM8XnwASajahLe1KjCdQ="
                 "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
@@ -214,10 +217,11 @@
           imports = [ ./hosts/${name}.nix ];
         };
 
-        "lavender.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment.tags = [ "infra" "lab" ];
-          imports = [ ./hosts/${name}.nix ];
-        };
+        "lavender.lab.shortcord.com" =
+          { name, nodes, pkgs, lib, config, ... }: {
+            deployment.tags = [ "infra" "lab" ];
+            imports = [ ./hosts/${name}.nix ];
+          };
 
         "lilac.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "infra" "lab" "mastodon" "lilac" ];
@@ -264,23 +268,19 @@
         }))
         builtins.listToAttrs
       ];
-    in {      
+    in {
       colmena = colmenaConfiguration;
       nixosConfigurations = builtins.listToAttrs nixosConfigurations;
-    } // flake-utils.lib.eachDefaultSystem (system: 
-    let 
-      pkgs = import nixpkgs {
-        system = "${system}";
-        overlays = overlays;
-      };
-    in {
-      devShells.default = pkgs.mkShell {
-        buildInputs = [ 
-          pkgs.ragenix
-          pkgs.colmena
-        ];
-      };
-    }) // flake-utils.lib.eachSystem [ "x86_64-linux" ] (system: {
-      packages.vm = vmPackages;
-    });
+    } // flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = import nixpkgs {
+          system = "${system}";
+          overlays = overlays;
+        };
+      in {
+        devShells.default = pkgs.mkShell {
+          buildInputs = [ pkgs.ragenix pkgs.colmena pkgs.nixfmt ];
+        };
+      }) // flake-utils.lib.eachSystem [ "x86_64-linux" ]
+    (system: { packages.vm = vmPackages; });
 }
