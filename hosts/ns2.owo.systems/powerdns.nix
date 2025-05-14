@@ -36,7 +36,8 @@
           binlog_format = "mixed";
           skip_name_resolve = true;
           max_connect_errors = 4294967295;
-          proxy_protocol_networks="172.18.0.0/16,100.64.0.0/16";
+          proxy_protocol_networks = "172.18.0.0/16,100.64.0.0/16";
+          gtid_strict_mode = true;
         };
       };
     };
