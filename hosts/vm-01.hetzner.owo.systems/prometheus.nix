@@ -21,6 +21,7 @@ let
     "svc.rocky.shinx.dev:9100"
     "feta.short.ts.shortcord.com:9100"
     "lilac.short.ts.shortcord.com:9100"
+    "lavender.lab.shortcord.com:9100"
   ];
   powerdnsExporterTargets =
     [ "powerdns.vm-01.hetzner.owo.systems:443" "powerdns.ns2.owo.systems:443" ];
