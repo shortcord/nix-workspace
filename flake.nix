@@ -87,7 +87,7 @@
           age.secrets = {
             distributedUserSSHKey.file =
               ./secrets/general/distributedUserSSHKey.age;
-            acmeCredentialsFile = {
+            acmeCredentialsFile = lib.mkIf config.services.nginx.enable {
               file = ./secrets/general/acmeCredentialsFile.age;
               owner = "acme";
               group = "acme";
