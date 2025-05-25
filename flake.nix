@@ -250,7 +250,10 @@
         };
 
         "gateway.home.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment.tags = [ "lab" ];
+          deployment = {
+            tags = [ "lab" ];
+            targetHost = "gateway.short.ts.shortcord.com";
+          };
           imports = [ ./hosts/${name}.nix ];
         };
       };
