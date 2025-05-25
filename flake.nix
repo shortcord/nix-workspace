@@ -248,6 +248,11 @@
           deployment.tags = [ "keycloak" "auth" ];
           imports = [ ./hosts/${name}.nix ];
         };
+
+        "gateway.home.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "lab" ];
+          imports = [ ./hosts/${name}.nix ];
+        };
       };
 
       nixosConfigurations = lib.pipe colmenaConfiguration [
