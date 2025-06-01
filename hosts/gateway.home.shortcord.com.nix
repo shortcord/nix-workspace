@@ -44,7 +44,11 @@
       };
       "20-vnet" = {
         matchConfig.MACAddress = "BC:24:11:D9:22:F1";
-        networkConfig.address = [ "10.0.16.1/24" "fd97:8cb1:d65e::/64" ];
+        networkConfig = {
+          DHCP = "no";
+          DNS = "127.0.0.1";
+          Address = [ "10.0.16.1/24" "fd97:8cb1:d65e::/64" ];
+        };
       };
     };
   };
