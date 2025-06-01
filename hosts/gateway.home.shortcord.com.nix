@@ -42,6 +42,10 @@
           DNS = "127.0.0.1";
         };
       };
+      "20-vnet" = {
+        matchConfig.MACAddress = "BC:24:11:D9:22:F1";
+        networkConfig.addresses = [ "10.0.16.1/24" "fd97:8cb1:d65e::/64" ];
+      };
     };
   };
 
@@ -64,6 +68,9 @@
         port = 53;
         address = [ "127.0.0.1" "::1" ];
       };
+    };
+    tailscale = {
+      extraUpFlags = [ "--login-server" "https://headscale.ns2.owo.systems" "--accept-routes" "--accept-dns" "--reset" "--advertise-routes=10.0.16.0/24" ];
     };
   };
 }
