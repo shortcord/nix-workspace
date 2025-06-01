@@ -66,6 +66,12 @@
       allowedTCPPorts = [ 22 ];
       allowPing = true;
     };
+    nat = {
+      enable = true;
+      enableIPv6 = false;
+      externalInterface = "ens18";
+      internalInterfaces = [ "ens19" ];
+    };
   };
 
   services = {
