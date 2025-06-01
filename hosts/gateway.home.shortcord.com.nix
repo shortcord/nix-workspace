@@ -19,6 +19,10 @@
       configurationLimit = 2;
     };
     growPartition = true;
+    kernel.sysctl = {
+      "net.ipv4.conf.all.forwarding" = 1;
+      "net.ipv6.conf.all.forwarding" = 1;
+    };
   };
 
   fileSystems = {
