@@ -129,6 +129,8 @@
           networking.domain = lib.mkDefault (builtins.concatStringsSep "."
             (builtins.tail (lib.splitString "." name)));
 
+          systemd.network.wait-online.anyInterface = config.networking.useNetworkd;
+
           nix = {
             settings = {
               experimental-features = [ "nix-command" "flakes" ];
