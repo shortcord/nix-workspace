@@ -7,6 +7,34 @@
     ./general/all.nix
   ];
 
+  fileSystems = {
+    "/" = {
+      device = "/dev/disk/by-label/nixos";
+      fsType = "ext4";
+    };
+    "/boot" = {
+      device = "/dev/disk/by-label/ESP";
+      fsType = "vfat";
+    };
+  };
+
+  swapDevices = [ ];
+  zramSwap.enable = true;
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  hardware.enableRedistributableFirmware = true;
+  boot = {
+    kernelPackages = pkgs.linuxKernel.packages.linux_6_1;
+    loader.systemd-boot = {
+      enable = true;
+      configurationLimit = 2;
+    };
+    growPartition = true;
+    kernel.sysctl = {
+      "net.ipv4.conf.all.forwarding" = 1;
+      "net.ipv6.conf.all.forwarding" = 1;
+    };
+  };
+
   systemd.network = {
     enable = true;
     wait-online.anyInterface = true;
