@@ -87,12 +87,14 @@
           age.secrets = {
             distributedUserSSHKey.file =
               ./secrets/general/distributedUserSSHKey.age;
+            pia-userpass.file = ./secrets/general/pia.age;
+
+            # Ensure that the PDNS creds are installed if nginx is enabled
             acmeCredentialsFile = lib.mkIf config.services.nginx.enable {
               file = ./secrets/general/acmeCredentialsFile.age;
               owner = "acme";
               group = "acme";
             };
-            pia-userpass.file = ./secrets/general/pia.age;
           };
 
           ## TODO: await for a patch to remove --update-input
@@ -124,11 +126,10 @@
           nix.nixPath = [ "nixpkgs=flake:nixpkgs" ];
 
           # Set hostname and domain to node name in flake by default
-          networking.hostName =
-            lib.mkDefault (builtins.head (lib.splitString "." name));
-          networking.domain = lib.mkDefault (builtins.concatStringsSep "."
-            (builtins.tail (lib.splitString "." name)));
+          networking.hostName = lib.mkDefault (builtins.head (lib.splitString "." name));
+          networking.domain = lib.mkDefault (builtins.concatStringsSep "." (builtins.tail (lib.splitString "." name)));
 
+          # Stupid
           systemd.network.wait-online.anyInterface = config.networking.useNetworkd;
 
           nix = {
@@ -156,9 +157,9 @@
               acceptTerms = true;
               defaults = {
                 email = "short@shortcord.com";
-                dnsProvider = "pdns";
+                dnsProvider = lib.mkForce "pdns";
                 environmentFile = config.age.secrets.acmeCredentialsFile.path;
-                webroot = null;
+                webroot = lib.mkForce null;
                 renewInterval = "weekly";
               };
             };
@@ -219,8 +220,7 @@
           imports = [ ./hosts/${name}.nix ];
         };
 
-        "lavender.lab.shortcord.com" =
-          { name, nodes, pkgs, lib, config, ... }: {
+        "lavender.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
             deployment.tags = [ "infra" "lab" ];
             imports = [ ./hosts/${name}.nix ];
           };
@@ -258,6 +258,14 @@
           };
           imports = [ ./hosts/${name}.nix ];
         };
+
+        "mousetail.dev" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment = {
+            tags = [ "infra" "mousetail" ];
+            targetHost = "mousetail.short.ts.shortcord.com";
+          };
+          imports = [ ./hosts/${name}.nix ];
+        };
       };
 
       nixosConfigurations = lib.pipe colmenaConfiguration [
@@ -273,8 +281,8 @@
       vmPackages = lib.pipe nixosConfigurations [
         (builtins.filter (obj: !obj.value.config.boot.isContainer))
         (builtins.map (node: {
-          name = "vm-${node.value.config.networking.hostName}";
-          value = node.value.config.formats.proxmox;
+          name = "${node.value.config.networking.hostName}";
+          value = node.value.config.formats.raw-efi;
         }))
         builtins.listToAttrs
       ];

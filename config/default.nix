@@ -20,6 +20,7 @@
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGQk+htjVN1ywCnUXY3LeiyNOV6bbp3KKXbSCKQx7mHV hydra.owo.solutions"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAJJkiqaqs67EEzd73X9RQu6vvya64EgtDQBGf4vQ5LN lavender.lab.shortcord.com"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICcXYPR1tmuJVoFlW1Ngq7Ixq8/R2SLZXUlcs3We/cKm gateway.home.shortcord.com"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFPQSzylwtqdsC6+c62Bldqy+uc4HVUJLbN5qYsPM80m mousetail.short.ts.shortcord.com"
       ];
     };
   };
