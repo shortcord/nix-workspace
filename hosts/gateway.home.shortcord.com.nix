@@ -19,10 +19,6 @@
       configurationLimit = 2;
     };
     growPartition = true;
-    kernel.sysctl = {
-      "net.ipv4.conf.all.forwarding" = 1;
-      "net.ipv6.conf.all.forwarding" = 1;
-    };
   };
 
   fileSystems = {
@@ -52,6 +48,9 @@
           DHCP = "no";
           DNS = "127.0.0.1";
           Address = [ "10.0.16.1/24" "fd97:8cb1:d65e::/64" ];
+          IPv4Forwarding = "yes";
+          IPv6Forwarding = "yes";
+          IPMasquerade = "yes";
         };
       };
     };
@@ -68,7 +67,7 @@
     };
     nat = {
       enable = true;
-      enableIPv6 = false;
+      enableIPv6 = true;
       externalInterface = "ens18";
       internalInterfaces = [ "ens19" ];
     };
@@ -80,7 +79,11 @@
       enable = true;
       dns = {
         port = 53;
-        address = [ "127.0.0.1" "::1" ];
+        address = [ 
+          "127.0.0.1"
+          "::1"
+          "10.0.16.1"
+        ];
       };
     };
     tailscale = {
