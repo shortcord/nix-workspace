@@ -1,4 +1,4 @@
-{ name, nodes, pkgs, lib, config, ... }: {
+{ name, nodes, pkgs, lib, config, modulesPath, ... }: {
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
     (modulesPath + "/virtualisation/qemu-guest-agent.nix")

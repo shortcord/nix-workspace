@@ -4,29 +4,11 @@
     ./${name}/hardware/default.nix
   ];
 
-  age.secrets = {
-    mysqldExporterConfig = {
-      file = ../secrets/${name}/mysqldExporterConfig.age;
-      owner = "prometheus";
-      group = "prometheus";
-    };
-    acmeCredentialsFile = {
-      file = ../secrets/general/acmeCredentialsFile.age;
-      owner = "acme";
-      group = "acme";
-    };
-  };
-
   services = {
     tailscale = { useRoutingFeatures = "both"; };
     prometheus = {
       enable = true;
       exporters = {
-        mysqld = {
-          enable = true;
-          openFirewall = true;
-          configFile = config.age.secrets.mysqldExporterConfig.path;
-        };
         node = {
           enable = true;
           openFirewall = true;
