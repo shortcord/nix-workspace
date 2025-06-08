@@ -267,7 +267,7 @@
           imports = [ ./hosts/${name}.nix ];
         };
 
-        "mousetail.dev" = { name, nodes, pkgs, lib, config, ... }: {
+        "ns3.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
           deployment = {
             tags = [ "infra" "ns3" ];
             targetHost = "ns3.short.ts.shortcord.com";
