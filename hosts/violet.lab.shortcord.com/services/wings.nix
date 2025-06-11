@@ -1,4 +1,4 @@
-{ pkgs, config, ... }: {
+{ pkgs, config, name, ... }: {
   age.secrets = {
     wingsToken = {
       file = ../../../secrets/${name}/wingsToken.age;

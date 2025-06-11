@@ -11,5 +11,6 @@
     ./komga.nix
     ./nginx.nix
     ./ipfs.nix
+    ./wings.nix
   ];
 }
