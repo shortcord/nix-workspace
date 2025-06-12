@@ -130,7 +130,7 @@
           networking.domain = lib.mkDefault (builtins.concatStringsSep "." (builtins.tail (lib.splitString "." name)));
 
           # Stupid
-          systemd.network.wait-online.anyInterface = config.networking.useNetworkd;
+          systemd.network.wait-online.anyInterface = lib.mkForce config.networking.useNetworkd;
 
           nix = {
             settings = {
