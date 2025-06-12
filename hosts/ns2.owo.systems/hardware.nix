@@ -59,6 +59,18 @@
 
   networking = {
     useDHCP = false;
+    nat.forwardPorts = [
+      {
+        proto = "tcp";
+        sourcePort = "6000:6005";
+        destination = "100.64.0.4:6000-6005";
+      }
+      {
+        proto = "udo";
+        sourcePort = "6000:6005";
+        destination = "100.64.0.4:6000-6005";
+      }
+    ];
     firewall = {
       enable = true;
       allowedUDPPorts = [ 53 ];
