@@ -18,7 +18,6 @@
   nixpkgs.hostPlatform = "x86_64-linux";
   hardware.enableRedistributableFirmware = false;
 
-
   boot = {
     growPartition = true;
     kernelModules = [ ];
@@ -59,18 +58,23 @@
 
   networking = {
     useDHCP = false;
-    nat.forwardPorts = [
-      {
-        proto = "tcp";
-        sourcePort = "6000:6005";
-        destination = "100.64.0.4:6000-6005";
-      }
-      {
-        proto = "udp";
-        sourcePort = "6000:6005";
-        destination = "100.64.0.4:6000-6005";
-      }
-    ];
+    nat = {
+      enable = true;
+      externalInterface = "ens3";
+      internalIPs = [ "100.64.0.0/24" ];
+      forwardPorts = [
+        {
+          proto = "tcp";
+          sourcePort = "6000:6005";
+          destination = "100.64.0.4:6000-6005";
+        }
+        {
+          proto = "udp";
+          sourcePort = "6000:6005";
+          destination = "100.64.0.4:6000-6005";
+        }
+      ];
+    }
     firewall = {
       enable = true;
       allowedUDPPorts = [ 53 6000 6001 6002 6003 6004 6005 ];
