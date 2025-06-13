@@ -74,7 +74,7 @@
           destination = "100.64.0.4:6000-6005";
         }
       ];
-    }
+    };
     firewall = {
       enable = true;
       allowedUDPPorts = [ 53 6000 6001 6002 6003 6004 6005 ];
