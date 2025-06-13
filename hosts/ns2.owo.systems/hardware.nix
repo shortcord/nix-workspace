@@ -66,15 +66,15 @@
         destination = "100.64.0.4:6000-6005";
       }
       {
-        proto = "udo";
+        proto = "udp";
         sourcePort = "6000:6005";
         destination = "100.64.0.4:6000-6005";
       }
     ];
     firewall = {
       enable = true;
-      allowedUDPPorts = [ 53 ];
-      allowedTCPPorts = [ 53 22 80 443 ];
+      allowedUDPPorts = [ 53 6000 6001 6002 6003 6004 6005 ];
+      allowedTCPPorts = [ 53 22 80 443 6000 6001 6002 6003 6004 6005 ];
       allowPing = true;
       trustedInterfaces = [
         "wg1"
