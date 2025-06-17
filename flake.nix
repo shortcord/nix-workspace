@@ -126,11 +126,14 @@
           nix.nixPath = [ "nixpkgs=flake:nixpkgs" ];
 
           # Set hostname and domain to node name in flake by default
-          networking.hostName = lib.mkDefault (builtins.head (lib.splitString "." name));
-          networking.domain = lib.mkDefault (builtins.concatStringsSep "." (builtins.tail (lib.splitString "." name)));
+          networking.hostName =
+            lib.mkDefault (builtins.head (lib.splitString "." name));
+          networking.domain = lib.mkDefault (builtins.concatStringsSep "."
+            (builtins.tail (lib.splitString "." name)));
 
           # Stupid
-          systemd.network.wait-online.anyInterface = lib.mkForce (!config.networking.useNetworkd);
+          systemd.network.wait-online.anyInterface =
+            lib.mkForce (!config.networking.useNetworkd);
 
           nix = {
             settings = {
@@ -220,7 +223,8 @@
           imports = [ ./hosts/${name}.nix ];
         };
 
-        "lavender.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+        "lavender.lab.shortcord.com" =
+          { name, nodes, pkgs, lib, config, ... }: {
             deployment.tags = [ "infra" "lab" ];
             imports = [ ./hosts/${name}.nix ];
           };
@@ -251,7 +255,8 @@
           imports = [ ./hosts/${name}.nix ];
         };
 
-        "gateway.home.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+        "gateway.home.shortcord.com" =
+          { name, nodes, pkgs, lib, config, ... }: {
           deployment = {
             tags = [ "lab" ];
             targetHost = "gateway.short.ts.shortcord.com";
