@@ -58,27 +58,10 @@
 
   networking = {
     useDHCP = false;
-    nat = {
-      enable = true;
-      externalInterface = "ens3";
-      internalIPs = [ "100.64.0.0/24" ];
-      forwardPorts = [
-        {
-          proto = "tcp";
-          sourcePort = "6000:6005";
-          destination = "100.64.0.4:6000-6005";
-        }
-        {
-          proto = "udp";
-          sourcePort = "6000:6005";
-          destination = "100.64.0.4:6000-6005";
-        }
-      ];
-    };
     firewall = {
       enable = true;
-      allowedUDPPorts = [ 53 6000 6001 6002 6003 6004 6005 ];
-      allowedTCPPorts = [ 53 22 80 443 6000 6001 6002 6003 6004 6005 ];
+      allowedUDPPorts = [ 53 ];
+      allowedTCPPorts = [ 53 22 80 443 ];
       allowPing = true;
       trustedInterfaces = [
         "wg1"
