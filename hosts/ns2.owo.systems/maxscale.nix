@@ -1,4 +1,4 @@
-{ }: {
+{ name, nodes, pkgs, lib, config, ...  }: {
   virtualisation.oci-containers.containers = {
     "maxscale" = {
       autoStart = true;
