@@ -132,8 +132,7 @@
             (builtins.tail (lib.splitString "." name)));
 
           # Stupid
-          systemd.network.wait-online.anyInterface =
-            lib.mkForce (!config.networking.useNetworkd);
+          systemd.network.wait-online.anyInterface = true;
 
           nix = {
             settings = {
