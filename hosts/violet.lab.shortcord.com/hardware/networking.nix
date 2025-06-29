@@ -134,7 +134,7 @@
             publicKey = "2QZuyQ+Owa5AyOBlq2q75PaPnji/FOMteEVh35kKYzY=";
             endpoint = "router.cloud.shortcord.com:51820";
             persistentKeepalive = 15;
-            allowedIPs = [];
+            allowedIPs = [ "0.0.0.0/0" "::/0" ];
           }];
         };
       };
