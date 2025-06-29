@@ -135,7 +135,6 @@
             endpoint = "router.cloud.shortcord.com:51820";
             persistentKeepalive = 15;
             allowedIPs = [];
-
           }];
         };
       };
