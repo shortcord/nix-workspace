@@ -270,14 +270,6 @@
           };
           imports = [ ./hosts/${name}.nix ];
         };
-
-        "ns3.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment = {
-            tags = [ "infra" "ns3" ];
-            targetHost = "ns3.short.ts.shortcord.com";
-          };
-          imports = [ ./hosts/${name}.nix ];
-        };
       };
 
       nixosConfigurations = lib.pipe colmenaConfiguration [
