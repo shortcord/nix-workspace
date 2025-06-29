@@ -117,16 +117,25 @@
       enable = true;
       interfaces = {
         "wg0" = {
-          ips = [ "10.6.210.28/32" "2001:470:e07b:2::7/128" ];
-          mtu = 1380;
+          ips = [ "10.75.0.2/32" "147.135.125.66/32" ];
           listenPort = 51820;
           privateKeyFile = config.age.secrets.wg0-private-key.path;
+          # We'll set the routes ourselfs
+          allowedIPsAsRoutes = false;
+          table = 9999;
+          postSetup = ''
+            ${pkgs.iproute2}/bin/ip route add default via 10.75.0.1 dev test table 9999
+            ${pkgs.iproute2}/bin/ip rule add from 147.135.125.66 table 9999
+          '';
+          postShutdown = ''
+            ${pkgs.iproute2}/bin/ip rule delete from 147.135.125.66 table 9999
+          '';
           peers = [{
-            publicKey = "ePYkBTYZaul66VdGLG70IZcCvIaZ7aSeRrkb+hskhiQ=";
-            presharedKey = "a1w5c8U/uN1yVJfoB8zuw9VwDqS44SzUQKZu1ZURJ2s=";
-            endpoint = "147.135.125.64:51820";
+            publicKey = "2QZuyQ+Owa5AyOBlq2q75PaPnji/FOMteEVh35kKYzY=";
+            endpoint = "router.cloud.shortcord.com:51820";
             persistentKeepalive = 15;
-            allowedIPs = [ "10.6.210.1/32" "10.6.210.0/24" ];
+            allowedIPs = [];
+
           }];
         };
       };
