@@ -124,7 +124,7 @@
           allowedIPsAsRoutes = false;
           table = 9999;
           postSetup = ''
-            ${pkgs.iproute2}/bin/ip route add default via 10.75.0.1 dev test table 9999
+            ${pkgs.iproute2}/bin/ip route add default via 10.75.0.1 dev wg0 table 9999
             ${pkgs.iproute2}/bin/ip rule add from 147.135.125.66 table 9999
           '';
           postShutdown = ''
