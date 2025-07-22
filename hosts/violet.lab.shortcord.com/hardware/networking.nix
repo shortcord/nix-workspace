@@ -85,9 +85,9 @@
         "30-storage" = {
           matchConfig.MACAddress = "C8:1F:66:E6:7A:54";
           linkConfig.RequiredForOnline = "no";
-          address = "10.65.0.1/30";
+          address = [ "10.65.0.1/30" ];
           networkConfig = {
-            DHCP = "off";
+            DHCP = "no";
             DNS = "no";
             IPv6AcceptRA = false;
           };
