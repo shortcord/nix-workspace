@@ -14,7 +14,7 @@
         };
     };
 
-    services.nfs = {
+    services.nfs.server = {
         enable = true;
         exports = ''
             /var/lib/vmdata 10.65.0.0/30(rw)
