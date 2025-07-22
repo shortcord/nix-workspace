@@ -82,6 +82,16 @@
             IPv6AcceptRA = false;
           };
         };
+        "30-storage" = {
+          matchConfig.MACAddress = "C8:1F:66:E6:7A:54";
+          linkConfig.RequiredForOnline = "no";
+          address = "10.65.0.1/30";
+          networkConfig = {
+            DHCP = "off";
+            DNS = "no";
+            IPv6AcceptRA = false;
+          }
+        };
         "vmbr0" = {
           matchConfig.Name = "vmbr0";
           linkConfig.RequiredForOnline = "no";

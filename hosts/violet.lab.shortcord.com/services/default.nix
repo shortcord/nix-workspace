@@ -12,5 +12,6 @@
     ./nginx.nix
     ./ipfs.nix
     ./wings.nix
+    ./nfs.nix
   ];
 }
