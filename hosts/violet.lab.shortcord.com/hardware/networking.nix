@@ -90,7 +90,7 @@
             DHCP = "off";
             DNS = "no";
             IPv6AcceptRA = false;
-          }
+          };
         };
         "vmbr0" = {
           matchConfig.Name = "vmbr0";
