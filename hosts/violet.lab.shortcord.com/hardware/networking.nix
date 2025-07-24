@@ -104,7 +104,10 @@
         };
         "vmbr0" = {
           matchConfig.Name = "vmbr0";
-          linkConfig.RequiredForOnline = "no";
+          linkConfig = {
+            RequiredForOnline = "no";
+            MTUBytes = 9400;
+          };
           networkConfig = {
             DHCP = "no";
             DNS = "no";
