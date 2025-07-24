@@ -17,7 +17,7 @@
     services.nfs.server = {
         enable = true;
         exports = ''
-            /var/lib/vmdata 10.65.0.0/30(rw,no_root_squash)
+            /var/lib/vmdata 10.65.0.0/30(rw,no_root_squash) 10.66.0.0/30(rw,no_root_squash)
         '';
     };
 }
