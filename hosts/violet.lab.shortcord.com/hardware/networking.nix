@@ -95,7 +95,7 @@
         "31-storage" = {
           matchConfig.MACAddress = "C8:1F:66:E6:7A:53";
           linkConfig.RequiredForOnline = "no";
-          address = [ "10.65.1.1/30" ];
+          address = [ "10.65.0.2/30" ];
           networkConfig = {
             DHCP = "no";
             DNS = "no";
