@@ -125,7 +125,15 @@
       allowedUDPPorts = [ 5201 ];
       allowedTCPPorts = [ 22 80 443 5201 ];
       allowPing = true;
-      trustedInterfaces = [ "vmbr0" config.services.tailscale.interfaceName "eno3" "eno4" ];
+      trustedInterfaces = [ 
+        "vmbr0"
+        config.services.tailscale.interfaceName
+        "eno2"
+        "eno3"
+        "eno4"
+        "enp6s0f0np0"
+        "enp6s0f1np1"
+      ];
     };
     nat = {
       enable = true;
