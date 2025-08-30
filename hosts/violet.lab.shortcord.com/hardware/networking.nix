@@ -82,9 +82,32 @@
             IPv6AcceptRA = false;
           };
         };
+        "30-storage" = {
+          matchConfig.MACAddress = "0C:42:A1:0B:C1:AE";
+          linkConfig.RequiredForOnline = "no";
+          address = [ "10.66.0.1/30" ];
+          networkConfig = {
+            DHCP = "no";
+            DNS = "no";
+            IPv6AcceptRA = false;
+          };
+        };
+        "31-storage" = {
+          matchConfig.MACAddress = "C8:1F:66:E6:7A:53";
+          linkConfig.RequiredForOnline = "no";
+          address = [ "10.65.0.1/30" ];
+          networkConfig = {
+            DHCP = "no";
+            DNS = "no";
+            IPv6AcceptRA = false;
+          };
+        };
         "vmbr0" = {
           matchConfig.Name = "vmbr0";
-          linkConfig.RequiredForOnline = "no";
+          linkConfig = {
+            RequiredForOnline = "no";
+            MTUBytes = 9400;
+          };
           networkConfig = {
             DHCP = "no";
             DNS = "no";
@@ -105,7 +128,15 @@
       allowedUDPPorts = [ 5201 ];
       allowedTCPPorts = [ 22 80 443 5201 ];
       allowPing = true;
-      trustedInterfaces = [ "vmbr0" config.services.tailscale.interfaceName ];
+      trustedInterfaces = [ 
+        "vmbr0"
+        config.services.tailscale.interfaceName
+        "eno2"
+        "eno3"
+        "eno4"
+        "enp6s0f0np0"
+        "enp6s0f1np1"
+      ];
     };
     nat = {
       enable = true;
