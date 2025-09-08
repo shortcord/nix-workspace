@@ -17,6 +17,24 @@
             Name = "vmbr0";
           };
         };
+        wg0 = {
+          netdevConfig = {
+            Kind = "wireguard";
+            Name = "wg0";
+          };
+          wireguardConfig = {
+            PrivateKeyFile = config.age.secrets.wg0-private-key.path;
+            ListenPort = "auto";
+          };
+          wireguardPeers = [
+            {
+              PublicKey = "2QZuyQ+Owa5AyOBlq2q75PaPnji/FOMteEVh35kKYzY=";
+              Endpoint = "router.cloud.shortcord.com:51820";
+              PersistentKeepalive = 15;
+              AllowedIPs = [ "0.0.0.0/0" "::/0" ];
+            }
+          ];
+        };
       };
       networks = {
         "10-wan" = {
@@ -115,6 +133,23 @@
             IPv6AcceptRA = false;
           };
         };
+        "wg0" = {
+          matchConfig.Name = "wg0";
+          addresses = [
+            { Address = "10.75.0.2/32"; }
+            { Address = "147.135.125.66/32"; }
+          ];
+          routingPolicyRules = [
+            { Table = 9999; }
+          ];
+          routes = [
+            {
+              Gateway  = "10.75.0.2";
+              Scope = "link";
+              Table = 9999;
+            }
+          ];
+        };
       };
     };
   };
@@ -143,32 +178,6 @@
       enableIPv6 = false;
       externalInterface = "enp68s0";
       internalInterfaces = [ "eno2" ];
-    };
-    wireguard = {
-      enable = true;
-      interfaces = {
-        "wg0" = {
-          ips = [ "10.75.0.2/32" "147.135.125.66/32" ];
-          listenPort = 51820;
-          privateKeyFile = config.age.secrets.wg0-private-key.path;
-          # We'll set the routes ourselfs
-          allowedIPsAsRoutes = false;
-          table = 9999;
-          postSetup = ''
-            ${pkgs.iproute2}/bin/ip route add default via 10.75.0.2 dev wg0 table 9999
-            ${pkgs.iproute2}/bin/ip rule add from 147.135.125.66 table 9999
-          '';
-          postShutdown = ''
-            ${pkgs.iproute2}/bin/ip rule delete from 147.135.125.66 table 9999
-          '';
-          peers = [{
-            publicKey = "2QZuyQ+Owa5AyOBlq2q75PaPnji/FOMteEVh35kKYzY=";
-            endpoint = "router.cloud.shortcord.com:51820";
-            persistentKeepalive = 15;
-            allowedIPs = [ "0.0.0.0/0" "::/0" ];
-          }];
-        };
-      };
     };
   };
 }
