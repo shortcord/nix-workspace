@@ -1,4 +1,4 @@
-{ name, pkgs, config, ... }: {
+{ name, pkgs, config, unstablePkgs,... }: {
   age.secrets = {
     catstodon-env.file = ../../secrets/${name}/catstodon.env.age;
   };
@@ -62,7 +62,7 @@
         createLocally = true;
         host = "/run/postgresql";
       };
-      ## package = pkgs.catstodon;
+      package = unstablePkgs.mastodon;
     };
   };
 }
