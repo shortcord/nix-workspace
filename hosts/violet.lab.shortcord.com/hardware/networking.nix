@@ -17,24 +17,6 @@
             Name = "vmbr0";
           };
         };
-        wg0 = {
-          netdevConfig = {
-            Kind = "wireguard";
-            Name = "wg0";
-          };
-          wireguardConfig = {
-            PrivateKeyFile = config.age.secrets.wg0-private-key.path;
-            ListenPort = "auto";
-          };
-          wireguardPeers = [
-            {
-              PublicKey = "2QZuyQ+Owa5AyOBlq2q75PaPnji/FOMteEVh35kKYzY=";
-              Endpoint = "router.cloud.shortcord.com:51820";
-              PersistentKeepalive = 15;
-              AllowedIPs = [ "0.0.0.0/0" "::/0" ];
-            }
-          ];
-        };
       };
       networks = {
         "10-wan" = {
@@ -132,23 +114,6 @@
             Address = [ "fd6f:357c:c101::1/48" ];
             IPv6AcceptRA = false;
           };
-        };
-        "wg0" = {
-          matchConfig.Name = "wg0";
-          addresses = [
-            { Address = "10.75.0.2/32"; }
-            # { Address = "147.135.125.66/32"; }
-          ];
-          routingPolicyRules = [
-            { Table = 9999; }
-          ];
-          routes = [
-            {
-              Gateway  = "10.75.0.2";
-              Scope = "link";
-              Table = 9999;
-            }
-          ];
         };
       };
     };
