@@ -66,6 +66,9 @@
           nixpkgs = import nixpkgs {
             system = "x86_64-linux";
             overlays = overlays;
+            config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+              "open-webui"
+            ];
           };
           # Per node override of nixpkgs
           ## "hostname" = { nixpkgs import stanza }
@@ -201,11 +204,6 @@
           ];
         };
 
-        "hydra.owo.solutions" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment.tags = [ "infra" "hydra" ];
-          imports = [ ./hosts/${name}.nix ];
-        };
-
         "storage.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "infra" "storage" ];
           imports = [ ./hosts/${name}.nix ];
@@ -224,7 +222,7 @@
 
         "lavender.lab.shortcord.com" =
           { name, nodes, pkgs, lib, config, ... }: {
-            deployment.tags = [ "infra" "lab" ];
+            deployment.tags = [ "infra" "lab" "lavender" ];
             imports = [ ./hosts/${name}.nix ];
           };
 
@@ -242,11 +240,6 @@
           deployment.tags = [ "infra" "container" "gitlab" ];
           deployment.targetHost = "2a01:4f8:c012:a734::10";
           imports = [ ./containers/${name}.nix ];
-        };
-
-        "miauws.life" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment.tags = [ "miauws" ];
-          imports = [ ./hosts/${name}.nix ];
         };
 
         "keycloak.owo.solutions" = { name, nodes, pkgs, lib, config, ... }: {
