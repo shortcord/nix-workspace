@@ -1,4 +1,4 @@
-{ config, pkgs, unstablePkgs, ... }:
+{ config, pkgs, unstablePkgs, lib, ... }:
 let
   ollamaPerDir = "/var/lib/ollama";
   namespacedHost = "127.0.0.5";
@@ -7,6 +7,7 @@ let
 
   open-webui-pkg = pkgs.callpackage ./packages/open-webui {};
 in {
+  nixpkgs.config.allowUnfree = true;
   security.acme = {
     # there has to be a better way :(
     certs = {

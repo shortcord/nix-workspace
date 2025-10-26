@@ -49,6 +49,7 @@
     kernelModules = [ ];
     extraModulePackages = [ ];
     kernelParams = [ "kvm-intel" ];
+    loader.grub.enable = false;
     loader.systemd-boot = {
       enable = true;
       configurationLimit = 5;
