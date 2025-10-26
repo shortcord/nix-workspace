@@ -158,9 +158,9 @@
     useDHCP = false;
     dhcpcd.enable = false;
     useNetworkd = true;
-    nameservers = {
+    nameservers = [
       "127.0.0.1"
-    };
+    ];
     firewall = {
       enable = true;
       allowedUDPPorts = [ 5201 ];
