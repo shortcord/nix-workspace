@@ -233,6 +233,7 @@
 
         "violet.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "infra" "lab" "violet" ];
+          deployment.targetHost = "violet.short.ts.shortcord.com";
           imports = [ ./hosts/${name}.nix ];
         };
 

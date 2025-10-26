@@ -137,7 +137,7 @@
           matchConfig.Name = "wg0";
           addresses = [
             { Address = "10.75.0.2/32"; }
-            { Address = "147.135.125.66/32"; }
+            # { Address = "147.135.125.66/32"; }
           ];
           routingPolicyRules = [
             { Table = 9999; }
