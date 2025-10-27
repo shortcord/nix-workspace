@@ -17,7 +17,6 @@ in {
           base_domain = "ts.shortcord.com";
           nameservers.global =
             [ "9.9.9.9" "149.112.112.112" "2620:fe::fe" "2620:fe::9" ];
-          use_username_in_magic_dns = true;
         };
         ip_prefixes = [ "100.64.0.0/10" "fd7a:115c:a1e0::/48" ];
         prefixes = {
