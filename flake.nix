@@ -220,11 +220,10 @@
           imports = [ ./hosts/${name}.nix ];
         };
 
-        "lavender.lab.shortcord.com" =
-          { name, nodes, pkgs, lib, config, ... }: {
-            deployment.tags = [ "infra" "lab" "lavender" ];
-            imports = [ ./hosts/${name}.nix ];
-          };
+        "lavender.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "infra" "lab" "lavender" ];
+          imports = [ ./hosts/${name}.nix ];
+        };
 
         "lilac.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "infra" "lab" "mastodon" "lilac" ];
@@ -233,35 +232,12 @@
 
         "violet.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "infra" "lab" "violet" ];
-          deployment.targetHost = "violet.short.ts.shortcord.com";
+          deployment.targetHost = "violet.ts.shortcord.com";
           imports = [ ./hosts/${name}.nix ];
-        };
-
-        "gitlab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment.tags = [ "infra" "container" "gitlab" ];
-          deployment.targetHost = "2a01:4f8:c012:a734::10";
-          imports = [ ./containers/${name}.nix ];
         };
 
         "keycloak.owo.solutions" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "keycloak" "auth" ];
-          imports = [ ./hosts/${name}.nix ];
-        };
-
-        "gateway.home.shortcord.com" =
-          { name, nodes, pkgs, lib, config, ... }: {
-          deployment = {
-            tags = [ "lab" ];
-            targetHost = "gateway.short.ts.shortcord.com";
-          };
-          imports = [ ./hosts/${name}.nix ];
-        };
-
-        "mousetail.dev" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment = {
-            tags = [ "infra" "mousetail" ];
-            targetHost = "mousetail.short.ts.shortcord.com";
-          };
           imports = [ ./hosts/${name}.nix ];
         };
       };

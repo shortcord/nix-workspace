@@ -14,7 +14,6 @@
     };
   };
   security.acme.certs."jellyfin.shortcord.com" = {
-    extraDomainNames = [ "jellyfin.short.ts.shortcord.com" ];
     inheritDefaults = true;
     dnsProvider = "pdns";
     environmentFile = config.age.secrets.acmeCredentialsFile.path;
@@ -29,7 +28,6 @@
     nginx = {
       virtualHosts = {
         "jellyfin.shortcord.com" = {
-          serverAliases = [ "jellyfin.short.ts.shortcord.com" ];
           kTLS = true;
           http2 = true;
           http3 = true;

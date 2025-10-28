@@ -2,8 +2,8 @@
   sshkeys = {
     users = {
       short = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINaxLI7oCJcUxfjGXXgs9YI7DimlFbtWE+R22jDF6Zxl short@maus.short.ts.shortcord.com"
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPrDWhYX7ALenoIyMYh6MzYBGbbgSLSWbz9EfzEkxo0k short@dell-g3.short.ts.shortcord.com"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINaxLI7oCJcUxfjGXXgs9YI7DimlFbtWE+R22jDF6Zxl short@maus.ts.shortcord.com"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPrDWhYX7ALenoIyMYh6MzYBGbbgSLSWbz9EfzEkxo0k short@dell-g3.ts.shortcord.com"
       ];
       deployment = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOzNDt0mA8dV9l5A/1tIgLVBf6ynUjjZN0Dckvs3kRIG deployment@gitlab.shortcord.com"
@@ -20,7 +20,7 @@
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGQk+htjVN1ywCnUXY3LeiyNOV6bbp3KKXbSCKQx7mHV hydra.owo.solutions"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAJJkiqaqs67EEzd73X9RQu6vvya64EgtDQBGf4vQ5LN lavender.lab.shortcord.com"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICcXYPR1tmuJVoFlW1Ngq7Ixq8/R2SLZXUlcs3We/cKm gateway.home.shortcord.com"
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFPQSzylwtqdsC6+c62Bldqy+uc4HVUJLbN5qYsPM80m mousetail.short.ts.shortcord.com"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFPQSzylwtqdsC6+c62Bldqy+uc4HVUJLbN5qYsPM80m mousetail.ts.shortcord.com"
       ];
     };
   };

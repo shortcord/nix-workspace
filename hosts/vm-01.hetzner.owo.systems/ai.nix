@@ -29,7 +29,7 @@ in {
         ANONYMIZED_TELEMETRY = "False";
         DO_NOT_TRACK = "True";
         SCARF_NO_ANALYTICS = "True";
-        OLLAMA_API_BASE_URL = "http://maus.short.ts.shortcord.com:11434";
+        OLLAMA_API_BASE_URL = "http://maus.ts.shortcord.com:11434";
       };
     };
     nginx = {
