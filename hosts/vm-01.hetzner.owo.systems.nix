@@ -16,7 +16,6 @@
     ./${name}/influxdb.nix
     # ./${name}/ai.nix
     # ./${name}/wings.nix # Removed until I update the flake to 25.05
-    ./${name}/xmpp.nix
     ./general/all.nix
   ];
 
