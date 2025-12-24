@@ -7,10 +7,7 @@
   };
   services.xserver.videoDrivers = [ "nvidia" ];
   boot = {
-    kernelPackages = pkgs.linuxKernel.packages.linux_6_1;
     growPartition = true;
-    kernelModules = [ "jool" ];
-    extraModulePackages = [ pkgs.linuxKernel.packages.linux_6_1.jool ];
     kernelParams = [ "kvm-intel" ];
     loader.systemd-boot = {
       enable = true;
