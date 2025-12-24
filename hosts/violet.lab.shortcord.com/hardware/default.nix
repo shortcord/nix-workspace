@@ -10,7 +10,7 @@
       modesetting.enable = true;
       powerManagement.enable = true;
       nvidiaPersistenced = true;
-    }
+    };
   };
   services.xserver = {
     enable = false;
