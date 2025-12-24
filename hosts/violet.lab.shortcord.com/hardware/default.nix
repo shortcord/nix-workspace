@@ -2,9 +2,10 @@
   zramSwap.enable = true;
   hardware.enableRedistributableFirmware = true;
   hardware.nvidia = {
-    open = true;
+    open = false;
     videoAcceleration = true;
   };
+  services.xserver.videoDrivers = [ "nvidia" ];
   boot = {
     kernelPackages = pkgs.linuxKernel.packages.linux_6_1;
     growPartition = true;
