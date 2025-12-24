@@ -1,6 +1,7 @@
 { name, pkgs, lib, config, ... }: {
   zramSwap.enable = true;
   hardware.enableRedistributableFirmware = true;
+  hardware.graphics.enable = true;
   boot = {
     kernelPackages = pkgs.linuxKernel.packages.linux_6_1;
     growPartition = true;
