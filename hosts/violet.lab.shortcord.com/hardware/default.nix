@@ -1,11 +1,21 @@
 { name, pkgs, lib, config, ... }: {
   zramSwap.enable = true;
-  hardware.enableRedistributableFirmware = true;
-  hardware.nvidia = {
-    open = true;
-    videoAcceleration = true;
+  
+  hardware = {
+    enableRedistributableFirmware = true;
+    graphics.enable = true;
+    nvidia = {
+      open = false;
+      videoAcceleration = true;
+      modesetting.enable = true;
+      powerManagement.enable = true;
+      nvidiaPersistenced = true;
+    }
   };
-  services.xserver.videoDrivers = [ "nvidia" ];
+  services.xserver = {
+    enable = false;
+    videoDrivers = [ "nvidia" ];
+  };
   boot = {
     growPartition = true;
     kernelParams = [ "kvm-intel" ];

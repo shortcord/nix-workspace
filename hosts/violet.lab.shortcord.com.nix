@@ -32,7 +32,20 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [ vim wget curl btrfs-progs git ];
+  environment.systemPackages = with pkgs; [ 
+    vim
+    wget
+    curl
+    btrfs-progs
+    git
+    pciutils
+    nvtopPackages.nvidia
+    cudaPackages.cudatoolkit
+  ];
+  services.ollama = {
+    enable = true;
+    acceleration = "cuda";
+  };
   services = {
     tailscale = {
       useRoutingFeatures = "both";
