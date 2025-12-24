@@ -2,7 +2,7 @@
   zramSwap.enable = true;
   hardware.enableRedistributableFirmware = true;
   hardware.nvidia = {
-    open = false;
+    open = true;
     videoAcceleration = true;
   };
   services.xserver.videoDrivers = [ "nvidia" ];
