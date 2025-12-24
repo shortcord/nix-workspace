@@ -1,8 +1,11 @@
 { name, pkgs, lib, config, ... }: {
   zramSwap.enable = true;
   hardware.enableRedistributableFirmware = true;
-  hardware.graphics.enable = true;
-  hardware.nvidia.open = true;
+  hardware.nvidia = {
+    enabled = true;
+    open = true;
+    videoAcceleration = true;
+  };
   boot = {
     kernelPackages = pkgs.linuxKernel.packages.linux_6_1;
     growPartition = true;
