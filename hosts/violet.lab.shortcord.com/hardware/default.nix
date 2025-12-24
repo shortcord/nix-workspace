@@ -2,7 +2,6 @@
   zramSwap.enable = true;
   hardware.enableRedistributableFirmware = true;
   hardware.nvidia = {
-    enabled = true;
     open = true;
     videoAcceleration = true;
   };
