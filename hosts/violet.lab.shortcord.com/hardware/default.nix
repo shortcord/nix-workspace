@@ -2,7 +2,7 @@
   zramSwap.enable = true;
   hardware.enableRedistributableFirmware = true;
   hardware.graphics.enable = true;
-  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
+  hardware.nvidia.open = true;
   boot = {
     kernelPackages = pkgs.linuxKernel.packages.linux_6_1;
     growPartition = true;
