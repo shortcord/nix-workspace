@@ -10,7 +10,7 @@
     loader = {
       grub = {
         enable = true;
-        device = "/dev/disk/by-uuid/79bdfbec-983a-41ac-9603-a207beae1f19";
+        device = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_30515526";
       };
     };
   };
