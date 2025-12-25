@@ -43,5 +43,14 @@
         "subvolid=741"
       ];
     };
+    "/var/lib/jellyfin/transcodes" = {
+      fstype = "tmpfs";
+      options = [
+        "size=10g"
+        "mode=0700"
+        "gid=983"
+        "uid=990"
+      ];
+    };
   };
 }
