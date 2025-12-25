@@ -13,5 +13,6 @@
     ./ipfs.nix
     # ./wings.nix
     ./nfs.nix
+    ./ollama.nix
   ];
 }
