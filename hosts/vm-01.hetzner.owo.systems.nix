@@ -14,7 +14,7 @@
     ./${name}/powerdns.nix
     ./${name}/uptime-kuma.nix
     ./${name}/influxdb.nix
-    # ./${name}/ai.nix
+    ./${name}/ai.nix
     # ./${name}/wings.nix # Removed until I update the flake to 25.05
     ./general/all.nix
   ];
