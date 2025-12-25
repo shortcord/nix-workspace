@@ -26,7 +26,7 @@
       database.createLocally = false;
       maxUploadSize = "10G";
       configureRedis = true;
-      extraOptions = {
+      settings = {
         enabledPreviewProviders = [
           "OC\\Preview\\BMP"
           "OC\\Preview\\GIF"
@@ -40,13 +40,11 @@
           "OC\\Preview\\XBitmap"
           "OC\\Preview\\HEIC"
         ];
-      };
-      config = {
         dbtype = "mysql";
         dbpassFile = config.age.secrets.nextcloudDbPass.path;
         dbhost = "127.0.0.1:3366";
-        defaultPhoneRegion = "US";
-        trustedProxies = [ "127.0.0.1" ];
+        default_phone_region = "US";
+        trusted_proxies = [ "127.0.0.1" ];
         adminpassFile = config.age.secrets.nextcloudAdminPass.path;
         objectstore.s3 = {
           enable = true;
@@ -57,7 +55,7 @@
           bucket = "shortcord-nextcloud";
           key = "nextcloud";
           secretFile = config.age.secrets.nextcloudS3Secret.path;
-          autocreate = false;
+          verify_bucket_exists = false;
         };
       };
     };
