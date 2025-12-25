@@ -7,7 +7,7 @@ in {
     phpfpm.pools."speedtest" = {
       user = config.services.nginx.user;
       group = config.services.nginx.group;
-      phpPackage = pkgs.php81;
+      phpPackage = pkgs.php82;
       settings = {
         pm = "dynamic";
         "listen.owner" = config.services.nginx.user;

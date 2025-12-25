@@ -3,8 +3,8 @@ let
   webRoot = "/var/www/panel.owo.solutions";
 in {
   environment.systemPackages = with pkgs; [
-    php81
-    php81Packages.composer
+    php82
+    php82Packages.composer
     unzip
   ];
   services = {
@@ -20,7 +20,7 @@ in {
     phpfpm.pools.pterodactyl = {
       user = config.services.nginx.user;
       group = config.services.nginx.group;
-      phpPackage = pkgs.php81;
+      phpPackage = pkgs.php82;
       settings = {
         pm = "dynamic";
         "listen.owner" = config.services.nginx.user;
@@ -80,7 +80,7 @@ in {
       "pterodactyl-tasks" = {
         script = ''
           set -eu
-          ${pkgs.php81}/bin/php ${webRoot}/artisan schedule:run
+          ${pkgs.php82}/bin/php ${webRoot}/artisan schedule:run
         '';
         serviceConfig = {
           Type = "oneshot";
@@ -93,7 +93,7 @@ in {
         startLimitBurst = 30;
         script = ''
           set -eu
-          ${pkgs.php81}/bin/php ${webRoot}/artisan queue:work --queue=high,standard,low --sleep=3 --tries=3
+          ${pkgs.php82}/bin/php ${webRoot}/artisan queue:work --queue=high,standard,low --sleep=3 --tries=3
         '';
         serviceConfig = {
           User = config.services.nginx.user;
