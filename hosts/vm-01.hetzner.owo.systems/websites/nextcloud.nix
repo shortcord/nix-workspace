@@ -26,6 +26,25 @@
       database.createLocally = false;
       maxUploadSize = "10G";
       configureRedis = true;
+      config = {
+        dbtype = "mysql";
+        dbpassFile = config.age.secrets.nextcloudDbPass.path;
+        dbhost = "127.0.0.1:3366";
+
+        adminpassFile = config.age.secrets.nextcloudAdminPass.path;
+        
+        objectstore.s3 = {
+          enable = true;
+          region = "de-01";
+          useSsl = true;
+          usePathStyle = true;
+          hostname = "storage.owo.systems";
+          bucket = "shortcord-nextcloud";
+          key = "nextcloud";
+          secretFile = config.age.secrets.nextcloudS3Secret.path;
+          verify_bucket_exists = false;
+        };
+      };
       settings = {
         enabledPreviewProviders = [
           "OC\\Preview\\BMP"
@@ -40,23 +59,8 @@
           "OC\\Preview\\XBitmap"
           "OC\\Preview\\HEIC"
         ];
-        dbtype = "mysql";
-        dbpassFile = config.age.secrets.nextcloudDbPass.path;
-        dbhost = "127.0.0.1:3366";
         default_phone_region = "US";
         trusted_proxies = [ "127.0.0.1" ];
-        adminpassFile = config.age.secrets.nextcloudAdminPass.path;
-        objectstore.s3 = {
-          enable = true;
-          region = "de-01";
-          useSsl = true;
-          usePathStyle = true;
-          hostname = "storage.owo.systems";
-          bucket = "shortcord-nextcloud";
-          key = "nextcloud";
-          secretFile = config.age.secrets.nextcloudS3Secret.path;
-          verify_bucket_exists = false;
-        };
       };
     };
     nginx.virtualHosts."${config.services.nextcloud.hostName}" = {
