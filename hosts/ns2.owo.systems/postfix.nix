@@ -2,7 +2,7 @@
   services = {
     postfix = {
       enable = true;
-      config = {
+      settings.main = {
         mynetworks = [ "127.0.0.0/8" "10.7.210.0/24" ];
         inet_interfaces = [ "127.0.0.1" "10.7.210.1" ];
         relay_domains = [ "lilac.lab.shortcord.com" "shortcord.com" "owo.systems" "owo.solutions" "owo.gallery" "mousetail.dev" ];
