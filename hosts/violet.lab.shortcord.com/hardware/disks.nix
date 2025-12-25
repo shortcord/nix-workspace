@@ -44,7 +44,7 @@
       ];
     };
     "/var/lib/jellyfin/transcodes" = {
-      fstype = "tmpfs";
+      fsType = "tmpfs";
       options = [
         "size=10g"
         "mode=0700"
