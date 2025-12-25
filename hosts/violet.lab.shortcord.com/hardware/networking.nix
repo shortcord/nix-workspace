@@ -33,11 +33,13 @@
             UseDNS = false;
           };
           dhcpV6Config = { RouteMetric = 2048; };
-          routes = [{
-            Gateway = "_dhcp4";
-            InitialCongestionWindow = 100;
-            InitialAdvertisedReceiveWindow = 100;
-          }];
+          routes = [
+            {
+              Gateway = "_dhcp4";
+              InitialCongestionWindow = 100;
+              InitialAdvertisedReceiveWindow = 100;
+            }
+          ];
         };
         "11-wan2" = {
           matchConfig.MACAddress = "c8:1f:66:e6:7a:51";
@@ -54,13 +56,13 @@
             UseDNS = false;
           };
           dhcpV6Config = { RouteMetric = 1024; };
-          routes = [{
-            routeConfig = {
+          routes = [
+            {
               Gateway = "_dhcp4";
               InitialCongestionWindow = 100;
               InitialAdvertisedReceiveWindow = 100;
-            };
-          }];
+            }
+          ];
         };
         "20-lan" = {
           matchConfig.MACAddress = "C8:1F:66:E6:7A:52";
