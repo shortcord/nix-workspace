@@ -20,7 +20,7 @@
     nextcloud = {
       enable = true;
       https = true;
-      package = pkgs.nextcloud30;
+      package = pkgs.nextcloud31;
       hostName = "nextcloud.owo.solutions";
       webfinger = true;
       database.createLocally = false;
