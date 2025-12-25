@@ -59,7 +59,7 @@
         smtp_tls_security_level = "encrypt";
 
         smtp_use_tls = "yes";
-        relayhost = "[smtp-relay.gmail.com]:587";
+        relayhost = [ "[smtp-relay.gmail.com]:587" ];
 
         smtp_always_send_ehlo = "yes";
         smtp_helo_name = "shortcord.com";
