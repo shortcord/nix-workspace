@@ -10,7 +10,6 @@
   services = {
     nginx = {
       enable = true;
-      package = pkgs.nginxQuic;
       recommendedGzipSettings = true;
       recommendedOptimisation = true;
       recommendedTlsSettings = true;

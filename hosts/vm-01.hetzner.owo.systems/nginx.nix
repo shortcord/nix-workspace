@@ -13,7 +13,6 @@
   };
 
   services.nginx = {
-    package = pkgs.nginxQuic;
     enable = true;
     recommendedTlsSettings = true;
     recommendedZstdSettings = true;

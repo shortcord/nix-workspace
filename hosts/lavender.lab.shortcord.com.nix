@@ -125,7 +125,6 @@
       region = "de-01";
     };
     nginx = {
-      package = pkgs.nginxQuic;
       enable = true;
       recommendedTlsSettings = true;
       recommendedZstdSettings = true;
