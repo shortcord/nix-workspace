@@ -28,6 +28,7 @@ in
                     remove = [ "duckduckgo" ];
                 };
             };
+            server.secret_key = "$SEARX_SECRET_KEY";
             search.formats = [ "html" "json" ];
             server.image_proxy = true;
             service.limiter = true;
