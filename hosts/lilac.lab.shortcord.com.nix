@@ -55,8 +55,6 @@ in {
     };
   };
 
-  environment.systemPackages = with pkgs; [ vim wget curl ];
-
   users.users.remotebuild = {
     isNormalUser = true;
     openssh = { authorizedKeys.keys = distributedUserSSHKeyPub; };

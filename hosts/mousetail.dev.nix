@@ -23,7 +23,6 @@
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.enableRedistributableFirmware = true;
   boot = {
-    kernelPackages = pkgs.linuxKernel.packages.linux_6_1;
     loader.systemd-boot = {
       enable = true;
       configurationLimit = 2;

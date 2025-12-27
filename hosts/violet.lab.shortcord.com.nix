@@ -37,12 +37,7 @@
   };
 
   environment.systemPackages = with pkgs; [ 
-    vim
-    wget
-    curl
     btrfs-progs
-    git
-    pciutils
     nvtopPackages.nvidia
     cudaPackages.cudatoolkit
   ];

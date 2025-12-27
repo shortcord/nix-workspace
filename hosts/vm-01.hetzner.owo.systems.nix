@@ -80,7 +80,6 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [ vim git ];
   nixpkgs.config = {
     allowUnfree = true;
     permittedInsecurePackages = [ "netbox-3.7.8" "nextcloud-27.1.11" ];

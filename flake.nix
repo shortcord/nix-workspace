@@ -201,6 +201,12 @@
             htop
             cloud-utils
             speedtest-cli
+            pciutils
+            wget
+            curl
+            neofetch
+            nload
+            iotop
           ];
         };
 
