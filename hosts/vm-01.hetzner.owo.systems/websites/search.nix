@@ -23,9 +23,18 @@ in
         redisCreateLocally = true;
         domain = "search.owo.solutions";
         settings = {
-            server.secret_key = "$SEARX_SECRET_KEY";
+            use_default_settings = true;
+            general = {
+                instance_name = "OWO Search";
+                instance_description = "A privacy-respecting metasearch engine operated by a internet mouse.";
+                instance_contact = "mailto:short@shortcord.com";
+            };
+            server = {
+                secret_key = "$SEARX_SECRET_KEY";
+                public_instance = true;
+                image_proxy = true;
+            };
             search.formats = [ "html" "json" ];
-            server.image_proxy = true;
             service.limiter = true;
         };
         limiterSettings = {
