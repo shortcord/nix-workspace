@@ -43,7 +43,7 @@ in
                 };
             };
         };
-        environmentFile = config.age.secrets.searxng-env.path
-    }
+        environmentFile = config.age.secrets.searxng-env.path;
+    };
   };
 }
