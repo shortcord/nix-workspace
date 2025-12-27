@@ -38,10 +38,10 @@ in
             service.limiter = true;
         };
         limiterSettings = {
-            trusted_proxies = [ "127.0.0.1/8" ];
             botdetection = {
                 ipv4_prefix = 32;
                 ipv6_prefix = 48;
+                trusted_proxies = [ "127.0.0.1/8" ];
                 ip_limit.filter_link_local = false;
                 ip_lists = {
                     pass_searxng_org = true;
