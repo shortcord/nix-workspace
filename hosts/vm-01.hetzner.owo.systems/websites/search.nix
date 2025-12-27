@@ -23,11 +23,6 @@ in
         redisCreateLocally = true;
         domain = "search.owo.solutions";
         settings = {
-            use_default_settings = {
-                engines = {
-                    remove = [ "duckduckgo" ];
-                };
-            };
             server.secret_key = "$SEARX_SECRET_KEY";
             search.formats = [ "html" "json" ];
             server.image_proxy = true;
