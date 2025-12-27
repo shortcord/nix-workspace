@@ -44,6 +44,11 @@ in
             };
         };
         environmentFile = config.age.secrets.searxng-env.path;
+        uwsgiConfig = {
+            disable-logging = true;
+            socket = "/run/searx/uwsgi.sock";
+            chmod-socket = "660";
+        };
     };
   };
 }
