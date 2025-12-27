@@ -21,7 +21,7 @@ in
         configureUwsgi = true;
         configureNginx = true;
         redisCreateLocally = true;
-        domain = "search.owo.systems";
+        domain = "search.owo.solutions";
         settings = {
             use_default_settings = {
                 engines = {
