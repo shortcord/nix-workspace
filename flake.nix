@@ -59,6 +59,7 @@
       unstablePkgs = import nixpkgs-unstable {
         system = "x86_64-linux";
         overlays = overlays;
+        config.allowUnfree = true;
       };
       colmenaConfiguration = {
         meta = {
