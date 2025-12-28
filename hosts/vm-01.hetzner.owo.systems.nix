@@ -61,6 +61,9 @@
         config.services.tailscale.interfaceName
         "docker0"
       ];
+      hosts = {
+        "100.64.0.9" = [ "search.owo.solutions" ];
+      };
     };
     wireguard = {
       enable = true;
