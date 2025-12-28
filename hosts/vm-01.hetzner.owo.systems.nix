@@ -51,6 +51,9 @@
   networking = {
     useDHCP = false;
     useNetworkd = true;
+    hosts = {
+      "100.64.0.9" = [ "search.owo.solutions" ];
+    };
     firewall = {
       enable = true;
       allowedUDPPorts = [ 51820 ];
@@ -61,9 +64,6 @@
         config.services.tailscale.interfaceName
         "docker0"
       ];
-      hosts = {
-        "100.64.0.9" = [ "search.owo.solutions" ];
-      };
     };
     wireguard = {
       enable = true;
