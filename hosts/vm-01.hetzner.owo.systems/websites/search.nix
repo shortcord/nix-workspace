@@ -10,11 +10,12 @@ in
     };
     systemd.services.searx-limiter-copy = {
         description = "Copy SearXNG limiter config to /run/searx";
+        wantedBy = [ "multi-user.target" ];
         requires = [ "searx-init.service" ];
         after = [ "searx-init.service" ];
         serviceConfig = {
             Type = "oneshot";
-            ExecStart = "${pkgs.coreutils}/bin/ls -s /etc/searxng/limiter.toml /run/searx/limiter.toml";
+            ExecStart = "${pkgs.coreutils}/bin/ln -s /etc/searxng/limiter.toml /run/searx/limiter.toml";
             User = "searx";
             RemainAfterExit = "yes";
             RuntimeDirectory = "searx";
