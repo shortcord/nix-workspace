@@ -12,7 +12,7 @@ in
         description = "Copy SearXNG limiter config to /run/searx";
         requires = [ "searx-init.service" ];
         after = [ "searx-init.service" ];
-        service-config = {
+        serviceConfig = {
             Type = "oneshot";
             ExecStart = "${pkgs.coreutils}/bin/ls -s /etc/searxng/limiter.toml /run/searx/limiter.toml";
             User = "searx";
