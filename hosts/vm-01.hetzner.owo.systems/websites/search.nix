@@ -15,7 +15,7 @@ in
         after = [ "searx-init.service" ];
         serviceConfig = {
             Type = "oneshot";
-            ExecStart = "${pkgs.coreutils}/bin/ln -s /etc/searxng/limiter.toml /run/searx/limiter.toml";
+            ExecStart = "${pkgs.coreutils}/bin/ln -fs /etc/searxng/limiter.toml /run/searx/limiter.toml";
             User = "searx";
             RemainAfterExit = "yes";
             RuntimeDirectory = "searx";
