@@ -58,6 +58,7 @@ in
                     trusted_proxies = [ "127.0.0.1/32" ];
                     ip_limit.filter_link_local = false;
                     ip_lists = {
+                        ip_pass = [ "100.64.0.0/24" ];
                         pass_searxng_org = true;
                     };
                 };
