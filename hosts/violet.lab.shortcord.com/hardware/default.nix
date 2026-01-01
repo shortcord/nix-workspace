@@ -1,21 +1,8 @@
 { name, pkgs, lib, config, ... }: {
   zramSwap.enable = true;
   
-  hardware = {
-    enableRedistributableFirmware = true;
-    graphics.enable = true;
-    nvidia = {
-      open = false;
-      videoAcceleration = true;
-      modesetting.enable = true;
-      powerManagement.enable = true;
-      nvidiaPersistenced = true;
-    };
-  };
-  services.xserver = {
-    enable = false;
-    videoDrivers = [ "nvidia" ];
-  };
+  hardware.enableRedistributableFirmware = true;
+
   boot = {
     growPartition = true;
     kernelParams = [ "kvm-intel" ];
@@ -43,5 +30,5 @@
       "net.ipv6.route.gc_timeout" = 5;
     };
   };
-  imports = [ ./disks.nix ./networking.nix ];
+  imports = [ ./disks.nix ./networking.nix ./gfx-nv-rtx2060.nix ];
 }
