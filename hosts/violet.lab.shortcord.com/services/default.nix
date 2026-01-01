@@ -1,7 +1,7 @@
 { name, pkgs, lib, config, ... }: {
   imports = [
     ./torrents/default.nix
-    ./gallery-dl-sync.nix
+    # ./gallery-dl-sync.nix
     ./pdns-recursor.nix
     ./repo-sync.nix
     ./jellyfin.nix
