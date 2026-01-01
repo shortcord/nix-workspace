@@ -17,7 +17,6 @@
   hardware.enableRedistributableFirmware = true;
 
   boot = {
-    kernelPackages = pkgs.linuxKernel.packages.linux_6_1;
     growPartition = true;
     kernelModules = [ ];
     extraModulePackages = [ ];
