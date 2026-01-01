@@ -130,8 +130,8 @@
     ];
     firewall = {
       enable = true;
-      allowedUDPPorts = [ 5201 ];
-      allowedTCPPorts = [ 22 80 443 5201 ];
+      allowedUDPPorts = [ ];
+      allowedTCPPorts = [ 22 80 443 ];
       allowPing = true;
       trustedInterfaces = [ 
         "vmbr0"
