@@ -69,7 +69,7 @@ in
             };
             environmentFile = config.age.secrets.searxng-env.path;
             uwsgiConfig = {
-                disable-logging = true;
+                disable-logging = false;
                 socket = "/run/searx/uwsgi.sock";
                 chmod-socket = "660";
             };
