@@ -47,7 +47,7 @@
       useRoutingFeatures = "both";
       extraUpFlags = [
         "--advertise-routes"
-        "10.18.0.0/24,10.200.1.0/24,fd6a:f1f3:23f4:1::/64"
+        "10.18.0.0/24,10.200.1.0/24,192.168.12.0/24,fd6a:f1f3:23f4:1::/64"
         "--accept-dns=false"
       ];
     };
