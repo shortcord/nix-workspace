@@ -51,9 +51,6 @@
   networking = {
     useDHCP = false;
     useNetworkd = true;
-    hosts = {
-      "100.64.0.9" = [ "search.owo.solutions" ];
-    };
     firewall = {
       enable = true;
       allowedUDPPorts = [ 51820 ];
