@@ -53,8 +53,8 @@
     kubo = {
       enable = true;
       emptyRepo = true;
-      enableGC = false;
-      autoMigrate = false;
+      enableGC = true;
+      autoMigrate = true;
       localDiscovery = true;
       settings = {
         Experimental.FilestoreEnabled = true;
