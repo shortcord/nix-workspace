@@ -62,7 +62,7 @@ in
                         link_token = true;
                     };
                     ip_lists = {
-                        ip_pass = [ "88.198.125.192/32" "2a01:4f8:c012:a734::1/64" ];
+                        pass_ip = [ "88.198.125.192/32" "2a01:4f8:c012:a734::1/64" ];
                         pass_searxng_org = true;
                     };
                 };
