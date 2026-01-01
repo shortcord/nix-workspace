@@ -5,7 +5,6 @@ let
   openWebUiConf = config.services.open-webui;
   domainName = "ai.mousetail.dev";
 in {
-  nixpkgs.config.allowUnfree = true;
   security.acme = {
     # there has to be a better way :(
     certs = {
@@ -20,7 +19,7 @@ in {
   services = {
     open-webui = {
       enable = true;
-      package = pkgs.open-webui;
+      package = unstablePkgs.open-webui;
       host = namespacedHost;
       port = 8080;
       environment = {
