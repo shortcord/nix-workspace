@@ -14,5 +14,6 @@
     # ./wings.nix
     ./nfs.nix
     ./ollama.nix
+    ./prometheus.nix
   ];
 }
