@@ -43,9 +43,10 @@ let
   ];
 
   prometheusConfig = config.services.prometheus;
+  grafanaConfig = config.services.grafana;
 in {
   fileSystems = {
-    "${prometheusConfig.stateDir}" = {
+    "/var/lib/${prometheusConfig.stateDir}" = {
       device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
       fsType = "btrfs";
       options = [
@@ -70,6 +71,20 @@ in {
       group = "prometheus";
     };
   };
+  security.acme.certs = {
+    "prometheus.${config.networking.fqdn}" = {
+      inheritDefaults = true;
+      dnsProvider = "pdns";
+      environmentFile = config.age.secrets.acmeCredentialsFile.path;
+      webroot = null;
+    };
+    "grafana.${config.networking.fqdn}" = {
+      inheritDefaults = true;
+      dnsProvider = "pdns";
+      environmentFile = config.age.secrets.acmeCredentialsFile.path;
+      webroot = null;
+    };
+  };
   services = {
     nginx = lib.mkIf config.services.nginx.enable {
       virtualHosts = {
@@ -82,6 +97,18 @@ in {
           locations."/" = {
             proxyPass =
               "http://${toString prometheusConfig.listenAddress}:${toString prometheusConfig.port}";
+          };
+        };
+        "grafana.${config.networking.fqdn}" = {
+          kTLS = true;
+          http2 = true;
+          http3 = true;
+          forceSSL = true;
+          enableACME = true;
+          locations."/" = {
+            proxyWebsockets = true;
+            proxyPass = 
+              "http://${toString grafanaConfig.settings.server.http_addr}:${toString grafanaConfig.settings.server.http_port}";
           };
         };
       };
