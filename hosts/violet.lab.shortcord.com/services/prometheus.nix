@@ -142,7 +142,7 @@ in {
       enable = true;
       listenAddress = "127.0.0.1";
       port = 9090;
-      retentionTime = "6m";
+      retentionTime = "2y";
       # Get around sandboxing issues, fuckin' developers
       checkConfig = "syntax-only";
       exporters = {
