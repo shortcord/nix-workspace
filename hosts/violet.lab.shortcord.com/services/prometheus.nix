@@ -60,12 +60,12 @@ in {
   };
   age.secrets = {
     minioPrometheusBearerToken = {
-      file = ../../secrets/${name}/minioPrometheusBearerToken.age;
+      file = ../../../secrets/${name}/minioPrometheusBearerToken.age;
       owner = "prometheus";
       group = "prometheus";
     };
     mysqldExporterConfig = {
-      file = ../../secrets/${name}/mysqldExporterConfig.age;
+      file = ../../../secrets/${name}/mysqldExporterConfig.age;
       owner = "prometheus";
       group = "prometheus";
     };
