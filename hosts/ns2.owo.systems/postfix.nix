@@ -3,14 +3,13 @@
     postfix = {
       enable = true;
       settings.main = {
-        mynetworks = [ "127.0.0.0/8" "10.7.210.0/24" ];
-        inet_interfaces = [ "127.0.0.1" "10.7.210.1" ];
+        mynetworks = [ "127.0.0.0/8" "10.7.210.0/24" "100.64.0.0/24" ];
+        inet_interfaces = [ "127.0.0.1" "10.7.210.1" "100.64.0.10/32" ];
         relay_domains = [ "lilac.lab.shortcord.com" "shortcord.com" "owo.systems" "owo.solutions" "owo.gallery" "mousetail.dev" ];
         parent_domain_matches_subdomains = [ "relay_domains" ];
 
         # Allow connections from trusted networks only.
         smtpd_client_restrictions = [ "permit_mynetworks" "reject" ];
-
 
         # Enforce server to always ehlo
         smtpd_helo_required = "yes";
