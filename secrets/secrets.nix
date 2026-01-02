@@ -34,6 +34,8 @@ in
   "violet.lab.shortcord.com/gallery-dl-config.age".publicKeys = all;
   "violet.lab.shortcord.com/wg0-private-key.age".publicKeys = all;
   "violet.lab.shortcord.com/acmeCredentialsFile.age".publicKeys = all;
+  "violet.lab.shortcord.com/minioPrometheusBearerToken.age".publicKeys = all;
+  "violet.lab.shortcord.com/mysqldExporterConfig.age".publicKeys = all;
 
   # Secrets for vm-01.hetzner.owo.systems
   "vm-01.hetzner.owo.systems/prometheusBasicAuthPassword.age".publicKeys = all;
