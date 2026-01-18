@@ -7,6 +7,8 @@ let
     "node.01.servers.owo.solutions"
     "node.02.servers.owo.solutions"
     "storage.owo.systems"
+    "labmox.ts.shortcord.com"
+    "gateway.rack02.shortcord.com"
   ];
   nodeExporterTargets = [
     # Nodes over internet
@@ -26,6 +28,7 @@ let
     "violet.ts.shortcord.com:9100"
     "storage.ts.shortcord.com:9100"
     "lavender.ts.shortcord.com:9100"
+    "labmox.ts.shortcord.com:9100"
   ];
   powerdnsExporterTargets = [
     "powerdns.vm-01.hetzner.owo.systems:443"
