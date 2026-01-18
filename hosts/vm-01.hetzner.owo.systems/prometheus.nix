@@ -1,34 +1,49 @@
 { name, pkgs, lib, config, ... }:
 let
   icmpTargets = [
-    "home.shortcord.com"
-    "router.cloud.shortcord.com"
-    "maus.ts.shortcord.com"
-    "violet.ts.shortcord.com"
+    "route.cloud.shortcord.com"
+    "pve.owo.solutions"
     "ns2.owo.solutions"
+    "node.01.servers.owo.solutions"
+    "node.02.servers.owo.solutions"
+    "storage.owo.systems"
+    "labmox.ts.shortcord.com"
+    "gateway.rack02.shortcord.com"
   ];
   nodeExporterTargets = [
-    "pve.owo.solutions:9100"
-    "vm-01.hetzner.owo.systems:9100"
-    "violet.ts.shortcord.com:9100"
+    # Nodes over internet
+    "node.01.servers.owo.solutions:9100"
+    "node.02.servers.owo.solutions:9100"
     "ipfs-pin-node-01.owo.systems:9100"
     "ipfs-01.owo.systems:9100"
-    "storage.owo.systems:9100"
-    "maus.ts.shortcord.com:9100"
-    "node.02.servers.owo.solutions:9100"
-    "ns2.owo.solutions:9100"
-    "octoprint.lab.shortcord.com:9100"
     "svc.rocky.shinx.dev:9100"
+
+    # Nodes over Tailscale
+    "ns2.ts.shortcord.com:9100"
+    "pve.ts.shortcord.com:9100"
     "feta.ts.shortcord.com:9100"
+    "maus.ts.shortcord.com:9100"
+    "vm-01.ts.shortcord.com:9100"
     "lilac.ts.shortcord.com:9100"
-    "lavender.lab.shortcord.com:9100"
+    "violet.ts.shortcord.com:9100"
+    "storage.ts.shortcord.com:9100"
+    "lavender.ts.shortcord.com:9100"
+    "labmox.ts.shortcord.com:9100"
   ];
-  powerdnsExporterTargets =
-    [ "powerdns.vm-01.hetzner.owo.systems:443" "powerdns.ns2.owo.systems:443" ];
-  mysqldExporterTargets =
-    [ "vm-01.hetzner.owo.systems:9104" "ns2.owo.systems:9104" ];
-  processExporterTargets = [ "svc.rocky.shinx.dev:9256" ];
-  apcupsdExporterTargets = [ "violet.ts.shortcord.com:9162" ];
+  powerdnsExporterTargets = [
+    "powerdns.vm-01.hetzner.owo.systems:443"
+    "powerdns.ns2.owo.systems:443"
+  ];
+  mysqldExporterTargets = [
+    "vm-01.hetzner.owo.systems:9104"
+    "ns2.owo.systems:9104"
+  ];
+  processExporterTargets = [
+    "svc.rocky.shinx.dev:9256"
+  ];
+  apcupsdExporterTargets = [
+    "violet.ts.shortcord.com:9162"
+  ];
 
 in {
   age.secrets = {
