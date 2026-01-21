@@ -247,29 +247,29 @@
           deployment.tags = [ "keycloak" "auth" ];
           imports = [ ./hosts/${name}.nix ];
         };
+
+        "gitlab.rack02.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "keycloak" "auth" ];
+          imports = [ ./containers/gitlab.shortcord.com.nix ];
+        };
       };
 
-      nixosConfigurations = lib.pipe colmenaConfiguration [
-        colmena.lib.makeHive
-        (builtins.getAttr "nodes")
-        builtins.attrValues
-        (builtins.map (node: {
-          name = node.config.networking.hostName;
-          value = node;
-        }))
-      ];
+      hive = colmena.lib.makeHive colmenaConfiguration;
 
-      vmPackages = lib.pipe nixosConfigurations [
-        (builtins.filter (obj: !obj.value.config.boot.isContainer))
-        (builtins.map (node: {
-          name = "${node.value.config.networking.hostName}";
-          value = node.value.config.formats.raw-efi;
-        }))
-        builtins.listToAttrs
-      ];
+      # Let's pull this inline fnc out instead
+      safeName = n: lib.replaceStrings [ "." ] [ "-" ] n;
+
+      vmPackages = lib.mapAttrs' (n: node:
+        lib.nameValuePair (safeName n) node.config.formats.raw-efi
+      ) (lib.filterAttrs (_: node: !node.config.boot.isContainer) hive.nodes);
+
+      lxcPackages = lib.mapAttrs' (n: node:
+        lib.nameValuePair (safeName n) node.config.formats.proxmox-lxc
+      ) (lib.filterAttrs (_: node: node.config.boot.isContainer) hive.nodes);
+
     in {
       colmena = colmenaConfiguration;
-      nixosConfigurations = builtins.listToAttrs nixosConfigurations;
+      nixosConfigurations = hive.nodes;
     } // flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
@@ -281,5 +281,10 @@
           buildInputs = [ pkgs.ragenix pkgs.colmena pkgs.nixfmt ];
         };
       }) // flake-utils.lib.eachSystem [ "x86_64-linux" ]
-    (system: { packages.vm = vmPackages; });
+    (system: { 
+      # flatten packages
+      packages =
+        (lib.mapAttrs' (n: v: lib.nameValuePair "vm-${n}" v) vmPackages)
+        // (lib.mapAttrs' (n: v: lib.nameValuePair "lxc-${n}" v) lxcPackages);
+    });
 }

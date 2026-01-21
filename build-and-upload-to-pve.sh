@@ -16,7 +16,7 @@ if [[ -z "${3}" ]]; then
     exit 1
 fi
 
-nix build ".#vm.${1}" || ( echo "nix broke :("; exit 1; )
+nix build ".#vm-${1}" || ( echo "nix broke :("; exit 1; )
 
 rsync -P --copy-links result/nixos.img root@"${3}":"/tmp/nixos.img" || ( echo "rsync broke :(("; exit 1; )
 
