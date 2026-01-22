@@ -55,7 +55,7 @@
         nixos-generators.nixosModules.all-formats
       ];
 
-      scConfig = import ./config/default.nix;
+      scConfig = import ./config/default.nix { inherit lib };
       unstablePkgs = import nixpkgs-unstable {
         system = "x86_64-linux";
         overlays = overlays;
