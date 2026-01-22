@@ -1,4 +1,4 @@
-{ config, modulesPath, ... }: {
+{ config, lib, modulesPath, ... }: {
     imports = [
         (modulesPath + "/virtualisation/proxmox-lxc.nix")
     ];
@@ -9,4 +9,8 @@
         manageNetwork = false;
         manageHostName = false;
     };
+
+    age.identityPaths = lib.mkAfter [
+        "/agenix/shared-container-key"
+    ];
 }
