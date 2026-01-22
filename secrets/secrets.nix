@@ -1,76 +1,77 @@
 let
-  scConfig = import ../config/default.nix;
-  all = scConfig.sshkeys.users.short ++ scConfig.sshkeys.hosts.general;
+  ## Import the flake one dir above to get lib
+  flake = builtins.getFlake (toString ../.);
+  lib = flake.inputs.nixpkgs.lib;
+
+  ## this config is a bit more than just a set, we doin' funny magic here
+  scConfig = import ../config/default.nix { inherit lib; };
+
+  mkHostSecrets = fqdn: names:
+    lib.genAttrs
+      (map (n: "${fqdn}/${n}.age") names)
+      (_: { publicKeys = scConfig.keyForHost fqdn; });
 in
 {
   # General Secrets
-  "general/distributedUserSSHKey.age".publicKeys = all;
-  "general/pdnsApiKey.age".publicKeys = all;
-  "general/promtailPassword.age".publicKeys = all;
-  "general/acmeCredentialsFile.age".publicKeys = all;
-  "general/restic-password.age".publicKeys = all;
-  "general/restic-s3-env.age".publicKeys = all;
-  "general/headscaleKey.age".publicKeys = all;
-  "general/pia.age".publicKeys = all;
-
-  # Secrets for ns2.owo.systems
-  "ns2.owo.systems/wireguardPrivateKey.age".publicKeys = all;
-  "ns2.owo.systems/wireguardPresharedKey.age".publicKeys = all;
-  "ns2.owo.systems/powerdnsConfig.age".publicKeys = all;
-  "ns2.owo.systems/mysqldExporterConfig.age".publicKeys = all;
-  "ns2.owo.systems/invoiceplane-dbpwd.age".publicKeys = all;
-  
-  # Secrets for storage.owo.systems
-  "storage.owo.systems/minioSecret.age".publicKeys = all;
-  "storage.owo.systems/acmeCredentialsFile.age".publicKeys = all;
-  "storage.owo.systems/wireguardPrivateKey.age".publicKeys = all;
-  "storage.owo.systems/wireguardPresharedKey.age".publicKeys = all;
-  
-  # Secrets for violet.lab.shortcord.com
-  "violet.lab.shortcord.com/nix-serve.age".publicKeys = all;
-  "violet.lab.shortcord.com/calckey-config.age".publicKeys = all;
-  "violet.lab.shortcord.com/minioSecret.age".publicKeys = all;
-  "violet.lab.shortcord.com/wingsToken.age".publicKeys = all;
-  "violet.lab.shortcord.com/gallery-dl-config.age".publicKeys = all;
-  "violet.lab.shortcord.com/wg0-private-key.age".publicKeys = all;
-  "violet.lab.shortcord.com/acmeCredentialsFile.age".publicKeys = all;
-  "violet.lab.shortcord.com/minioPrometheusBearerToken.age".publicKeys = all;
-  "violet.lab.shortcord.com/mysqldExporterConfig.age".publicKeys = all;
-
-  # Secrets for vm-01.hetzner.owo.systems
-  "vm-01.hetzner.owo.systems/prometheusBasicAuthPassword.age".publicKeys = all;
-  "vm-01.hetzner.owo.systems/powerdnsConfig.age".publicKeys = all;
-  "vm-01.hetzner.owo.systems/wireguardPrivateKey.age".publicKeys = all;
-  "vm-01.hetzner.owo.systems/powerdns-env.age".publicKeys = all;
-  "vm-01.hetzner.owo.systems/blackbox.age".publicKeys = all;
-  "vm-01.hetzner.owo.systems/minioPrometheusBearerToken.age".publicKeys = all;
-  "vm-01.hetzner.owo.systems/lokiConfig.age".publicKeys = all;
-  "vm-01.hetzner.owo.systems/lokiBasicAuth.age".publicKeys = all;
-  "vm-01.hetzner.owo.systems/mysqldExporterConfig.age".publicKeys = all;
-  "vm-01.hetzner.owo.systems/nextcloudDbPass.age".publicKeys = all;
-  "vm-01.hetzner.owo.systems/nextcloudAdminPass.age".publicKeys = all;
-  "vm-01.hetzner.owo.systems/nextcloudS3Secret.age".publicKeys = all;
-  "vm-01.hetzner.owo.systems/netboxSecretKey.age".publicKeys = all;
-  "vm-01.hetzner.owo.systems/wingsToken.age".publicKeys = all;
-  "vm-01.hetzner.owo.systems/searxng.age".publicKeys = all;
-
-  # Secrets for lilac.lab.shortcord.com
-  "lilac.lab.shortcord.com/catstodon.env.age".publicKeys = all;
-  "lilac.lab.shortcord.com/wireguardPrivateKey.age".publicKeys = all;
-
-  # Secrets for miauws.life
-  "miauws.life/catstodon.env.age".publicKeys = all;
-  "miauws.life/email-short.env.age".publicKeys = all;
-  "miauws.life/email-noreply.env.age".publicKeys = all;
-
-  # Secrets for keycloak.owo.solutionss
-  "keycloak.owo.solutions/keycloak-psql-password.age".publicKeys = all;
-  "keycloak.owo.solutions/wireguard-mailrelay-key.age".publicKeys = all;
-
-  # Secrets for hydra.owo.solutions
-  "hydra.owo.solutions/nix-serve.age".publicKeys = all;
-
-  # lavender.lab.shortcord.com
-  "lavender.lab.shortcord.com/minioSecret.age".publicKeys = all;
-
+  "general/distributedUserSSHKey.age".publicKeys = scConfig.sshkeys.allHosts;
+  "general/pdnsApiKey.age".publicKeys = scConfig.sshkeys.allHosts;
+  "general/promtailPassword.age".publicKeys = scConfig.sshkeys.allHosts;
+  "general/acmeCredentialsFile.age".publicKeys = scConfig.sshkeys.allHosts;
+  "general/restic-password.age".publicKeys = scConfig.sshkeys.allHosts;
+  "general/restic-s3-env.age".publicKeys = scConfig.sshkeys.allHosts;
+  "general/headscaleKey.age".publicKeys = scConfig.sshkeys.allHosts;
+  "general/pia.age".publicKeys = scConfig.sshkeys.allHosts;
 }
+  // mkHostSecrets "ns2.owo.systems" [
+    "wireguardPrivateKey"
+    "wireguardPresharedKey"
+    "powerdnsConfig"
+    "mysqldExporterConfig"
+    "invoiceplane-dbpwd"
+  ]
+  // mkHostSecrets "storage.owo.systems" [
+    "minioSecret"
+    "acmeCredentialsFile"
+    "wireguardPrivateKey"
+    "wireguardPresharedKey"
+   ]
+  // mkHostSecrets "violet.lab.shortcord.com" [
+    "nix-serve"
+    "calckey-config"
+    "minioSecret"
+    "wingsToken"
+    "gallery-dl-config"
+    "wg0-private-key"
+    "acmeCredentialsFile"
+    "minioPrometheusBearerToken"
+    "mysqldExporterConfig"
+    "deluged"
+  ]
+  // mkHostSecrets "vm-01.hetzner.owo.systems" [
+    "prometheusBasicAuthPassword"
+    "powerdnsConfig"
+    "wireguardPrivateKey"
+    "powerdns-env"
+    "blackbox"
+    "minioPrometheusBearerToken"
+    "lokiConfig"
+    "lokiBasicAuth"
+    "mysqldExporterConfig"
+    "nextcloudDbPass"
+    "nextcloudAdminPass"
+    "nextcloudS3Secret"
+    "netboxSecretKey"
+    "wingsToken"
+    "searxng"
+  ]
+  // mkHostSecrets "lilac.lab.shortcord.com" [
+    "catstodon.env"
+    "wireguardPrivateKey"
+   ]
+  // mkHostSecrets "keycloak.owo.solutions" [
+    "keycloak-psql-password"
+    "wireguard-mailrelay-key"
+  ]
+  // mkHostSecrets "lavender.lab.shortcord.com" [
+    "minioSecret"
+  ]
