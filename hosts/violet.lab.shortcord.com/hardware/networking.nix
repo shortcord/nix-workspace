@@ -68,7 +68,11 @@
           matchConfig.MACAddress = "C8:1F:66:E6:7A:52";
           linkConfig.RequiredForOnline = "no";
           address = [ "10.18.0.1/24" ];
-          networkConfig = { DHCPServer = true; };
+          networkConfig = { 
+            DHCPServer = true;
+            IPMasquerade = "ipv4";
+            IPv4Forwarding = true;
+          };
           dhcpServerConfig = {
             ServerAddress = "10.18.0.1/24";
             DNS = "10.18.0.1";
