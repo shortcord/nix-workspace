@@ -1,9 +1,10 @@
 { name, pkgs, lib, config, ... }: 
 let
-  _jellyfin = config.services.jellyfin;
+  _nginxVirtualHosts = config.services.nginx.virtualHosts;
+  _vhosts = builtins.attrNames (_nginxVirtualHosts);
 in {
-  networking.hosts = lib.mkIf _jellyfin.enable {
-    "10.18.0.1" = [ "jellyfin.shortcord.com" ];
+  networking.hosts = {
+    "10.18.0.1" = _vhosts;
   };
   services = {
     resolved.enable = false;
