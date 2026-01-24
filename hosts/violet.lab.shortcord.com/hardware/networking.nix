@@ -11,6 +11,26 @@
       wait-online.anyInterface = true;
       enable = true;
       netdevs = {
+        wg0 = {
+          netdevConfig = {
+            Kind = "wireguard";
+            Name = "wg0";
+            Description = "Tunnel to Rack02";
+          };
+          wireguardConfig = {
+            ListenPort = "auto";
+            PrivateKeyFile = config.age.secrets.wg0-private-key.path;
+            RouteTable = "off";
+          };
+          wireguardPeers = [
+            {
+              PublicKey = "a/kBn642nCzwQDCsPgI19hf15yqpZvSwqXnQDjGpQ14=";
+              Endpoint = "gateway.rack02.shortcord.com:51820";
+              AllowedIPs = [ "10.76.0.1/31" "0.0.0.0/0" ];
+              PersistentKeepalive = 5;
+            }
+          ];
+        };
         vmbr0 = {
           netdevConfig = {
             Kind = "bridge";
@@ -19,6 +39,22 @@
         };
       };
       networks = {
+        "wg0" = {
+          matchConfig.Name = "wg0";
+          networkConfig = {
+            Address = "10.76.0.2/31";
+          };
+          routes = [
+            { 
+              Scope = "link";
+              Destination = "10.76.0.1";
+            }
+            {
+              Destination = "10.70.0.0/24";
+              Gateway = "10.76.0.1";
+            }
+          ];
+        };
         "10-wan" = {
           matchConfig.MACAddress = "98:B7:85:20:05:8A";
           networkConfig = {
