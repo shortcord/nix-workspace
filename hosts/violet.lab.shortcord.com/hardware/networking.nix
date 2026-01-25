@@ -126,7 +126,10 @@
         };
         "30-storage" = {
           matchConfig.MACAddress = "0C:42:A1:0B:C1:AE";
-          linkConfig.RequiredForOnline = "no";
+          linkConfig = {
+            RequiredForOnline = "no";
+            MTUBytes = 9200;
+          };
           address = [ "10.66.0.1/30" ];
           networkConfig = {
             DHCP = "no";
