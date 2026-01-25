@@ -18,7 +18,7 @@
         enable = true;
         nproc = 128;
         exports = ''
-            /var/lib/vmdata 10.65.0.0/30(rw,no_root_squash) 10.66.0.0/30(rw,no_root_squash,async,rw,no_subtree_check)
+            /var/lib/vmdata 10.65.0.0/30(rw,no_root_squash) 10.66.0.0/30(rw,no_root_squash,async,rw,no_subtree_check) 100.64.0.0/24(rw,no_root_squash,async,rw,no_subtree_check)
             /var/jellyfin 100.64.0.0/24(rw,async,rw,no_subtree_check,all_squash,anonuid=990,anongid=983)
         '';
     };
