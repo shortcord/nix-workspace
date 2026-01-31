@@ -77,28 +77,6 @@
     };
   };
 
-  security.acme = {
-    # there has to be a better way :(
-    certs = {
-      "admin.${config.networking.fqdn}" = {
-        inheritDefaults = true;
-        dnsProvider = "pdns";
-        environmentFile = config.age.secrets.acmeCredentialsFile.path;
-        webroot = null;
-      };
-      "storage.${config.networking.fqdn}" = {
-        inheritDefaults = true;
-        dnsProvider = "pdns";
-        environmentFile = config.age.secrets.acmeCredentialsFile.path;
-        webroot = null;
-      };
-    };
-  };
-
-  age.secrets = {
-    minioSecret.file = ../secrets/${name}/minioSecret.age;
-  };
-
   services = {
     pdns-recursor = {
       enable = true;
@@ -113,72 +91,6 @@
         node = {
           enable = true;
           openFirewall = true;
-        };
-      };
-    };
-    minio = {
-      enable = true;
-      rootCredentialsFile = config.age.secrets.minioSecret.path;
-      listenAddress = "127.0.0.1:9000";
-      consoleAddress = "127.0.0.1:9001";
-      region = "de-01";
-    };
-    nginx = {
-      enable = true;
-      recommendedTlsSettings = true;
-      recommendedOptimisation = true;
-      recommendedGzipSettings = true;
-      recommendedProxySettings = true;
-      recommendedBrotliSettings = true;
-      eventsConfig = ''
-        worker_connections 20000;
-      '';
-      virtualHosts = {
-        "admin.${config.networking.fqdn}" = {
-          kTLS = true;
-          http2 = true;
-          http3 = true;
-          forceSSL = true;
-          enableACME = true;
-
-          extraConfig = ''
-            ignore_invalid_headers off;
-            client_max_body_size 0;
-            proxy_buffering off;
-            proxy_request_buffering off;
-            proxy_set_header X-NginX-Proxy true;
-            chunked_transfer_encoding off;
-          '';
-
-          locations."/" = {
-            proxyPass = "http://${config.services.minio.consoleAddress}";
-            proxyWebsockets = true;
-          };
-        };
-        "storage.${config.networking.fqdn}" = {
-          kTLS = true;
-          http2 = true;
-          http3 = true;
-          forceSSL = true;
-          enableACME = true;
-
-          extraConfig = ''
-            ignore_invalid_headers off;
-            client_max_body_size 0;
-            proxy_buffering off;
-            proxy_request_buffering off;
-            proxy_set_header X-NginX-Proxy true;
-            chunked_transfer_encoding off;
-          '';
-
-          locations."/" = {
-            proxyPass = "http://${config.services.minio.listenAddress}";
-            proxyWebsockets = true;
-            extraConfig = ''
-              proxy_connect_timeout 600;
-              chunked_transfer_encoding off;
-            '';
-          };
         };
       };
     };
