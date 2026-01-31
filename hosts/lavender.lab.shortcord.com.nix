@@ -1,5 +1,5 @@
 { name, nodes, pkgs, lib, config, ... }: {
-  system.stateVersion = "24.11";
+  system.stateVersion = "25.11";
 
   imports = [ ./general/all.nix ];
 
@@ -21,9 +21,7 @@
       networks = {
         "10-lan" = {
           matchConfig.MACAddress = "14:18:77:5b:a9:87";
-          linkConfig = {
-            RequiredForOnline = true;
-          };
+          linkConfig = { RequiredForOnline = true; };
           networkConfig = {
             DHCP = "yes";
             DNS = "127.0.0.1";
@@ -43,10 +41,12 @@
     kernelModules = [ ];
     extraModulePackages = [ ];
     kernelParams = [ "kvm-intel" ];
-    loader.grub.enable = false;
-    loader.systemd-boot = {
-      enable = true;
-      configurationLimit = 5;
+    loader = {
+      grub.enable = false;
+      systemd-boot = {
+        enable = true;
+        configurationLimit = 5;
+      };
     };
     initrd = {
       availableKernelModules = [
