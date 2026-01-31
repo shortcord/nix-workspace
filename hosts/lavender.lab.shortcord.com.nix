@@ -12,11 +12,6 @@
       device = "/dev/disk/by-label/NIXBOOT";
       fsType = "vfat";
     };
-    "/var/lib/minio/data" = {
-      device = "/dev/disk/by-label/DATA";
-      fsType = "xfs";
-      options = [ "noatime" "nodiratime" "rw" "defaults" ];
-    };
   };
 
   systemd = {
