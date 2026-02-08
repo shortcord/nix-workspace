@@ -12,6 +12,10 @@
       device = "/dev/disk/by-label/NIXBOOT";
       fsType = "vfat";
     };
+    "/data" = {
+      device = "/dev/disk/by-label/DATA";
+      fsType = "xfs";
+    };
   };
 
   systemd = {
@@ -25,6 +29,19 @@
           networkConfig = {
             DHCP = "yes";
             DNS = "127.0.0.1";
+          };
+        };
+        "20-storage" = {
+          matchConfig.MACAddress = "14:18:77:5b:a9:88";
+          linkConfig = { 
+            RequiredForOnline = false;
+            MTUBytes = 9200;
+          };
+          address = [ "10.65.0.2/30" ];
+          networkConfig = {
+            DHCP = "no";
+            DNS = "no";
+            IPv6AcceptRA = false;
           };
         };
       };
@@ -73,6 +90,13 @@
   };
 
   services = {
+    nfs.server = {
+      enable = true;
+      nproc = 128;
+      exports = ''
+          /data/vmdata 10.65.0.1/32(rw,no_root_squash,async,rw,no_subtree_check)
+      '';
+    };
     pdns-recursor = {
       enable = true;
       dns = {
