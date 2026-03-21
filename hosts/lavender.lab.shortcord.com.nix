@@ -94,7 +94,12 @@
       enable = true;
       nproc = 128;
       exports = ''
+          # Local Proxmox Node
           /data/vmdata 10.65.0.1/32(rw,no_root_squash,async,rw,no_subtree_check)
+          
+          # Tailscale Nodes
+          /data/vmdata 100.64.0.0/10(rw,no_root_squash,async,rw,no_subtree_check)
+          /data/vmdata [fd7a:115c:a1e0::/48](rw,no_root_squash,async,rw,no_subtree_check)
       '';
     };
     pdns-recursor = {
