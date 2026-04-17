@@ -30,7 +30,6 @@ in {
 
   networking = {
     useDHCP = false;
-    nameservers = [ "10.18.0.1" ];
     firewall = {
       enable = true;
       allowedUDPPorts = [ ];
