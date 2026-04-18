@@ -104,7 +104,8 @@
           ## TODO: await for a patch to remove --update-input
           # ref: https://github.com/NixOS/nixpkgs/issues/349734
           system.autoUpgrade = {
-            enable = true;
+            # Broken due to me making nixosConfigurations' hostname fqdn by default instead of a short name
+            enable = false;
             flake =
               "git+https://gitlab.shortcord.com/shortcord/nix-workspace.git?ref=main";
             flags = [
@@ -234,6 +235,8 @@
 
         "lilac.lab.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "infra" "lab" "mastodon" "lilac" ];
+          # VM sits behind firewall, tailscale is needed for ssh deployment
+          deployment.targetHost = "lilac.ts.shortcord.com";
           imports = [ ./hosts/${name}.nix ];
         };
 
