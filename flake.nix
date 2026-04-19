@@ -254,11 +254,6 @@
           deployment.tags = [ "keycloak" "auth" ];
           imports = [ ./containers/gitlab.shortcord.com.nix ];
         };
-
-        "storage.rack02.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
-          deployment.tags = [ "keycloak" "auth" ];
-          imports = [ ./containers/${name}.nix ];
-        };
       };
 
       hive = colmena.lib.makeHive colmenaConfiguration;
