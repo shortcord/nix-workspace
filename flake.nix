@@ -104,8 +104,7 @@
           ## TODO: await for a patch to remove --update-input
           # ref: https://github.com/NixOS/nixpkgs/issues/349734
           system.autoUpgrade = {
-            # Broken due to me making nixosConfigurations' hostname fqdn by default instead of a short name
-            enable = false;
+            enable = true;
             flake =
               "git+https://gitlab.shortcord.com/shortcord/nix-workspace.git?ref=main";
             flags = [
@@ -255,6 +254,11 @@
           deployment.tags = [ "keycloak" "auth" ];
           imports = [ ./containers/gitlab.shortcord.com.nix ];
         };
+
+        "storage.rack02.shortcord.com" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "keycloak" "auth" ];
+          imports = [ ./containers/${name}.nix ];
+        };
       };
 
       hive = colmena.lib.makeHive colmenaConfiguration;
@@ -272,7 +276,7 @@
 
     in {
       colmena = colmenaConfiguration;
-      nixosConfigurations = hive.nodes;
+      nixosConfigurations = lib.mapAttrs'(n: v: lib.nameValuePair (builtins.head (lib.splitString "." n)) v) hive.nodes;
     } // flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
