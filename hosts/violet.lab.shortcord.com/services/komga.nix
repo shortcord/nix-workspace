@@ -1,10 +1,4 @@
 { pkgs, config, ... }: {
-  security.acme.certs."komga.${config.networking.fqdn}" = {
-    inheritDefaults = true;
-    dnsProvider = "pdns";
-    environmentFile = config.age.secrets.acmeCredentialsFile.path;
-    webroot = null;
-  };
   virtualisation = {
     oci-containers = {
       containers = {
@@ -26,7 +20,7 @@
           http2 = true;
           http3 = true;
           forceSSL = true;
-          enableACME = true;
+          useACMEHost = "${config.networking.fqdn}";
           locations."/" = { proxyPass = "http://127.0.0.2:25600"; };
         };
       };

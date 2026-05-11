@@ -1,20 +1,6 @@
 { name, pkgs, config, lib, ... }: {
   age.secrets.nix-serve.file = ../../../secrets/${name}/nix-serve.age;
   nix.settings.secret-key-files = [ config.age.secrets.nix-serve.path ];
-  security.acme.certs = {
-    "binarycache.${config.networking.fqdn}" = {
-      inheritDefaults = true;
-      dnsProvider = "pdns";
-      environmentFile = config.age.secrets.acmeCredentialsFile.path;
-      webroot = null;
-    };
-    "hydra.${config.networking.fqdn}" = {
-      inheritDefaults = true;
-      dnsProvider = "pdns";
-      environmentFile = config.age.secrets.acmeCredentialsFile.path;
-      webroot = null;
-    };
-  };
   services = {
     nginx = {
       virtualHosts = {
@@ -23,7 +9,7 @@
           http2 = true;
           http3 = true;
           forceSSL = true;
-          enableACME = true;
+          useACMEHost = "${config.networking.fqdn}";
 
           locations."/" = {
             proxyPass = "http://${config.services.nix-serve.bindAddress}:${
@@ -37,7 +23,7 @@
             http2 = true;
             http3 = true;
             forceSSL = true;
-            enableACME = true;
+            useACMEHost = "${config.networking.fqdn}";
 
             locations."/" = {
               proxyPass = "http://${config.services.hydra.listenHost}:${

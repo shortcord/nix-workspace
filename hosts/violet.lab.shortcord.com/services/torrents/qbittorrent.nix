@@ -1,10 +1,4 @@
 { name, pkgs, config, lib, ... }: {
-  security.acme.certs."qbittorrent.${config.networking.fqdn}" = {
-        inheritDefaults = true;
-        dnsProvider = "pdns";
-        environmentFile = config.age.secrets.acmeCredentialsFile.path;
-        webroot = null;
-      };
   fileSystems = {
     "/var/lib/qbittorrent" = {
       device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
@@ -31,7 +25,8 @@
           http2 = true;
           http3 = true;
           forceSSL = true;
-          enableACME = true;
+          useACMEHost = "${config.networking.fqdn}";
+
           locations."/" = { proxyPass = "http://127.0.0.1:8082"; };
         };
       };

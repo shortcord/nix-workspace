@@ -32,7 +32,7 @@
           http2 = true;
           http3 = true;
           forceSSL = true;
-          enableACME = true;
+          useACMEHost = "jellyfin.shortcord.com";
 
           extraConfig = ''
             client_max_body_size 20M;

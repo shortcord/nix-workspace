@@ -1,12 +1,4 @@
 { name, pkgs, lib, config, ... }: {
-  security.acme.certs = {
-    "actual.${config.networking.fqdn}" = {
-      inheritDefaults = true;
-      dnsProvider = "pdns";
-      environmentFile = config.age.secrets.acmeCredentialsFile.path;
-      webroot = null;
-    };
-  };
   services.nginx = {
     virtualHosts = {
       "actual.${config.networking.fqdn}" = {
@@ -14,7 +6,8 @@
         http2 = true;
         http3 = true;
         forceSSL = true;
-        enableACME = true;
+        useACMEHost = "${config.networking.fqdn}";
+
         locations."/" = { proxyPass = "http://127.0.0.2:5006"; };
       };
     };

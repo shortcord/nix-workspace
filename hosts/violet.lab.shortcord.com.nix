@@ -23,6 +23,12 @@
     distributedBuilds = lib.mkForce false;
   };
 
+  security.acme.certs."${config.networking.fqdn}" = {
+    inheritDefaults = true;
+    extraDomainNames = [ "*.${config.networking.fqdn}" ];
+  };
+  users.users.nginx.extraGroups = [ "acme" ];
+
   nixpkgs = {
     hostPlatform = "x86_64-linux";
     config = {

@@ -22,7 +22,7 @@
           http2 = true;
           http3 = true;
           forceSSL = true;
-          enableACME = true;
+          useACMEHost = "${config.networking.fqdn}";
 
           extraConfig = ''
             ignore_invalid_headers off;
@@ -45,7 +45,7 @@
           http2 = true;
           http3 = true;
           forceSSL = true;
-          enableACME = true;
+          useACMEHost = "${config.networking.fqdn}";
 
           extraConfig = ''
             ignore_invalid_headers off;

@@ -6,12 +6,6 @@
       group = config.services.pterodactyl.wings.group;
     };
   };
-  security.acme.certs."wings.${config.networking.fqdn}" = {
-    inheritDefaults = true;
-    dnsProvider = "pdns";
-    environmentFile = config.age.secrets.acmeCredentialsFile.path;
-    webroot = null;
-  };
   services = {
     pterodactyl.wings = {
       enable = true;
@@ -35,7 +29,7 @@
           http2 = true;
           http3 = true;
           forceSSL = true;
-          enableACME = true;
+          useACMEHost = "${config.networking.fqdn}";
 
           locations."/" = {
             proxyWebsockets = true;

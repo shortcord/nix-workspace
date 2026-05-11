@@ -74,20 +74,6 @@ in {
       group = "prometheus";
     };
   };
-  security.acme.certs = {
-    "prometheus.${config.networking.fqdn}" = {
-      inheritDefaults = true;
-      dnsProvider = "pdns";
-      environmentFile = config.age.secrets.acmeCredentialsFile.path;
-      webroot = null;
-    };
-    "grafana.${config.networking.fqdn}" = {
-      inheritDefaults = true;
-      dnsProvider = "pdns";
-      environmentFile = config.age.secrets.acmeCredentialsFile.path;
-      webroot = null;
-    };
-  };
   services = {
     nginx = lib.mkIf config.services.nginx.enable {
       virtualHosts = {
@@ -96,7 +82,7 @@ in {
           http2 = true;
           http3 = true;
           forceSSL = true;
-          enableACME = true;
+          useACMEHost = "${config.networking.fqdn}";
           locations."/" = {
             proxyPass =
               "http://${toString prometheusConfig.listenAddress}:${toString prometheusConfig.port}";
@@ -107,7 +93,7 @@ in {
           http2 = true;
           http3 = true;
           forceSSL = true;
-          enableACME = true;
+          useACMEHost = "${config.networking.fqdn}";
           locations."/" = {
             proxyWebsockets = true;
             proxyPass = 

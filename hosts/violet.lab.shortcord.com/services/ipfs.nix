@@ -1,18 +1,4 @@
 { pkgs, config, ... }: {
-  security.acme.certs = {
-    "ipfs.${config.networking.fqdn}" = {
-      inheritDefaults = true;
-      dnsProvider = "pdns";
-      environmentFile = config.age.secrets.acmeCredentialsFile.path;
-      webroot = null;
-    };
-    "ipns.${config.networking.fqdn}" = {
-      inheritDefaults = true;
-      dnsProvider = "pdns";
-      environmentFile = config.age.secrets.acmeCredentialsFile.path;
-      webroot = null;
-    };
-  };
   fileSystems = {
     "/var/lib/ipfs" = {
       device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
@@ -35,7 +21,7 @@
           http2 = true;
           http3 = true;
           forceSSL = true;
-          enableACME = true;
+          useACMEHost = "${config.networking.fqdn}";
 
           locations."/" = { proxyPass = "http://localhost:8080"; };
         };
@@ -44,7 +30,7 @@
           http2 = true;
           http3 = true;
           forceSSL = true;
-          enableACME = true;
+          useACMEHost = "${config.networking.fqdn}";
 
           locations."/" = { proxyPass = "http://localhost:8080"; };
         };

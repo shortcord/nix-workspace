@@ -4,13 +4,6 @@ let
   dlDirectory = "${webRoot}/archlinux";
   upstream = "rsync://mirrors.edge.kernel.org/archlinux/";
 in {
-  security.acme.certs."repos.${config.networking.fqdn}" = {
-    inheritDefaults = true;
-    dnsProvider = "pdns";
-    environmentFile = config.age.secrets.acmeCredentialsFile.path;
-    webroot = null;
-  };
-
   fileSystems = {
     "/var/repo-mirrors" = {
       device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
@@ -76,7 +69,7 @@ in {
         http2 = true;
         http3 = true;
         forceSSL = true;
-        enableACME = true;
+        useACMEHost = "${config.networking.fqdn}";
 
         root = webRoot;
 

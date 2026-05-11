@@ -1,11 +1,5 @@
 { config, pkgs, ... }: 
 {
-  security.acme.certs."lidarr.${config.networking.fqdn}" = {
-        inheritDefaults = true;
-        dnsProvider = "pdns";
-        environmentFile = config.age.secrets.acmeCredentialsFile.path;
-        webroot = null;
-      };
   services = {
     lidarr = { 
       enable = true;
@@ -18,7 +12,8 @@
           http2 = true;
           http3 = true;
           forceSSL = true;
-          enableACME = true;
+          useACMEHost = "${config.networking.fqdn}";
+
           locations."/" = {
             proxyPass = "http://127.0.0.1:8686";
             proxyWebsockets = true;
