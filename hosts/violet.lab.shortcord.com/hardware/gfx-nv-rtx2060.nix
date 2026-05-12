@@ -9,6 +9,7 @@ hardware = {
       powerManagement.enable = true;
       nvidiaPersistenced = true;
     };
+    nvidia-container-toolkit.enable = true;
   };
   services.xserver = {
     enable = false;
