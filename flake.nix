@@ -170,13 +170,14 @@
                 # Only add the resolvers if pdns-recursor is enabled and exportHosts is true, this is because lego will 
                 # resolve the wrong SOA record since exportHosts includes the host it runs on, aka SOA for violet is localhost
                 # which is factually wrong.
-                extraLegoFlags = lib.mkIf (config.services.pdns-recursor.enable && config.services.pdns-recursor.exportHosts) {
-                [
-                  # Quad9 DNS
-                  "--dns.resolvers=9.9.9.9:53"
-                  "--dns.resolvers=149.112.112.112:53"
-                ];
-              };
+                extraLegoFlags =
+                  lib.mkIf
+                    (config.services.pdns-recursor.enable
+                      && config.services.pdns-recursor.exportHosts)
+                    [
+                      "--dns.resolvers=9.9.9.9:53"
+                      "--dns.resolvers=149.112.112.112:53"
+                    ];
             };
           };
 
