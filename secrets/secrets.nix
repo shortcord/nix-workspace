@@ -46,7 +46,6 @@ in
     "minioPrometheusBearerToken"
     "mysqldExporterConfig"
     "deluged"
-    "vllmEnv"
   ]
   // mkHostSecrets "vm-01.hetzner.owo.systems" [
     "prometheusBasicAuthPassword"
