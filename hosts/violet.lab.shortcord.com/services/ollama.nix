@@ -6,7 +6,7 @@
     host = "0.0.0.0";
     package = unstablePkgs.ollama-cuda;
     environmentVariables = {
-      OLLAMA_CONTEXT_LENGTH = "64000";
+      OLLAMA_CONTEXT_LENGTH = "128000";
     };
   };
 }
