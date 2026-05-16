@@ -1,6 +1,10 @@
 { config, ... }: {
 
 hardware = {
+    nixpkgs.config = {
+      allowUnfree = true;
+      nvidia.acceptLicense = true;
+    };
     graphics.enable = true;
     nvidia = {
       open = false;
