@@ -82,7 +82,7 @@
 
   nixpkgs.config = {
     allowUnfree = true;
-    permittedInsecurePackages = [ "netbox-3.7.8" "nextcloud-27.1.11" ];
+    permittedInsecurePackages = [ "netbox-3.7.8" "nextcloud-27.1.11" "docker-28.5.2" ];
   };
 
   services = {
