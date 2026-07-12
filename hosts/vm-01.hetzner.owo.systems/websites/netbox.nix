@@ -5,6 +5,11 @@
       owner = "netbox";
       group = "netbox";
     };
+    netboxApiTokenPeppersFile = {
+      file = ../../../secrets/${name}/netboxApiTokenPeppersFile.age;
+      owner = "netbox";
+      group = "netbox";
+    };
   };
   users.users = {
     ## allow nginx user read/exec to the static directory
@@ -35,6 +40,7 @@
         ALLOWED_HOSTS = [ '*' ]
         LOGIN_REQUIRED = True
       '';
+      apiTokenPeppersFile = config.age.secrets.netboxApiTokenPeppersFile.path;
     };
     nginx = {
       virtualHosts = {

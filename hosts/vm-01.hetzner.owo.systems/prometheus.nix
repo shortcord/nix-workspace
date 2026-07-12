@@ -57,6 +57,9 @@ in {
       owner = "prometheus";
       group = "prometheus";
     };
+    grafanaSecretKey = {
+      file = ../../secrets/${name}/grafanaSecretKey.age;
+    };
   };
   services = {
     nginx = lib.mkIf config.services.nginx.enable {
@@ -98,6 +101,13 @@ in {
           http_port = 3000;
           domain = "grafana.${config.networking.fqdn}";
           root_url = "https://grafana.${config.networking.fqdn}";
+        };
+        security = {
+          secret_key = "__file{${config.age.secrets.grafanaSecretKey.path}}";
+          cookie_secure = true;
+          content_security_policy = true;
+          cookie_samesite = "strict";
+          disable_initial_admin_creation = true;
         };
       };
     };

@@ -10,7 +10,7 @@ let
 
     inherit (cfg.package) version src;
 
-    nativeBuildInputs = with pkgs.nodePackages; [ less ];
+    nativeBuildInputs = with pkgs; [ lessc ];
 
     buildPhase = ''
       mkdir -p $out
@@ -22,10 +22,10 @@ let
       less_dir=$src/less
       css_dir=$out/static/css
 
-      lessc $less_dir/app.less $css_dir/write.css
-      lessc $less_dir/fonts.less $css_dir/fonts.css
-      lessc $less_dir/icons.less $css_dir/icons.css
-      lessc $less_dir/prose.less $css_dir/prose.css
+      ${pkgs.lessc}/bin/lessc $less_dir/app.less $css_dir/write.css
+      ${pkgs.lessc}/bin/lessc $less_dir/fonts.less $css_dir/fonts.css
+      ${pkgs.lessc}/bin/lessc $less_dir/icons.less $css_dir/icons.css
+      ${pkgs.lessc}/bin/lessc $less_dir/prose.less $css_dir/prose.css
     '';
   };
 in {

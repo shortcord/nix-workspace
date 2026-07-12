@@ -49,6 +49,7 @@ in
   ]
   // mkHostSecrets "vm-01.hetzner.owo.systems" [
     "prometheusBasicAuthPassword"
+    "grafanaSecretKey"
     "powerdnsConfig"
     "wireguardPrivateKey"
     "powerdns-env"
@@ -61,6 +62,7 @@ in
     "nextcloudAdminPass"
     "nextcloudS3Secret"
     "netboxSecretKey"
+    "netboxApiTokenPeppersFile"
     "wingsToken"
     "searxng"
   ]
