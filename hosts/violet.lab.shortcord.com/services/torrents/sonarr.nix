@@ -1,4 +1,5 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, lib, ... }:
+{
   services = {
     sonarr = {
       enable = true;
@@ -23,7 +24,7 @@
   };
   systemd.services.sonarr = {
     serviceConfig = {
-      UMask = "0013";
+      UMask = lib.mkForce "0013";
     };
   };
 }

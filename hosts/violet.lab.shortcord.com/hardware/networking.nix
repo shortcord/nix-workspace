@@ -68,7 +68,7 @@
             UseDomains = false;
             UseDNS = false;
           };
-          dhcpV6Config = { RouteMetric = 2048; };
+          ipv6AcceptRAConfig = { RouteMetric = 2048; };
           routes = [
             {
               Gateway = "_dhcp4";
@@ -91,7 +91,7 @@
             UseDomains = false;
             UseDNS = false;
           };
-          dhcpV6Config = { RouteMetric = 1024; };
+          ipv6AcceptRAConfig = { RouteMetric = 1024; };
           routes = [
             {
               Gateway = "_dhcp4";

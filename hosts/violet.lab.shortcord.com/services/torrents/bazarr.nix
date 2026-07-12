@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: 
+{ config, pkgs, lib, ... }:
 {
   services = {
     bazarr = { 
@@ -24,7 +24,7 @@
   };
   systemd.services.bazarr = {
     serviceConfig = {
-      UMask = "0013";
+      UMask = lib.mkForce "0013";
     };
   };
 }

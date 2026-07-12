@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: 
+{ config, pkgs, lib, ... }:
 {
   services = {
     lidarr = { 
@@ -24,7 +24,7 @@
   };
   systemd.services.lidarr = {
     serviceConfig = {
-      UMask = "0013";
+      UMask = lib.mkForce "0013";
     };
   };
 }

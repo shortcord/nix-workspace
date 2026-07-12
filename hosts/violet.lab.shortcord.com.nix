@@ -34,12 +34,7 @@
     config = {
       allowUnfree = true;
       ## TODO: Update these packages
-      permittedInsecurePackages = [
-        "dotnet-sdk-6.0.428"
-        "aspnetcore-runtime-6.0.36"
-        "qbittorrent-nox-4.6.4"
-        "docker-28.5.2"
-      ];
+      permittedInsecurePackages = [ ];
     };
   };
 
