@@ -1,6 +1,9 @@
 { name, nodes, pkgs, lib, config, ... }: {
   system.stateVersion = "22.11";
 
+  # need to migrate to ceph or something, minio is depracated :(
+  nixpkgs.config.permittedInsecurePackages = [ "minio-2025-10-15T17-29-55Z" ];
+
   boot.loader.grub = {
     device = "/dev/disk/by-id/ata-HGST_HUS726060ALE610_K8GEVAAD";
     enable = true;
@@ -86,7 +89,7 @@
     defaults = {
       email = "short@shortcord.com";
       dnsProvider = "pdns";
-      credentialsFile = config.age.secrets.acmeCredentialsFile.path;
+      environmentFile =  config.age.secrets.acmeCredentialsFile.path;
       reloadServices = [ "minio.service" ];
     };
     certs = {
