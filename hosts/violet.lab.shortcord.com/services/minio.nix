@@ -1,4 +1,4 @@
-{ name, pkgs, config, ... }: {
+{ name, pkgs, config, secretPath, ... }: {
   fileSystems = {
     "/var/lib/minio" = {
       device = "/dev/disk/by-uuid/f6dda70e-3919-40df-adff-55b4947a7576";
@@ -13,7 +13,7 @@
       ];
     };
   };
-  age.secrets.minioSecret.file = ../../../secrets/${name}/minioSecret.age;
+  age.secrets.minioSecret.file = secretPath name "minioSecret.age";
   services = {
     nginx = {
       virtualHosts = {

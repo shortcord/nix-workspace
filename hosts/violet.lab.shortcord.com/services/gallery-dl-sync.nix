@@ -1,4 +1,4 @@
-{ name, pkgs, lib, config, ... }:
+{ name, pkgs, lib, config, secretPath, ... }:
 let
   pages = pkgs.writeText "pages.txt" ''
     # Favs
@@ -125,7 +125,7 @@ in {
     };
   };
   age.secrets.gallery-dl-config.file =
-    ../../../secrets/${name}/gallery-dl-config.age;
+    secretPath name "gallery-dl-config.age";
   environment.etc."gallery-dl-pages.txt".source = pages;
   systemd = {
     timers = {

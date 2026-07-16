@@ -1,11 +1,11 @@
-{ config, pkgs, name, ... }:
+{ config, pkgs, name, secretPath, ... }:
 let
  searxConfig = config.services.searx;
 in
 {
     age.secrets = {
         searxng-env = {
-        file = ../../../secrets/${name}/searxng.age;
+        file = secretPath name "searxng.age";
         };
     };
     systemd.services.searx-limiter-copy = {

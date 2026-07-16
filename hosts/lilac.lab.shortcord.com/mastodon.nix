@@ -1,6 +1,6 @@
-{ name, pkgs, config, unstablePkgs,... }: {
+{ name, pkgs, config, unstablePkgs, secretPath, ... }: {
   age.secrets = {
-    catstodon-env.file = ../../secrets/${name}/catstodon.env.age;
+    catstodon-env.file = secretPath name "catstodon.env.age";
   };
   services = {
     nginx = {

@@ -1,4 +1,4 @@
-{ name, nodes, pkgs, lib, config, ... }: {
+{ name, nodes, pkgs, lib, config, secretPath, ... }: {
   imports = [
     ./general/all.nix
     ./${name}/hardware.nix
@@ -13,7 +13,7 @@
 
   age.secrets = {
     mysqldExporterConfig = {
-      file = ../secrets/${name}/mysqldExporterConfig.age;
+      file = secretPath name "mysqldExporterConfig.age";
       owner = "prometheus";
       group = "prometheus";
     };

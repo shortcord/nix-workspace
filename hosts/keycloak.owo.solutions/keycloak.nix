@@ -1,6 +1,6 @@
-{ name, config, pkgs, ... }: {
+{ name, config, pkgs, secretPath, ... }: {
   age.secrets.keycloak-psql-password.file =
-    ../../secrets/${name}/keycloak-psql-password.age;
+    secretPath name "keycloak-psql-password.age";
   networking = { firewall = { allowedTCPPorts = [ 80 443 ]; }; };
   systemd = {
     network = {

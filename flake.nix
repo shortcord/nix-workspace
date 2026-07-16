@@ -56,6 +56,8 @@
       ];
 
       scConfig = import ./config/default.nix { inherit lib; };
+      # Helper to construct absolute secret paths — works from any file depth
+      secretPath = hostName: secretFile: ./secrets/${hostName}/${secretFile};
       unstablePkgs = import nixpkgs-unstable {
         system = "x86_64-linux";
         overlays = overlays;
@@ -77,7 +79,7 @@
           nodeNixpkgs = { };
           specialArgs = {
             inherit ragenix pterodactyl-wings nixos-mailserver nixpkgs-unstable
-              shortcord-site unstablePkgs maustodon-flake;
+              shortcord-site unstablePkgs maustodon-flake secretPath;
           };
         };
         defaults = { name, lib, config, pkgs, ... }: {

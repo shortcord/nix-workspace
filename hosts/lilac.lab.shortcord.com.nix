@@ -1,4 +1,4 @@
-{ name, nodes, pkgs, lib, config, modulesPath, ... }:
+{ name, nodes, pkgs, lib, config, modulesPath, secretPath, ... }:
 let
   distributedUserSSHKeyPub = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKnmaQeov9+Xv7z/ulQ0zPVDN3ZKW4AUK8IyoVkbUKQa"
@@ -6,7 +6,7 @@ let
 in {
   age.secrets = {
     wireguardPrivateKey = {
-      file = ../secrets/${name}/wireguardPrivateKey.age;
+      file = secretPath name "wireguardPrivateKey.age";
       owner = "systemd-network";
       group = "systemd-network";
     };

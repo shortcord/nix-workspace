@@ -1,7 +1,7 @@
-{ name, pkgs, lib, config, ... }: {
+{ name, pkgs, lib, config, secretPath, ... }: {
   age.secrets = {
     wg0-private-key = {
-      file = ../../../secrets/${name}/wg0-private-key.age;
+      file = secretPath name "wg0-private-key.age";
       owner = "systemd-network";
       group = "systemd-network";
     };

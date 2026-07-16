@@ -1,6 +1,6 @@
-{ pkgs, config, lib, ... }: {
+{ pkgs, config, lib, secretPath, ... }: {
   age.secrets.promtailPassword = {
-    file = ../../secrets/general/promtailPassword.age;
+    file = secretPath "general" "promtailPassword.age";
     owner = "promtail";
     group = "promtail";
   };

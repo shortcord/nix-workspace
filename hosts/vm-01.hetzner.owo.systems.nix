@@ -1,8 +1,8 @@
-{ name, nodes, pkgs, nixpkgs-unstable, lib, config, modulesPath, ... }: {
+{ name, nodes, pkgs, nixpkgs-unstable, lib, config, modulesPath, secretPath, ... }: {
   system.stateVersion = "22.11";
 
   age.secrets = {
-    wireguardPrivateKey.file = ../secrets/${name}/wireguardPrivateKey.age;
+    wireguardPrivateKey.file = secretPath name "wireguardPrivateKey.age";
   };
 
   imports = [

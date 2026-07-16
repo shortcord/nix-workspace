@@ -1,5 +1,5 @@
-{ name, nodes, pkgs, lib, config, ... }: {
-  age.secrets.powerdnsConfig.file = ../../secrets/${name}/powerdnsConfig.age;
+{ name, nodes, pkgs, lib, config, secretPath, ... }: {
+  age.secrets.powerdnsConfig.file = secretPath name "powerdnsConfig.age";
   security.acme.certs."ns2.owo.systems" = {
     # postRun = let
     #   homeDir = config.services.mysql.dataDir;
@@ -18,7 +18,7 @@
   services = {
     mysqlBackup = {
       enable = true;
-      # Backup daily
+      # Backup daily>
       calendar = "*-*-* 00:00:00";
       singleTransaction = true;
       databases = [ "powerdns" ];

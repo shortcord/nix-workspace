@@ -1,11 +1,11 @@
-{ config, lib, ... }: {
+{ config, lib, secretPath, ... }: {
   imports = [
     ./restic.nix
   ];
 
   age.secrets = {
-    distributedUserSSHKey.file = lib.mkForce ../../secrets/general/distributedUserSSHKey.age;
-    headscaleKey.file = ../../secrets/general/headscaleKey.age;
+    distributedUserSSHKey.file = lib.mkForce (secretPath "general" "distributedUserSSHKey.age");
+    headscaleKey.file = secretPath "general" "headscaleKey.age";
   };
 
   services = {

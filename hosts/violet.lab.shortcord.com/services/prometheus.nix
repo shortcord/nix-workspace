@@ -1,4 +1,4 @@
-{ name, pkgs, lib, config, ... }:
+{ name, pkgs, lib, config, secretPath, ... }:
 let
   icmpTargets = [
     "route.cloud.shortcord.com"
@@ -64,17 +64,17 @@ in {
   };
   age.secrets = {
     minioPrometheusBearerToken = {
-      file = ../../../secrets/${name}/minioPrometheusBearerToken.age;
+      file = secretPath name "minioPrometheusBearerToken.age";
       owner = "prometheus";
       group = "prometheus";
     };
     mysqldExporterConfig = {
-      file = ../../../secrets/${name}/mysqldExporterConfig.age;
+      file = secretPath name "mysqldExporterConfig.age";
       owner = "prometheus";
       group = "prometheus";
     };
     grafanaSecretKey = {
-      file = ../../../secrets/${name}/grafanaSecretKey.age;
+      file = secretPath name "grafanaSecretKey.age";
     };
   };
   services = {

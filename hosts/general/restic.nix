@@ -1,11 +1,11 @@
-{ name, config, pkgs, lib, ... }:
+{ name, config, pkgs, lib, secretPath, ... }:
 let
   serviceConf = config.services;
   enableJob = (serviceConf.mysqlBackup.enable || serviceConf.postgresqlBackup.enable );
 in {
   age.secrets = lib.mkIf (enableJob) {
-    restic-password.file = ../../secrets/general/restic-password.age;
-    restic-s3-env.file = ../../secrets/general/restic-s3-env.age;
+    restic-password.file = secretPath "general" "restic-password.age";
+    restic-s3-env.file = secretPath "general" "restic-s3-env.age";
   };
   services.restic.backups = {
     "remote-backup" = lib.mkIf (enableJob) {

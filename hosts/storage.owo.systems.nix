@@ -1,4 +1,4 @@
-{ name, nodes, pkgs, lib, config, ... }: {
+{ name, nodes, pkgs, lib, config, secretPath, ... }: {
   system.stateVersion = "22.11";
 
   # need to migrate to ceph or something, minio is depracated :(
@@ -52,7 +52,7 @@
   imports = [ ./general/all.nix ];
 
   age.secrets = {
-    minioSecret.file = ../secrets/${name}/minioSecret.age;
+    minioSecret.file = secretPath name "minioSecret.age";
   };
 
   networking = {

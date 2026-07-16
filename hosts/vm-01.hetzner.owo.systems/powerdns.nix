@@ -1,7 +1,7 @@
-{ name, config, lib, pkgs, ... }: {
+{ name, config, lib, pkgs, secretPath, ... }: {
    age.secrets = {
-    powerdnsConfig.file = ../../secrets/${name}/powerdnsConfig.age;
-    powerdns-env.file = ../../secrets/${name}/powerdns-env.age;
+    powerdnsConfig.file = secretPath name "powerdnsConfig.age";
+    powerdns-env.file = secretPath name "powerdns-env.age";
   };
 
   networking.firewall = lib.mkIf config.networking.firewall.enable {

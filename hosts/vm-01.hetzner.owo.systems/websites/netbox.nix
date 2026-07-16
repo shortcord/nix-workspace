@@ -1,12 +1,12 @@
-{ name, pkgs, lib, config, ... }: {
+{ name, pkgs, lib, config, secretPath, ... }: {
   age.secrets = {
     netboxSecretKey = {
-      file = ../../../secrets/${name}/netboxSecretKey.age;
+      file = secretPath name "netboxSecretKey.age";
       owner = "netbox";
       group = "netbox";
     };
     netboxApiTokenPeppersFile = {
-      file = ../../../secrets/${name}/netboxApiTokenPeppersFile.age;
+      file = secretPath name "netboxApiTokenPeppersFile.age";
       owner = "netbox";
       group = "netbox";
     };

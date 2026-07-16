@@ -1,5 +1,5 @@
-{ pkgs, config, ... }: {
-  age.secrets.pdnsApiKey.file = ../../secrets/general/pdnsApiKey.age;
+{ pkgs, config, secretPath, ... }: {
+  age.secrets.pdnsApiKey.file = secretPath "general" "pdnsApiKey.age";
   systemd = {
     timers = {
       "update-dyndns-ipv4" = {

@@ -1,7 +1,7 @@
-{ lib, pkgs, config, name, ... }: {
+{ lib, pkgs, config, name, secretPath, ... }: {
   age.secrets = {
     wingsToken = {
-      file = ../../../secrets/${name}/wingsToken.age;
+      file = secretPath name "wingsToken.age";
       owner = config.services.pterodactyl.wings.user;
       group = config.services.pterodactyl.wings.group;
     };

@@ -1,7 +1,7 @@
-{ name, nodes, pkgs, lib, config, ... }: {
+{ name, nodes, pkgs, lib, config, secretPath, ... }: {
   age.secrets = {
-    wireguardPrivateKey.file = ../../secrets/${name}/wireguardPrivateKey.age;
-    wireguardPresharedKey.file = ../../secrets/${name}/wireguardPresharedKey.age;
+    wireguardPrivateKey.file = secretPath name "wireguardPrivateKey.age";
+    wireguardPresharedKey.file = secretPath name "wireguardPresharedKey.age";
   };
   networking = {
     firewall = {

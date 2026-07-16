@@ -1,5 +1,5 @@
-{ name, config, lib, pkgs, modulesPath, ... }: {
-  age.secrets.wireguard-mailrelay-key.file = ../../secrets/${name}/wireguard-mailrelay-key.age;
+{ name, config, lib, pkgs, modulesPath, secretPath, ... }: {
+  age.secrets.wireguard-mailrelay-key.file = secretPath name "wireguard-mailrelay-key.age";
 
   imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
   
