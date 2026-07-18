@@ -46,7 +46,7 @@
       hydraURL = "https://hydra.${config.networking.fqdn}";
       notificationSender = "hydra@${config.networking.fqdn}";
       buildMachinesFiles = [ ];
-      useSubstitutes = false;
+      useSubstitutes = true;
     };
   };
 }
