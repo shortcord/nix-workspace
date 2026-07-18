@@ -40,7 +40,7 @@
       port = 5000;
     };
     hydra = {
-      enable = false;
+      enable = true;
       listenHost = "localhost";
       hydraURL = "https://hydra.${config.networking.fqdn}";
       notificationSender = "hydra@${config.networking.fqdn}";
