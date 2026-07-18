@@ -42,6 +42,7 @@
     hydra = {
       enable = true;
       listenHost = "localhost";
+      port = 3454;
       hydraURL = "https://hydra.${config.networking.fqdn}";
       notificationSender = "hydra@${config.networking.fqdn}";
       buildMachinesFiles = [ ];
