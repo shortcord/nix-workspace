@@ -284,6 +284,7 @@
     in {
       colmena = colmenaConfiguration;
       nixosConfigurations = lib.mapAttrs'(n: v: lib.nameValuePair (builtins.head (lib.splitString "." n)) v) hive.nodes;
+      hydraJobs = lib.mapAttrs'(n: v: lib.nameValuePair (builtins.head (lib.splitString "." n)) v) hive.nodes;
     } // flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
