@@ -1,7 +1,7 @@
 { name, pkgs, lib, config, ... }: {
   services = {
     apcupsd = {
-      enable = true;
+      enable = false;
       configText = ''
         UPSNAME primary
         UPSTYPE usb
