@@ -175,12 +175,6 @@ in {
                   fail_if_not_ssl: true
                   preferred_ip_protocol: "ip6"
                   ip_protocol_fallback: true
-              icmp6_probe:
-                prober: icmp
-                timeout: 2s
-                icmp:
-                  preferred_ip_protocol: "ip6"
-                  ip_protocol_fallback: false
               icmp4_probe:
                 prober: icmp
                 timeout: 2s
@@ -202,28 +196,6 @@ in {
             config.age.secrets.minioPrometheusBearerToken.path;
           scheme = "https";
           static_configs = [{ targets = [ "storage.owo.systems" ]; }];
-        }
-        {
-          job_name = "icmp6-probes";
-          metrics_path = "/probe";
-          params = { module = [ "icmp6_probe" ]; };
-          scrape_interval = "5s";
-          scrape_timeout = "3s";
-          static_configs = [{ targets = icmpTargets; }];
-          relabel_configs = [
-            {
-              source_labels = [ "__address__" ];
-              target_label = "__param_target";
-            }
-            {
-              source_labels = [ "__param_target" ];
-              target_label = "instance";
-            }
-            {
-              target_label = "__address__";
-              replacement = "127.0.0.1:9115";
-            }
-          ];
         }
         {
           job_name = "icmp4-probes";
