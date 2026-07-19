@@ -144,7 +144,7 @@
             settings = {
               experimental-features = [ "nix-command" "flakes" ];
               auto-optimise-store = true;
-              substituters = [ "https://cache.nixos.org" ];
+              substituters = [ "binarycache.violet.lab.shortcord.com" "https://cache.nixos.org" ];
               trusted-public-keys = [
                 "binarycache.violet.lab.shortcord.com:Bq1Q/51gHInHj8dMKoaCI5lHM8XnwASajahLe1KjCdQ="
                 "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
