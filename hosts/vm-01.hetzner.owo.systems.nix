@@ -80,10 +80,7 @@
     };
   };
 
-  nixpkgs.config = {
-    allowUnfree = true;
-    permittedInsecurePackages = [ ];
-  };
+  nixpkgs.config.permittedInsecurePackages = [ ];
 
   services = {
     nginx = {

@@ -40,6 +40,43 @@
     let
       inherit (nixpkgs) lib;
 
+      # Single source of truth for unfree packages allowed across all nixpkgs instances (stable and unstable)
+      allowUnfreeList = [
+        "open-webui"
+        "ollama"
+        "ollama-cuda"
+        "mastodon"
+        "nvidia-x11"
+        "nvidia-persistenced"
+        "nvidia-container-toolkit"
+        "nvidia-settings"
+        "cudatoolkit"
+        "cuda_cudart"
+        "cuda_nvcc"
+        "cuda_cccl"
+        "libcublas"
+        "cuda-merged"
+        "cuda_cuobjdump"
+        "cuda_gdb"
+        "cuda_nvdisasm"
+        "cuda_nvprune"
+        "cuda_cupti"
+        "cuda_cuxxfilt"
+        "cuda_nvml_dev"
+        "cuda_nvrtc"
+        "cuda_nvtx"
+        "cuda_profiler_api"
+        "cuda_sanitizer_api"
+        "libcufft"
+        "libcurand"
+        "libcusolver"
+        "libnvjitlink"
+        "libcusparse"
+        "libnpp"
+        "nvidia-kernel-modules"
+      ];
+      allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) allowUnfreeList;
+
       overlays = [
         pterodactyl-wings.overlays.default
         shortcord-site.overlays.default
@@ -61,7 +98,7 @@
       unstablePkgs = import nixpkgs-unstable {
         system = "x86_64-linux";
         overlays = overlays;
-        config.allowUnfree = true;
+        config.allowUnfreePredicate = allowUnfreePredicate;
       };
       colmenaConfiguration = {
         meta = {
@@ -69,9 +106,7 @@
           nixpkgs = import nixpkgs {
             system = "x86_64-linux";
             overlays = overlays;
-            config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-              "open-webui"
-            ];
+            config.allowUnfreePredicate = allowUnfreePredicate;
           };
           # Per node override of nixpkgs
           ## "hostname" = { nixpkgs import stanza }

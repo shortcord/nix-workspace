@@ -50,7 +50,8 @@ The exception to this are containers, as it is expected that the Proxmox host ha
 - [x] Fix the damned systemd-networkd-wait-online.service, god damn systemd.
 - [x] At some point install a GPU in violet, or build up another computer to host Jellyfin and ollama.
 - [ ] Go through all the hosts and either update or remove `permittedInsecurePackages` entries
-- [ ] Go through all the hosts and remove `nixpkgs.config.allowUnfree = true;` since we are setting that in `flake.nix`
+- [x] Go through all the hosts and remove `nixpkgs.config.allowUnfree = true;` since we are setting that in `flake.nix`
     - We should use `nixpkgs.config.allowUnfreePredicate` instead of blindly allowing all packages
+    - Allowlist lives in `flake.nix` as `allowUnfreeList` / `allowUnfreePredicate` and is shared by stable and unstable nixpkgs.
 - [ ] Fix `evaluation warning: 'system' has been renamed to/replaced by 'stdenv.hostPlatform.system'`
     - Pretty sure it's talking about the entries in `flake.nix`; haven't looked into it yet.
