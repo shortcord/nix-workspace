@@ -1,13 +1,10 @@
 { pkgs, ... }:
 let
-    gatewayChecker = pkgs.writeText "gateway-checker" ''
-        #!/usr/bin/env bash
+    gatewayChecker = ''
         set -euo pipefail
 
         PRIMARY_IF="eno1"
         BACKUP_IF="enp68s0"
-
-        mkdir -p "$STATE_DIR"
 
         get_gw() {
             ${pkgs.iproute2}/bin/ip --json route show default dev "$1" | ${pkgs.jq}/bin/jq -r '.[0].gateway // empty'
@@ -30,10 +27,10 @@ let
 
         if check_wan "$PRIMARY_IF"; then
             ${pkgs.iproute2}/bin/ip route replace default via "$PRIMARY_GW" dev "$PRIMARY_IF" metric 100
-            ${pkgs.coreutils}/bin/echo primary > "$STATE_FILE"
+            ${pkgs.coreutils}/bin/echo primary
         elif check_wan "$BACKUP_IF"; then
             ${pkgs.iproute2}/bin/ip route replace default via "$BACKUP_GW" dev "$BACKUP_IF" metric 100
-            ${pkgs.coreutils}/bin/echo backup > "$STATE_FILE"
+            ${pkgs.coreutils}/bin/echo backup
         else
             ${pkgs.coreutils}/bin/echo "Both WANs failed; keeping current route."
         fi
@@ -54,7 +51,7 @@ in {
             "gateway-checker" = {
                 description = "Gateway Checker";
                 after = [ "network.target" ];
-                script = "${gatewayChecker}";
+                script = " ${gatewayChecker}";
                 serviceConfig = {
                     Type = "oneshot";
                     SyslogIdentifier = "gateway-checker";
