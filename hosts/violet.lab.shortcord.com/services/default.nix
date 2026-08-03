@@ -15,5 +15,6 @@
     ./nfs.nix
     ./ollama.nix
     ./prometheus.nix
+    ./gateway-checker.nix
   ];
 }
