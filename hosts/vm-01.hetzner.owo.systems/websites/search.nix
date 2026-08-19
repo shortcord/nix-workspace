@@ -3,11 +3,9 @@ let
  searxConfig = config.services.searx;
 in
 {
-    age.secrets = {
-        searxng-env = {
-        file = secretPath name "searxng.age";
-        };
-    };
+    age.secrets.searxng-env.file = secretPath name "searxng.age";
+
+    # Copy the limiter config to the runtime directory
     systemd.services.searx-limiter-copy = {
         description = "Copy SearXNG limiter config to /run/searx";
         wantedBy = [ "multi-user.target" ];
@@ -49,7 +47,12 @@ in
                     public_instance = true;
                     image_proxy = true;
                 };
-                search.formats = [ "html" "json" ];
+                search = {
+                    formats = [ "html" "json" ];
+                    safe_search = 0;
+                    autocomplete = "duckduckgo";
+                    default_language = "en-US";
+                };
                 service.limiter = true;
             };
             limiterSettings = {
