@@ -17,19 +17,19 @@ let
             ${pkgs.iputils}/bin/ping -I "$iface" -c 2 -W 2 8.8.8.8 >/dev/null 2>&1
         }
 
-        PRIMARY_GW="$(get_gw "$PRIMARY_IF" || true)"
-        BACKUP_GW="$(get_gw "$BACKUP_IF" || true)"
+        PRIMARY_GW="$(get_gw "''${PRIMARY_IF}" || true)"
+        BACKUP_GW="$(get_gw "''${BACKUP_IF}" || true)"
 
-        if [[ -z "$PRIMARY_GW" || -z "$BACKUP_GW" ]]; then
-            ${pkgs.coreutils}/bin/echo "Missing gateway; primary=$PRIMARY_GW backup=$BACKUP_GW"
+        if [[ -z "$PRIMARY_GW" || -z "''${BACKUP_GW}" ]]; then
+            ${pkgs.coreutils}/bin/echo "Missing gateway; primary=''${PRIMARY_GW} backup=''${BACKUP_GW}"
             exit 0
         fi
 
-        if check_wan "$PRIMARY_IF"; then
-            ${pkgs.iproute2}/bin/ip route replace default via "$PRIMARY_GW" dev "$PRIMARY_IF" metric 100
+        if check_wan "''${PRIMARY_IF}"; then
+            ${pkgs.iproute2}/bin/ip route replace default via "''${PRIMARY_GW}" dev "''${PRIMARY_IF}" metric 100
             ${pkgs.coreutils}/bin/echo primary
-        elif check_wan "$BACKUP_IF"; then
-            ${pkgs.iproute2}/bin/ip route replace default via "$BACKUP_GW" dev "$BACKUP_IF" metric 100
+        elif check_wan "''${BACKUP_IF}"; then
+            ${pkgs.iproute2}/bin/ip route replace default via "''${BACKUP_GW}" dev "''${BACKUP_IF}" metric 100
             ${pkgs.coreutils}/bin/echo backup
         else
             ${pkgs.coreutils}/bin/echo "Both WANs failed; keeping current route."
