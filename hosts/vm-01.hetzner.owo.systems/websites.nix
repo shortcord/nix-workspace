@@ -10,6 +10,5 @@
         ./websites/speedtest.nix
         ./websites/maus.gay.nix
         ./websites/jackett.nix
-        ./websites/search.nix
     ];
 }
