@@ -108,6 +108,8 @@
             DHCPServer = true;
             IPMasquerade = "ipv4";
             IPv4Forwarding = true;
+            IgnoreCarrierLoss = true;
+            ConfigureWithoutCarrier = true;
           };
           dhcpServerConfig = {
             ServerAddress = "10.18.0.1/24";
