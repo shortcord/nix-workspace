@@ -178,7 +178,6 @@
       allowedUDPPorts = [ ];
       allowedTCPPorts = [ 22 80 443 ];
       allowPing = true;
-      interfaces.
       trustedInterfaces = [ 
         "vmbr0"
         config.services.tailscale.interfaceName
