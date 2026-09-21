@@ -174,7 +174,7 @@
       "127.0.0.1"
     ];
     firewall = {
-      enable = false;
+      enable = true;
       allowedUDPPorts = [ ];
       allowedTCPPorts = [ 22 80 443 ];
       allowPing = true;
