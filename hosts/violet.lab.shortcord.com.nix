@@ -54,7 +54,7 @@
     };
     btrfs.autoScrub = {
       enable = true;
-      interval = "weekly";
+      interval = "Sun 01:00";
       fileSystems = [ "/btrfs" ];
     };
     prometheus = {
@@ -103,10 +103,17 @@
 
   systemd = {
     timers = {
+      "btrfs-scrub-btrfs" = {
+        timerConfig = {
+          RandomizedDelaySec = "2h";
+        };
+      };
       "btrfs-rebalance" = {
         wantedBy = [ "timers.target" ];
         timerConfig = {
-          OnCalendar = "weekly";
+          OnCalendar = "Sat 01:00";
+          RandomizedDelaySec = "2h";
+          Persistent = true;
           Unit = "btrfs-rebalance.service";
         };
       };
@@ -117,6 +124,8 @@
           set -eu
           ${pkgs.btrfs-progs}/bin/btrfs balance start --full-balance /btrfs
         '';
+        after = [ "btrfs-scrub-btrfs.service" ];
+        conflicts = [ "btrfs-scrub-btrfs.service" ];
         serviceConfig = {
           Type = "oneshot";
           User = "root";
