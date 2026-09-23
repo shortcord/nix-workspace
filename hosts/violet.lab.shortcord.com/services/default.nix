@@ -5,7 +5,6 @@
     ./pdns-recursor.nix
     ./repo-sync.nix
     ./jellyfin.nix
-    ./apcupsd.nix
     ./actual.nix
     ./hydra.nix
     ./komga.nix

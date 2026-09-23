@@ -41,9 +41,6 @@ let
   processExporterTargets = [
     "svc.rocky.shinx.dev:9256"
   ];
-  apcupsdExporterTargets = [
-    "violet.ts.shortcord.com:9162"
-  ];
 
 in {
   age.secrets = {
@@ -234,32 +231,10 @@ in {
           static_configs = [{ targets = processExporterTargets; }];
         }
         {
-          job_name = "apcupsd-exporter";
-          static_configs = [{ targets = apcupsdExporterTargets; }];
-        }
-        {
           job_name = "powerdns-exporter";
           scheme = "https";
           metrics_path = "/metrics";
           static_configs = [{ targets = powerdnsExporterTargets; }];
-        }
-        {
-          job_name = "octoprint-exporter";
-          scheme = "https";
-          metrics_path = "/prom-metrics";
-          scrape_interval = "5s";
-          scrape_timeout = "3s";
-          static_configs =
-            [{ targets = [ "printer1.feta.shortcord.com" "printer2.feta.shortcord.com" ]; }];
-        }
-        {
-          job_name = "klipper-exporter";
-          scheme = "https";
-          metrics_path = "/prom-metrics";
-          scrape_interval = "5s";
-          scrape_timeout = "3s";
-          static_configs =
-            [{ targets = [ "printer3.feta.shortcord.com" ]; }];
         }
       ];
     };

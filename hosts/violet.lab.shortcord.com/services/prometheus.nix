@@ -41,9 +41,6 @@ let
   processExporterTargets = [
     "svc.rocky.shinx.dev:9256"
   ];
-  apcupsdExporterTargets = [
-    "violet.ts.shortcord.com:9162"
-  ];
 
   prometheusConfig = config.services.prometheus;
   grafanaConfig = config.services.grafana;
@@ -230,10 +227,6 @@ in {
         {
           job_name = "process-exporter";
           static_configs = [{ targets = processExporterTargets; }];
-        }
-        {
-          job_name = "apcupsd-exporter";
-          static_configs = [{ targets = apcupsdExporterTargets; }];
         }
         {
           job_name = "powerdns-exporter";
