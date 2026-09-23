@@ -24,7 +24,7 @@ in {
         port = 53;
         address = [ "127.0.0.1" "::1" "10.18.0.1" ];
       };
-      forwardZones = { "ts.shortcord.com" = "100.100.100.100"; };
+      forwardZonesRecurse = { "ts.shortcord.com" = "100.100.100.100"; };
     };
   };
 }
