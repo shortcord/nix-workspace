@@ -7,7 +7,6 @@
     ./${name}/postfix.nix
     ./${name}/powerdns.nix
     ./${name}/headscale.nix
-    ./${name}/jellyfin.nix
     ./${name}/maxscale.nix
   ];
 
