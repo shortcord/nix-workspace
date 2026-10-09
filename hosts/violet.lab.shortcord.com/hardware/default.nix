@@ -4,6 +4,7 @@
   hardware.enableRedistributableFirmware = true;
 
   boot = {
+    supportedFilesystems = [ "zfs" "btrfs" "ext4" "xfs" ];
     growPartition = true;
     kernelParams = [ "kvm-intel" ];
     loader.systemd-boot = {

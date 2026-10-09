@@ -52,5 +52,10 @@
         "uid=990"
       ];
     };
+    "/var/lib/violet" = {
+      device = "100.64.0.1:/srv/downloads";
+      fsType = "nfs";
+      options = [ "x-systemd.automount" "noauto" ];
+    };
   };
 }
