@@ -32,9 +32,13 @@
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    disko = {
+      url = "github:nix-community/disko/latest";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { nixpkgs, nixpkgs-unstable, colmena, ragenix, flake-utils
+  outputs = { nixpkgs, nixpkgs-unstable, disko, colmena, ragenix, flake-utils
     , nixos-mailserver, pterodactyl-wings, shortcord-site, maustodon-flake
     , nixos-generators, nixfmt, ... }:
     let
@@ -90,6 +94,7 @@
         pterodactyl-wings.nixosModules.default
         nixos-mailserver.nixosModules.default
         nixos-generators.nixosModules.all-formats
+        disko.nixosModules.disko
       ];
 
       scConfig = import ./config/default.nix { inherit lib; };
@@ -114,7 +119,7 @@
           nodeNixpkgs = { };
           specialArgs = {
             inherit ragenix pterodactyl-wings nixos-mailserver nixpkgs-unstable
-              shortcord-site unstablePkgs maustodon-flake secretPath;
+              shortcord-site unstablePkgs maustodon-flake secretPath disko;
           };
         };
         defaults = { name, lib, config, pkgs, ... }: {
