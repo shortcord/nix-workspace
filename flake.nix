@@ -263,6 +263,11 @@
           imports = [ ./hosts/${name}.nix ];
         };
 
+        "ns1.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
+          deployment.tags = [ "infra" "nameserver" "ns1" ];
+          imports = [ ./hosts/${name}.nix ];
+        };
+
         "ns2.owo.systems" = { name, nodes, pkgs, lib, config, ... }: {
           deployment.tags = [ "infra" "nameserver" "ns2" ];
           imports = [ ./hosts/${name}.nix ];
