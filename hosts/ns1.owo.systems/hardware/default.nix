@@ -1,12 +1,11 @@
-{ name, pkgs, lib, config, ... }: {
+{ name, pkgs, lib, config, modulesPath, ... }: {
   system.stateVersion = "26.05";
 
-  imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];  
+  imports = [ (modulesPath + "/profiles/qemu-guest.nix") ./disks.nix ./networking.nix ];  
   
   hardware.enableRedistributableFirmware = true;
 
   boot = {
-    kernelPackages = pkgs.linuxKernel.kernels.linux_7_2;
     growPartition = true;
     kernelModules = [ ];
     extraModulePackages = [ ];
@@ -21,5 +20,4 @@
       kernelModules = [ ];
     };
   };
-  imports = [ ./disks.nix ./networking.nix ];
 }

@@ -8,11 +8,11 @@
 {
   fileSystems = {
     "/boot" = {
-      device = "/dev/disk/by-label/NIXBOOT";
+      device = "/dev/disk/by-partlabel/NIXBOOT";
       fsType = "vfat";
     };
     "/" = {
-      device = "/dev/disk/by-label/NIXROOT";
+      device = "/dev/disk/by-partlabel/NIXROOT";
       autoResize = true;
       fsType = "ext4";
     };
