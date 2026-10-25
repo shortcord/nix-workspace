@@ -28,7 +28,6 @@
             ESP = {
               size = "1G";
               type = "EF00";
-              label = "NIXBOOT";
               content = {
                 type = "filesystem";
                 format = "vfat";
@@ -38,7 +37,6 @@
             };
             root = {
               size = "100%";
-              label = "NIXROOT";
               content = {
                 type = "filesystem";
                 format = "ext4";
